@@ -1,7 +1,7 @@
 @ECHO OFF
 @rem LLVM installation path
 IF "%dp0%"=="" (SET LLVM=".\bin") ELSE (SET LLVM=%dp0%\bin)
-@rem SET LLVM="C:\Program Files\LLVM\"
+@rem SET LLVM="C:\Program Files\LLVM\bin\"
 IF NOT EXIST "%LLVM%" (
 	ECHO LLVM not found.
 	PAUSE
