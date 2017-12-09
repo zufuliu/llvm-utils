@@ -33,6 +33,12 @@ MKLINK lld-link.exe lld.exe
 DEL ld.lld.exe
 MKLINK ld.lld.exe lld.exe
 
+DEL ld64.lld.exe
+MKLINK ld64.lld.exe lld.exe
+
+DEL wasm-ld.exe
+MKLINK wasm-ld.exe lld.exe
+
 DEL llvm-lib.exe
 MKLINK llvm-lib.exe llvm-ar.exe
 
