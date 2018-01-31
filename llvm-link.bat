@@ -45,8 +45,8 @@ MKLINK llvm-lib.exe llvm-ar.exe
 DEL llvm-ranlib.exe
 MKLINK llvm-ranlib.exe llvm-ar.exe
 
-DEL libiomp5md.dll
-MKLINK libiomp5md.dll libomp.dll
+@rem DEL libiomp5md.dll
+@rem MKLINK libiomp5md.dll libomp.dll
 
 CD ..\msbuild-bin
 
