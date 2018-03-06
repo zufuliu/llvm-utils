@@ -12,7 +12,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <!-- Set the value of _MSC_VER to claim for compatibility -->
-      <AdditionalOptions>-m64 -fmsc-version=1912 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-m64 -fmsc-version=1913 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
