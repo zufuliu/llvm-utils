@@ -1,6 +1,6 @@
 # LLVM Utils
 
-## LLVM (6.0) for Visual Studio 2017
+## LLVM (7.0) for Visual Studio 2017
 
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
@@ -26,4 +26,4 @@ The huge size of LLVM Windows installation can be reduced dramatically by use Wi
 ### Usage
 Just copy *llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it.
 
-## [License](http://llvm.org/releases/5.0.0/LICENSE.TXT)
+## [License](http://llvm.org/releases/6.0.0/LICENSE.TXT)
