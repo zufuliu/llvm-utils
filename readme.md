@@ -15,7 +15,9 @@ please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017\Win32` an
 
 or run `VS2017\install.bat` directly (witch may requre Administrator privilege).
 
-Note: If your LLVM version is not 7.0, please change `$(LLVMInstallDir)\lib\clang\7.0\` in each *Toolset.props* to appropriate value.
+Note:
+* If your LLVM version is not 7.0, please change `$(LLVMInstallDir)\lib\clang\7.0.0\` in each *Toolset.props* to appropriate value.
+* If your VC compiler version is not `19.13.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1913` in in each *Toolset.props* to appropriate value.
 
 ### Usage
 Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
