@@ -13,7 +13,7 @@ please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017\Win32` an
 |`VS2017\Win32` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\x64` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
 
-or run `VS2017\install.bat` directly (witch may requre Administrator privilege).
+or run `VS2017\install.bat` directly (witch may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
 Note:
 * If your LLVM version is not 7.0, please change `$(LLVMInstallDir)\lib\clang\7.0.0\` in each *Toolset.props* to appropriate value.
