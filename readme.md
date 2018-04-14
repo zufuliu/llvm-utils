@@ -17,13 +17,22 @@ or run `VS2017\install.bat` directly (witch may requre Administrator privilege).
 
 Note:
 * If your LLVM version is not 7.0, please change `$(LLVMInstallDir)\lib\clang\7.0.0\` in each *Toolset.props* to appropriate value.
-* If your VC compiler version is not `19.13.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1913` in in each *Toolset.props* to appropriate value.
+* If your VC compiler version is not `19.13.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1913` in in each *Toolset.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
+
+| Visual Studio Version | `_MSC_VER` |
+|-----------------------|------------|
+| Visual Studio 2015 14.0 | 1900 |
+| Visual Studio 2017 15.0 | 1910 |
+| Visual Studio 2017 15.3 | 1911 |
+| Visual Studio 2017 15.5 | 1912 |
+| Visual Studio 2017 15.6 | 1913 |
+| Visual Studio 2017 15.7 | 1914 |
 
 ### Usage
 Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
 
 ## LLVM Windows Symbolic Link Maker
-The huge size of LLVM Windows installation can be reduced dramatically by use Windows symbolic link(see [mklink command](https://technet.microsoft.com/en-us/library/cc753194\(v=ws.11\).aspx)).
+The huge size of LLVM Windows installation can be reduced dramatically by use Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
 ### Usage
 Just copy *llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it.
