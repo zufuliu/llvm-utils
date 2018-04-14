@@ -11,6 +11,8 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- remove the implicit vcxxx.pdb path to avoid rebuilds every time as clang-cl only supports /Z7 -->
+      <ProgramDataBaseFileName></ProgramDataBaseFileName>
       <!-- Set the value of _MSC_VER to claim for compatibility -->
       <AdditionalOptions>-m64 -fmsc-version=1913 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
