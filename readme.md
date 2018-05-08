@@ -17,7 +17,7 @@ or run `VS2017\install.bat` directly (witch may require Administrator privilege.
 
 Note:
 * If your LLVM version is not 7.0, please change `$(LLVMInstallDir)\lib\clang\7.0.0\` in each *Toolset.props* to appropriate value.
-* If your VC compiler version is not `19.13.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1913` in in each *Toolset.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
+* If your VC compiler version is not `19.14.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1914` in in each *Toolset.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
 
 | Visual Studio Version | `_MSC_VER` |
 |-----------------------|------------|
