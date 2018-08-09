@@ -16,8 +16,8 @@ please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017\Win32` an
 or run `VS2017\install.bat` directly (witch may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
 Note:
-* LLVM 8.0 installer no longer create the *msbuild-bin* folder (which previously contains *cl.exe*) in it's installation directory, please create it manually or use the following *llvm-link.bat* to create it.
 * Old versions can be found at [release list](https://github.com/zufuliu/llvm-utils/tags), if you don't like to follow the following steps.
+* LLVM 8.0 installer no longer create the *msbuild-bin* folder (which previously contains *cl.exe*) in it's installation directory, please create it manually or use the following *llvm-link.bat* to create it.
 * If your LLVM version is not 8.0, please change `$(LLVMInstallDir)\lib\clang\8.0.0\` in each *Toolset.props* to appropriate value.
 * If your VC compiler version is not `19.14.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1914` in in each *Toolset.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
 
@@ -39,4 +39,4 @@ The huge size of LLVM Windows installation can be reduced dramatically by use Wi
 ### Usage
 Just copy *llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it.
 
-## [License](http://llvm.org/releases/6.0.0/LICENSE.TXT)
+## [License](http://llvm.org/releases/6.0.1/LICENSE.TXT)
