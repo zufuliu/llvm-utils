@@ -19,7 +19,7 @@ Note:
 * Old versions can be found at [release list](https://github.com/zufuliu/llvm-utils/tags), if you don't like to follow the following steps.
 * LLVM 8.0 installer no longer create the *msbuild-bin* folder (which previously contains *cl.exe*) in it's installation directory, please create it manually or use the following *llvm-link.bat* to create it.
 * If your LLVM version is not 8.0, please change `$(LLVMInstallDir)\lib\clang\8.0.0\` in each *Toolset.props* to appropriate value.
-* If your VC compiler version is not `19.14.*` (type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1914` in in each *Toolset.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
+* If your VC compiler version is not `19.15.*` (VS2017 15.8, type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1915` in in each *Toolset.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
 
 | Visual Studio Version | `_MSC_VER` |
 |-----------------------|------------|
@@ -29,6 +29,7 @@ Note:
 | Visual Studio 2017 15.5 | 1912 |
 | Visual Studio 2017 15.6 | 1913 |
 | Visual Studio 2017 15.7 | 1914 |
+| Visual Studio 2017 15.8 | 1915 |
 
 ### Usage
 Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
