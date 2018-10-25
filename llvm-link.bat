@@ -49,10 +49,10 @@ MKLINK llvm-ranlib.exe llvm-ar.exe
 @rem MKLINK libiomp5md.dll libomp.dll
 
 @rem LLVM 8.0 no longer contains this folder
-MKDIR ..\msbuild-bin
-CD ..\msbuild-bin
-
-DEL cl.exe
-MKLINK cl.exe ..\bin\clang.exe
+@rem MKDIR ..\msbuild-bin
+@rem CD ..\msbuild-bin
+@rem 
+@rem DEL cl.exe
+@rem MKLINK cl.exe ..\bin\clang.exe
 
 PAUSE

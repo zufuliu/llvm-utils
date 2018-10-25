@@ -4,7 +4,7 @@
   <PropertyGroup>
     <LLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</LLVMInstallDir>
     <LLVMInstallDir Condition="'$(LLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</LLVMInstallDir>
-    <ExecutablePath>$(LLVMInstallDir)\msbuild-bin;$(ExecutablePath)</ExecutablePath>
+    <ClangClExecutable>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClExecutable>
     <IncludePath>$(LLVMInstallDir)\lib\clang\8.0.0\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LLVMInstallDir)\lib\clang\8.0.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
