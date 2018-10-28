@@ -1,6 +1,4 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v141_xp\Toolset.targets"/>
-  <PropertyGroup>
-    <CLToolExe>$(ClangClExecutable)</CLToolExe>
-  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\LLVM\LLVM.Common.targets"/>
 </Project>

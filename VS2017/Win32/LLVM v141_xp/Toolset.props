@@ -1,21 +1,4 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v141_xp\Toolset.props"/>
-
-  <PropertyGroup>
-    <LLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</LLVMInstallDir>
-    <LLVMInstallDir Condition="'$(LLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</LLVMInstallDir>
-    <ClangClExecutable>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClExecutable>
-    <IncludePath>$(LLVMInstallDir)\lib\clang\8.0.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(LLVMInstallDir)\lib\clang\8.0.0\lib\windows;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <!-- remove the implicit vcxxx.pdb path to avoid rebuilds every time as clang-cl only supports /Z7 -->
-      <ProgramDataBaseFileName></ProgramDataBaseFileName>
-      <MinimalRebuild></MinimalRebuild>
-      <!-- Set the value of _MSC_VER to claim for compatibility -->
-      <AdditionalOptions>-m32 -fmsc-version=1915 %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
-  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\LLVM\LLVM.Common.props"/>
 </Project>
