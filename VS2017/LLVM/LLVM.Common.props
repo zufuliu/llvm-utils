@@ -3,17 +3,21 @@
     <LLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</LLVMInstallDir>
     <LLVMInstallDir Condition="'$(LLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</LLVMInstallDir>
     <ClangClExecutable>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClExecutable>
-    <IncludePath>$(LLVMInstallDir)\lib\clang\8.0.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(LLVMInstallDir)\lib\clang\8.0.0\lib\windows;$(LibraryPath)</LibraryPath>
+    <LldLinkExecutable>$(LLVMInstallDir)\bin\lld-link.exe</LldLinkExecutable>
+    <UseClangCl>true</UseClangCl>
+    <UseLldLink>true</UseLldLink>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <!-- remove the implicit vcxxx.pdb path to avoid rebuilds every time as clang-cl only supports /Z7 -->
-      <ProgramDataBaseFileName></ProgramDataBaseFileName>
-      <MinimalRebuild></MinimalRebuild>
-      <!-- Set the value of _MSC_VER to claim for compatibility -->
-      <AdditionalOptions>-m$(PlatformArchitecture) -fmsc-version=1915 %(AdditionalOptions)</AdditionalOptions>
+      <!-- Set this to "Default" (which means not passing any /RTC option) so that any other value will
+           be treated as having been overridden by the user.  This Serves as a hint to the user that
+           Default is the value we support, and other values will generate a warning.  It also means
+           that if the user simply creates a new project in MSVC (which uses /RTCu by default), then
+           switches the toolset to Clang, we will still treat the value as default (which for us is to
+           not pass the option).  Only if the user explicitly overrode this setting in a project to use
+           /RTCu would we see the warning. -->
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

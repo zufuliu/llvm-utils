@@ -18,8 +18,8 @@ or run `VS2017\install.bat` directly (witch may require Administrator privilege.
 
 Notes:
 * Old versions can be found at [release list](https://github.com/zufuliu/llvm-utils/tags), if you don't like to follow the following steps.
-* If your LLVM version is not 8.0, please change `$(LLVMInstallDir)\lib\clang\8.0.0\` in *LLVM\LLVM.Common.props* to appropriate value.
-* If your VC compiler version is not `19.15.*` (VS2017 15.8, type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1915` in in *LLVM\LLVM.Common.props* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
+* If your LLVM version is not 8.0, please change `$(LLVMInstallDir)\lib\clang\8.0.0\` in *LLVM\LLVM.Common.targets* to appropriate value.
+* If your VC compiler version is not `19.15.*` (VS2017 15.8, type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1915` in in *LLVM\LLVM.Common.targets* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
 
 | Visual Studio Version | `_MSC_VER` |
 |-----------------------|------------|
