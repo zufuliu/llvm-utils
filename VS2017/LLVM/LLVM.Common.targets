@@ -22,7 +22,7 @@
   <ItemDefinitionGroup Condition="$(UseClangCl)">
     <ClCompile>
       <!-- Set the value of _MSC_VER to claim for compatibility -->
-      <AdditionalOptions>-m$(PlatformArchitecture) -fmsc-version=1915 $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-m$(PlatformArchitecture) -fmsc-version=1916 $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
 
