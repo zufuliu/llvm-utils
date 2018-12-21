@@ -1,0 +1,70 @@
+http://llvm.org/docs/GettingStarted.html
+http://clang.llvm.org/get_started.html
+http://lldb.llvm.org/build.html
+
+llvm
+	svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm
+
+llvm/tools/clang
+	svn co http://llvm.org/svn/llvm-project/cfe/trunk clang
+llvm/tools/clang/tools/extra
+	svn co http://llvm.org/svn/llvm-project/clang-tools-extra/trunk extra
+
+llvm/tools/lld
+	svn co http://llvm.org/svn/llvm-project/lld/trunk lld
+llvm/tools/lldb
+	svn co http://llvm.org/svn/llvm-project/lldb/trunk lldb
+
+llvm/tools/llgo
+	svn co http://llvm.org/svn/llvm-project/llgo/trunk llgo
+llvm/tools/polly
+	svn co http://llvm.org/svn/llvm-project/polly/trunk polly
+
+llvm/projects/compiler-rt
+	svn co http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt
+llvm/projects/dragonegg
+	svn co http://llvm.org/svn/llvm-project/dragonegg/trunk dragonegg
+llvm/projects/libcxx
+	svn co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+llvm/projects/libcxxabi
+	svn co http://llvm.org/svn/llvm-project/libcxxabi/trunk libcxxabi
+llvm/projects/libunwind
+	svn co http://llvm.org/svn/llvm-project/libunwind/trunk libunwind
+llvm/projects/openmp
+	svn co http://llvm.org/svn/llvm-project/openmp/trunk openmp
+llvm/projects/parallel-libs
+	svn co http://llvm.org/svn/llvm-project/parallel-libs/trunk parallel-libs
+
+
+CMakeLists.txt
+	add_definitions(-D__STDC_FORMAT_MACROS)
+	add_definitions(-D__USE_MINGW_ANSI_STDIO)
+
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+
+llvm_replace_compiler_option(CMAKE_CXX_FLAGS_RELEASE "/DNDEBUG" "/source-charset:utf-8")
+llvm_replace_compiler_option(CMAKE_C_FLAGS_RELEASE "/DNDEBUG" "/source-charset:utf-8")
+
+llvm/tools/lldb/cmake/modules/LLDBConfig.cmake
+	function(find_python_libs_windows)
+
+pyconfig.h
+	#define hypot _hypot
+
+gendef python27.dll
+dlltool --dllname python27.dll --def python27.def --output-lib libpython27.a
+ranlib libpython27.a
+
+gendef python36.dll
+dlltool --dllname python36.dll --def python36.def --output-lib libpython36.a
+ranlib libpython36.a
+
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN -DLLVM_VERSION_SUFFIX="-svn326883" ../llvm
+
+mingw32-make -j4 libclang
+
+set VSINSTALLDIR=%VS_PATH%\
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm
+
+ninja -j4 libclang
