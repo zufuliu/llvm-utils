@@ -6,13 +6,16 @@
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
 
 Assume `VS_PATH` is your Visual Studio 2017 installation path (such as `C:\Program Files (x86)\Microsoft Visual Studio 2017`),
-please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017\Win32` and `VS2017\x64` to following target paths:
+please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017` to following target paths:
 
 | Fold | Target Path |
 |------|-------------|
 |`VS2017\LLVM` | `%VS_PATH%\Common7\IDE\VC\VCTargets\LLVM\` |
-|`VS2017\Win32` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
-|`VS2017\x64` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
+|`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
+|`VS2017\LLVM v141_xp` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
+|`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
+|`VS2017\LLVM v141_xp` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
+|`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\ARM64\PlatformToolsets\` |
 
 or run `VS2017\install.bat` directly (witch may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
