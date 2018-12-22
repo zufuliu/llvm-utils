@@ -5,7 +5,7 @@
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
 
-Assume `VS_PATH` is your Visual Studio 2017 installation path (such as `C:\Program Files (x86)\Microsoft Visual Studio 2017`),
+Assume `VS_PATH` is your Visual Studio 2017 installation path (such as `C:\Program Files (x86)\Microsoft Visual Studio\2017`),
 please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017` to following target paths:
 
 | Fold | Target Path |
@@ -17,12 +17,12 @@ please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017` to follo
 |`VS2017\LLVM v141_xp` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\ARM64\PlatformToolsets\` |
 
-or run `VS2017\install.bat` directly (witch may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
+or run `VS2017\install.bat` directly (which may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
 Notes:
 * Old versions can be found at [release list](https://github.com/zufuliu/llvm-utils/tags), if you don't like to follow the following steps.
 * If your LLVM version is not 8.0, please change `$(LLVMInstallDir)\lib\clang\8.0.0\` in *LLVM\LLVM.Common.targets* to appropriate value.
-* If your VC compiler version is not `19.15.*` (VS2017 15.8, type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1916` in in *LLVM\LLVM.Common.targets* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
+* If your VC compiler version is not `19.16.*` (VS2017 15.9, type `cl` in Command Prompt or find it in `%VS_PATH%\VC\Tools\MSVC`), please change `-fmsc-version=1916` in in *LLVM\LLVM.Common.targets* to appropriate value. A full list of `_MSC_VER` can be found at https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering, here is a brief list:
 
 | Visual Studio Version | `_MSC_VER` |
 |-----------------------|------------|
@@ -39,10 +39,10 @@ Notes:
 Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
 
 ## LLVM Windows Symbolic Link Maker
-The huge size of LLVM Windows installation can be reduced dramatically by use Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
+The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
 ### Usage
-Just copy *llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it.
+Just copy *llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it (which may require Administrator privilege).
 
 ## [License](http://llvm.org/releases/7.0.0/LICENSE.TXT)
 
