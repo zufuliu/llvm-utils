@@ -5,10 +5,10 @@
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
 
-Assume `VS_PATH` is your Visual Studio 2017 installation path (such as `C:\Program Files (x86)\Microsoft Visual Studio\2017`),
-please manually copy fold *LLVM v141* and *LLVM v141_xp* under `VS2017` to following target paths:
+Assume `VS_PATH` is your Visual Studio 2017 installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community`),
+please manually copy folder *LLVM v141* and *LLVM v141_xp* under `VS2017` to following target paths:
 
-| Fold | Target Path |
+| Folder | Target Path |
 |------|-------------|
 |`VS2017\LLVM` | `%VS_PATH%\Common7\IDE\VC\VCTargets\LLVM\` |
 |`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
