@@ -42,7 +42,7 @@ Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
 ### Usage
-Just copy *llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it (which may require Administrator privilege).
+Just copy *llvm\llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it (which may require Administrator privilege).
 
 ## [License](http://llvm.org/releases/7.0.0/LICENSE.TXT)
 

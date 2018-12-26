@@ -60,7 +60,11 @@ gendef python36.dll
 dlltool --dllname python36.dll --def python36.def --output-lib libpython36.a
 ranlib libpython36.a
 
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN -DLLVM_VERSION_SUFFIX="-svn326883" ../llvm
+gendef python37.dll
+dlltool --dllname python37.dll --def python37.def --output-lib libpython37.a
+ranlib libpython37.a
+
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN -DLLVM_VERSION_SUFFIX="-svn350063" ../llvm
 
 mingw32-make -j4 libclang
 
