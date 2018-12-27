@@ -7,7 +7,7 @@ FOR /f "delims=" %%A IN (
 SET VCT_PATH=%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms
 IF NOT EXIST "%VCT_PATH%" (
 	ECHO Visual C++ 2017 NOT Installed.
-	PAUSE
+	IF "%~1" == "" PAUSE
 	EXIT /B
 )
 
@@ -23,3 +23,4 @@ XCOPY /Y "LLVM v141_xp" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v141_xp\"
 XCOPY /Y "LLVM v141" "%VCT_PATH%\ARM64\PlatformToolsets\LLVM v141\"
 
 POPD
+IF "%~1" == "" PAUSE
