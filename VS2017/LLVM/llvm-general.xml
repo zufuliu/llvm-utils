@@ -36,7 +36,7 @@
                 DisplayName="Use lld-link"
                 Description="Use lld-link for linking.  If this option is disabled, the Microsoft linker (link.exe) will be used instead."
                 Category="General"
-                Default="true">
+                Default="false">
   </BoolProperty>
   <StringProperty Name="LldLinkExecutable"
                   DisplayName="lld-link Executable"

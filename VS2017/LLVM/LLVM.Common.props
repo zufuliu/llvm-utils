@@ -5,7 +5,7 @@
     <ClangClExecutable>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClExecutable>
     <LldLinkExecutable>$(LLVMInstallDir)\bin\lld-link.exe</LldLinkExecutable>
     <UseClangCl>true</UseClangCl>
-    <UseLldLink>true</UseLldLink>
+    <UseLldLink>false</UseLldLink>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
