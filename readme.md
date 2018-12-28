@@ -36,12 +36,14 @@ Notes:
 | Visual Studio 2015 14.0 | 1900 |
 
 ### Usage
-Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
+Select *LLVM v141* or *LLVM v141_xp* as your project Platform Toolset.
 
 ### Install to AppVeyor Build Image
 
 	git clone -q --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
+
+Please note that LLVM 7.0.0 on AppVeyor doesn't support ARM64.
 
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
@@ -49,9 +51,13 @@ The huge size of LLVM Windows installation can be reduced dramatically by using 
 ### Usage
 Just copy *llvm\llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it (which may require Administrator privilege).
 
-## [License](http://llvm.org/releases/7.0.0/LICENSE.TXT)
+## [License](../master/license.txt)
 
 ## Related Links
 * [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace
+* Original source for MSBuild
+
+	svn co http://llvm.org/svn/llvm-project/llvm/trunk/tools/msbuild msbuild
+
 * Outdated [LLVM for Visual Studio 2017](https://github.com/WubbaLubba/LlvmForVS2017) by @WubbaLubba
 * [Failed to find MSBuild toolsets directory](https://bugs.llvm.org/show_bug.cgi?id=33672) in LLVM Bugzilla
