@@ -123,6 +123,7 @@
         <UseFullPaths/>
         <RemoveUnreferencedCodeData/>
         <SupportJustMyCode/>
+        <LanguageStandard/>
 
         <!-- We can't just unset BasicRuntimeChecks, as that will pass /RTCu to the compiler.
              We have to explicitly set it to 'Default' to avoid passing anything. -->
