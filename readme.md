@@ -38,6 +38,11 @@ Notes:
 ### Usage
 Select *LLVM v141* and *LLVM v141_xp* as your project Platform Toolset.
 
+### Install to AppVeyor Build Image
+
+	git clone -q --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
+	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
+
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
