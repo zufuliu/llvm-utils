@@ -40,6 +40,12 @@ Select *LLVM v141* or *LLVM v141_xp* as your project Platform Toolset.
 
 ### Install to AppVeyor Build Image
 
+	curl -Ls -o "llvm-utils-master.zip" "https://github.com/zufuliu/llvm-utils/archive/master.zip"
+	7z x -y "llvm-utils-master.zip" >NUL
+	CALL "llvm-utils-master\VS2017\install.bat" 1
+
+or
+
 	git clone -q --depth=1 --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
 
