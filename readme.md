@@ -40,7 +40,7 @@ Select *LLVM v141* or *LLVM v141_xp* as your project Platform Toolset.
 
 ### Install to AppVeyor Build Image
 
-	git clone -q --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
+	git clone -q --depth=1 --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
 
 Please note that LLVM 7.0.0 on AppVeyor doesn't support ARM64.
