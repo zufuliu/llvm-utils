@@ -1,11 +1,16 @@
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
 
-SET "EXIST_ON_ERROR=%~1"
+IF EXIST "%~1" (
+	SET "VS_PATH=%~1"
+	SET "EXIST_ON_ERROR=%~2"
+) ELSE (
+	SET "EXIST_ON_ERROR=%~1"
 
-FOR /f "delims=" %%A IN (
-'"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -property installationPath'
-) DO SET "VS_PATH=%%A"
+	FOR /f "delims=" %%A IN (
+	'"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -property installationPath'
+	) DO SET "VS_PATH=%%A"
+)
 
 SET VCT_PATH=%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms
 IF NOT EXIST "%VCT_PATH%" (
