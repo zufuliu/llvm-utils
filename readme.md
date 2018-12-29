@@ -22,7 +22,7 @@ or run `VS2017\install.bat` directly (may require Administrator privilege. In Wi
 Because `vswhere` doesn't print the installation path for Visual Studio 2019 Preview, please call the script with installation path, e.g: `CALL VS2017\install.bat "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview"`
 
 ### Usage
-Select *LLVM v141* or *LLVM v141_xp* as your project Platform Toolset.
+Select *LLVM v141* or *LLVM v141_xp* as your project's Platform Toolset.
 
 ### Install to AppVeyor Build Image
 

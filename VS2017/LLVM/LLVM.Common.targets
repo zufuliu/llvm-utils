@@ -7,6 +7,8 @@
          that the user may have overridden in the UI. -->
     <CLToolExe Condition="$(UseClangCl)">$(ClangClExecutable)</CLToolExe>
     <LinkToolExe Condition="$(UseLldLink)">$(LldLinkExecutable)</LinkToolExe>
+    <!-- TRACKER : error TRK0002: Failed to execute command. -->
+    <TrackFileAccess Condition="$(UseClangCl) OR $(UseLldLink)">false</TrackFileAccess>
   </PropertyGroup>
 
   <ItemGroup>

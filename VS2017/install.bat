@@ -31,6 +31,6 @@ XCOPY /Q /Y "LLVM v141" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v141\"
 XCOPY /Q /Y "LLVM v141_xp" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v141_xp\"
 XCOPY /Q /Y "LLVM v141" "%VCT_PATH%\ARM64\PlatformToolsets\LLVM v141\"
 
+IF "%EXIST_ON_ERROR%" == "" PAUSE
 POPD
 ENDLOCAL
-IF "%EXIST_ON_ERROR%" == "" PAUSE
