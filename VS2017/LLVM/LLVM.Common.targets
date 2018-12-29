@@ -7,8 +7,6 @@
          that the user may have overridden in the UI. -->
     <CLToolExe Condition="$(UseClangCl)">$(ClangClExecutable)</CLToolExe>
     <LinkToolExe Condition="$(UseLldLink)">$(LldLinkExecutable)</LinkToolExe>
-    <IncludePath Condition="$(UseClangCl)">$(LLVMInstallDir)\lib\clang\8.0.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="$(UseClangCl)">$(LLVMInstallDir)\lib\clang\8.0.0\lib\windows;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,9 +19,8 @@
        general purpose list of command line flags. -->
   <ItemDefinitionGroup Condition="$(UseClangCl)">
     <ClCompile>
-      <!-- Set the value of _MSC_VER to claim for compatibility -->
-      <AdditionalOptions Condition="'$(Platform)' != 'ARM64'">-m$(PlatformArchitecture) -fmsc-version=1916 $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Platform)' == 'ARM64'">--target=aarch64-pc-windows-msvc -fmsc-version=1916 $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Platform)' != 'ARM64'">-m$(PlatformArchitecture) $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Platform)' == 'ARM64'">--target=aarch64-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
 
