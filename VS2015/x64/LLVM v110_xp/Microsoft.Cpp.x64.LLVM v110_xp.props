@@ -1,0 +1,4 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v110_xp\Microsoft.Cpp.$(Platform).v110_xp.props"/>
+  <Import Project="$(VCTargetsPath)\LLVM\LLVM.Common.props"/>
+</Project>
