@@ -10,6 +10,9 @@ IF EXIST "%~1" (
 	FOR /f "delims=" %%A IN (
 	'"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -property installationPath'
 	) DO SET "VS_PATH=%%A"
+
+	@rem VSINSTALLDIR is set by vsdevcmd_start.bat
+	IF "%VS_PATH%" == "" SET "VS_PATH=%VSINSTALLDIR%"
 )
 
 SET VCT_PATH=%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms
