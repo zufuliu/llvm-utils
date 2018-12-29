@@ -10,7 +10,7 @@ please manually copy folder *LLVM v141* and *LLVM v141_xp* under `VS2017` to fol
 
 | Folder | Target Path |
 |------|-------------|
-|`VS2017\LLVM` | `%VS_PATH%\Common7\IDE\VC\VCTargets\LLVM\` |
+|`VS2017\LLVM` | `%VS_PATH%\Common7\IDE\VC\VCTargets\` |
 |`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM v141_xp` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
@@ -39,7 +39,7 @@ Please note that LLVM 7.0.0 on AppVeyor doesn't support ARM64.
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
 ### Usage
-Just copy *llvm\llvm-link.bat* to LLVM installation path (such as `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
+Just copy *llvm\llvm-link.bat* to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
 
 ## [License](../master/license.txt)
 
