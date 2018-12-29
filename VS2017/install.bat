@@ -1,14 +1,16 @@
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
 
+SET "EXIST_ON_ERROR=%~1"
+
 FOR /f "delims=" %%A IN (
 '"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -property installationPath'
 ) DO SET "VS_PATH=%%A"
 
 SET VCT_PATH=%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms
 IF NOT EXIST "%VCT_PATH%" (
-	ECHO Visual C++ 2017 NOT Installed.
-	IF "%~1" == "" PAUSE
+	ECHO Visual C++ 2017 or 2019 NOT Installed.
+	IF "%EXIST_ON_ERROR%" == "" PAUSE
 	ENDLOCAL
 	EXIT /B
 )
@@ -26,4 +28,4 @@ XCOPY /Q /Y "LLVM v141" "%VCT_PATH%\ARM64\PlatformToolsets\LLVM v141\"
 
 POPD
 ENDLOCAL
-IF "%~1" == "" PAUSE
+IF "%EXIST_ON_ERROR%" == "" PAUSE
