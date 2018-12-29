@@ -1,11 +1,11 @@
 # LLVM Utils
 
-## LLVM for Visual Studio 2017
+## LLVM for Visual Studio 2017 and 2019
 
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
 
-Assume `VS_PATH` is your Visual Studio 2017 installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community`),
+Assume `VS_PATH` is your Visual Studio 2017 (or 2019) installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community` or `C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview`),
 please manually copy folder *LLVM v141* and *LLVM v141_xp* under `VS2017` to following target paths:
 
 | Folder | Target Path |
