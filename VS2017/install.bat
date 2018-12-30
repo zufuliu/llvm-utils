@@ -28,11 +28,11 @@ ECHO VCTargetsPath: %VCT_PATH%
 PUSHD %~dp0
 
 XCOPY /Q /Y "LLVM" "%VCT_PATH%\..\LLVM\"
-XCOPY /Q /Y "LLVM v141" "%VCT_PATH%\x64\PlatformToolsets\LLVM v141\"
-XCOPY /Q /Y "LLVM v141_xp" "%VCT_PATH%\x64\PlatformToolsets\LLVM v141_xp\"
-XCOPY /Q /Y "LLVM v141" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v141\"
-XCOPY /Q /Y "LLVM v141_xp" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v141_xp\"
-XCOPY /Q /Y "LLVM v141" "%VCT_PATH%\ARM64\PlatformToolsets\LLVM v141\"
+XCOPY /Q /Y "LLVM_v141" "%VCT_PATH%\x64\PlatformToolsets\LLVM_v141\"
+XCOPY /Q /Y "LLVM_v141_xp" "%VCT_PATH%\x64\PlatformToolsets\LLVM_v141_xp\"
+XCOPY /Q /Y "LLVM_v141" "%VCT_PATH%\Win32\PlatformToolsets\LLVM_v141\"
+XCOPY /Q /Y "LLVM_v141_xp" "%VCT_PATH%\Win32\PlatformToolsets\LLVM_v141_xp\"
+XCOPY /Q /Y "LLVM_v141" "%VCT_PATH%\ARM64\PlatformToolsets\LLVM_v141\"
 
 IF "%EXIST_ON_ERROR%" == "" PAUSE
 POPD
