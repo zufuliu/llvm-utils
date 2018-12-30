@@ -1,4 +1,6 @@
+dist/LLVM*/
 *.pyc
 *.pyo
 *.plist
 *.orig
+*.zip

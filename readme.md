@@ -24,19 +24,6 @@ or run `VS2017\install.bat` directly (may require Administrator privilege. In Wi
 
 Because `vswhere` doesn't print the installation path for Visual Studio 2019 Preview, please call the script with installation path, e.g: `CALL VS2017\install.bat "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview"` or call vsdevcmd.bat (or vcvarsall.bat, etc.) before this script.
 
-### Install to AppVeyor Build Image
-
-	curl -Ls -o "llvm-utils-master.zip" "https://github.com/zufuliu/llvm-utils/archive/master.zip"
-	7z x -y "llvm-utils-master.zip" >NUL
-	CALL "llvm-utils-master\VS2017\install.bat" 1
-
-or
-
-	git clone -q --depth=1 --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
-	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
-
-Please note that LLVM 7.0.0 on AppVeyor doesn't support ARM64.
-
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
 Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to following target paths.
 
@@ -85,6 +72,43 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (v100)" (`LLVM_v100`) and "
 |`VS2015\x64\LLVM_v90` | `%MB_PATH%\Platforms\x64\PlatformToolsets\` |
 |`VS2015\Win32\LLVM_v100` | `%MB_PATH%\Platforms\Win32\PlatformToolsets\` |
 |`VS2015\Win32\LLVM_v90` | `%MB_PATH%\Platforms\Win32\PlatformToolsets\` |
+
+## Install to AppVeyor Build Image
+### Install from release archives
+
+| Visual Studio Version | Archive Name |
+|------|-------------|
+| 2017 and 2019 | LLVM_VS2017.zip |
+| 2010 to 2015 | LLVM_VS2010_2015.zip |
+| 2015 | LLVM_VS2015.zip |
+| 2013 | LLVM_VS2013.zip |
+| 2012 | LLVM_VS2012.zip |
+| 2010 | LLVM_VS2010.zip |
+
+Examples:
+
+	curl -Ls -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v18.12/LLVM_VS2017.zip"
+	7z x -y "LLVM_VS2017.zip" >NUL
+	CALL "LLVM_VS2017\install.bat" 1
+
+	curl -Ls -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v18.12/LLVM_VS2010_2015.zip"
+	7z x -y "LLVM_VS2010_2015.zip" >NUL
+	CALL "LLVM_VS2010_2015\install.bat" 1
+
+### Install from latest master source code
+
+	curl -Ls -o "llvm-utils-master.zip" "https://github.com/zufuliu/llvm-utils/archive/master.zip"
+	7z x -y "llvm-utils-master.zip" >NUL
+	CALL "llvm-utils-master\VS2017\install.bat" 1
+	CALL "llvm-utils-master\VS2015\install.bat" 1
+
+or
+
+	git clone -q --depth=1 --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
+	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
+	CALL "c:\projects\llvm-utils\VS2015\install.bat" 1
+
+Please note that preinstalled LLVM 7.0.0 in AppVeyor build image doesn't support ARM64.
 
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
