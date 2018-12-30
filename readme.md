@@ -2,6 +2,8 @@
 
 ![LLVM for Visual Studio](../master/images/VS2017.png)
 
+[![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases).
+
 ## LLVM for Visual Studio 2017 and 2019
 The Platform Toolset is "LLVM for Visual Studio 2017 (v141)" (`LLVM_v141`) and "LLVM for Visual Studio 2017 - Windows XP (v141_xp)" (`LLVM_v141_xp`).
 
