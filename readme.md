@@ -38,7 +38,7 @@ or
 Please note that LLVM 7.0.0 on AppVeyor doesn't support ARM64.
 
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
-Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy folder *LLVM v1x0* and *LLVM v1x0_xp* under `VS2015` to following target paths.
+Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy *VS2017\LLVM* and related folders under `VS2015` to following target paths.
 
 `VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015. Install to AppVeyor build image is similar to VS2017.
 
@@ -76,13 +76,15 @@ The Platform Toolset is *LLVM v110* and *LLVM v110_xp*.
 |`VS2015\Win32\LLVM v110_xp` | `%MB_PATH%\v110\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2010
-The Platform Toolset is *LLVM v100*.
+The Platform Toolset is *LLVM v100* and *LLVM v90* (Require Visual Studio 2008).
 
 | Folder | Target Path |
 |------|-------------|
 |`VS2017\LLVM` | `%MB_PATH%\` |
 |`VS2015\x64\LLVM v100` | `%MB_PATH%\Platforms\x64\PlatformToolsets\` |
+|`VS2015\x64\LLVM v90` | `%MB_PATH%\Platforms\x64\PlatformToolsets\` |
 |`VS2015\Win32\LLVM v100` | `%MB_PATH%\Platforms\Win32\PlatformToolsets\` |
+|`VS2015\Win32\LLVM v90` | `%MB_PATH%\Platforms\Win32\PlatformToolsets\` |
 
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).

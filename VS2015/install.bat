@@ -70,6 +70,8 @@ ECHO VCTargetsPath for Visual Studio 2010: %VCT_PATH%
 XCOPY /Q /Y "..\VS2017\LLVM" "%VCT_PATH%\..\LLVM\"
 XCOPY /Q /Y "x64\LLVM v100" "%VCT_PATH%\x64\PlatformToolsets\LLVM v100\"
 XCOPY /Q /Y "Win32\LLVM v100" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v100\"
+XCOPY /Q /Y "x64\LLVM v90" "%VCT_PATH%\x64\PlatformToolsets\LLVM v90\"
+XCOPY /Q /Y "Win32\LLVM v90" "%VCT_PATH%\Win32\PlatformToolsets\LLVM v90\"
 SET SUCCESS=1
 
 :VC_NOT_FOUND
