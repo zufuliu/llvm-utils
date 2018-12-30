@@ -29,7 +29,7 @@ Because `vswhere` doesn't print the installation path for Visual Studio 2019 Pre
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
 Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to following target paths.
 
-`VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015. Install to AppVeyor build image is similar to VS2017.
+`VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015.
 
 ### Visual Studio 2015
 The Platform Toolset is "LLVM for Visual Studio 2015 (v140)" (`LLVM_v140`) and "LLVM for Visual Studio 2015 - Windows XP (v140_xp)" (`LLVM_v140_xp`).
@@ -81,7 +81,7 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (v100)" (`LLVM_v100`) and "
 | Visual Studio Version | Archive Name |
 |------|-------------|
 | 2017 and 2019 | LLVM_VS2017.zip |
-| 2010 to 2015 | LLVM_VS2010_2015.zip |
+| 2010, 2012, 2013 and 2015 | LLVM_VS2010_2015.zip |
 | 2015 | LLVM_VS2015.zip |
 | 2013 | LLVM_VS2013.zip |
 | 2012 | LLVM_VS2012.zip |
