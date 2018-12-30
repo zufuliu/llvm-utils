@@ -1,12 +1,13 @@
 # LLVM Utils
 
 ## LLVM for Visual Studio 2017 and 2019
+The Platform Toolset is "LLVM for Visual Studio 2017 (v141)" (`LLVM_v141`) and "LLVM for Visual Studio 2017 - Windows XP (v141_xp)" (`LLVM_v141_xp`).
 
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
 
 Assume `VS_PATH` is your Visual Studio 2017 (or 2019) installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community` or `C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview`),
-please manually copy folder *LLVM_v141* and *LLVM_v141_xp* under `VS2017` to following target paths:
+please manually copy folder `LLVM_v141` and `LLVM_v141_xp` under `VS2017` to following target paths:
 
 | Folder | Target Path |
 |------|-------------|
@@ -20,9 +21,6 @@ please manually copy folder *LLVM_v141* and *LLVM_v141_xp* under `VS2017` to fol
 or run `VS2017\install.bat` directly (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
 Because `vswhere` doesn't print the installation path for Visual Studio 2019 Preview, please call the script with installation path, e.g: `CALL VS2017\install.bat "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview"` or call vsdevcmd.bat (or vcvarsall.bat, etc.) before this script.
-
-### Usage
-Select *LLVM_v141* or *LLVM_v141_xp* as your project's Platform Toolset.
 
 ### Install to AppVeyor Build Image
 
@@ -38,12 +36,12 @@ or
 Please note that LLVM 7.0.0 on AppVeyor doesn't support ARM64.
 
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
-Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy *VS2017\LLVM* and related folders under `VS2015` to following target paths.
+Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to following target paths.
 
 `VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015. Install to AppVeyor build image is similar to VS2017.
 
 ### Visual Studio 2015
-The Platform Toolset is *LLVM_v140* and *LLVM_v140_xp*.
+The Platform Toolset is "LLVM for Visual Studio 2015 (v140)" (`LLVM_v140`) and "LLVM for Visual Studio 2015 - Windows XP (v140_xp)" (`LLVM_v140_xp`).
 
 | Folder | Target Path |
 |------|-------------|
@@ -54,7 +52,7 @@ The Platform Toolset is *LLVM_v140* and *LLVM_v140_xp*.
 |`VS2015\LLVM_v140_xp` | `%MB_PATH%\V140\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2013
-The Platform Toolset is *LLVM_v120* and *LLVM_v120_xp*.
+The Platform Toolset is "LLVM for Visual Studio 2013 (v120)" (`LLVM_v120`) and "LLVM for Visual Studio 2013 - Windows XP (v120_xp)" (`LLVM_v120_xp`).
 
 | Folder | Target Path |
 |------|-------------|
@@ -65,7 +63,7 @@ The Platform Toolset is *LLVM_v120* and *LLVM_v120_xp*.
 |`VS2015\LLVM_v120_xp` | `%MB_PATH%\v120\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2012
-The Platform Toolset is *LLVM_v110* and *LLVM_v110_xp*.
+The Platform Toolset is "LLVM for Visual Studio 2012 (v110)" (`LLVM_v110`) and "LLVM for Visual Studio 2012 - Windows XP (v110_xp)" (`LLVM_v110_xp`).
 
 | Folder | Target Path |
 |------|-------------|
@@ -76,7 +74,7 @@ The Platform Toolset is *LLVM_v110* and *LLVM_v110_xp*.
 |`VS2015\Win32\LLVM_v110_xp` | `%MB_PATH%\v110\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2010
-The Platform Toolset is *LLVM_v100* and *LLVM_v90* (Require Visual Studio 2008).
+The Platform Toolset is "LLVM for Visual Studio 2010 (v100)" (`LLVM_v100`) and "LLVM for Visual Studio 2008 (v90)" (`LLVM_v90`).
 
 | Folder | Target Path |
 |------|-------------|
@@ -90,7 +88,7 @@ The Platform Toolset is *LLVM_v100* and *LLVM_v90* (Require Visual Studio 2008).
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
 ### Usage
-Just copy *llvm\llvm-link.bat* to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
+Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
 
 ## [License](../master/license.txt)
 
