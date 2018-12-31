@@ -22,16 +22,16 @@
     <_PlatformToolsetShortNameFor_LLVM_v90>LLVM v90</_PlatformToolsetShortNameFor_LLVM_v90>
 
     <!-- Friendly names added to the PlatformToolset in the property pages. -->
-    <_PlatformToolsetFriendlyNameFor_LLVM_v141>LLVM for Visual Studio 2017 (v141)</_PlatformToolsetFriendlyNameFor_LLVM_v141>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>LLVM for Visual Studio 2017 - Windows XP (v141_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v140>LLVM for Visual Studio 2015 (v140)</_PlatformToolsetFriendlyNameFor_LLVM_v140>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v140_xp>LLVM for Visual Studio 2015 - Windows XP (v140_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v140_xp>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v120>LLVM for Visual Studio 2013 (v120)</_PlatformToolsetFriendlyNameFor_LLVM_v120>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v120_xp>LLVM for Visual Studio 2013 - Windows XP (v120_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v120_xp>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v110>LLVM for Visual Studio 2012 (v110)</_PlatformToolsetFriendlyNameFor_LLVM_v110>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v110_xp>LLVM for Visual Studio 2012 - Windows XP (v110_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v110_xp>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v100>LLVM for Visual Studio 2010 (v100)</_PlatformToolsetFriendlyNameFor_LLVM_v100>
-    <_PlatformToolsetFriendlyNameFor_LLVM_v90>LLVM for Visual Studio 2008 (v90)</_PlatformToolsetFriendlyNameFor_LLVM_v90>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v141>LLVM for Visual Studio 2017 (LLVM_v141)</_PlatformToolsetFriendlyNameFor_LLVM_v141>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>LLVM for Visual Studio 2017 - Windows XP (LLVM_v141_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v140>LLVM for Visual Studio 2015 (LLVM_v140)</_PlatformToolsetFriendlyNameFor_LLVM_v140>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v140_xp>LLVM for Visual Studio 2015 - Windows XP (LLVM_v140_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v140_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v120>LLVM for Visual Studio 2013 (LLVM_v120)</_PlatformToolsetFriendlyNameFor_LLVM_v120>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v120_xp>LLVM for Visual Studio 2013 - Windows XP (LLVM_v120_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v120_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v110>LLVM for Visual Studio 2012 (LLVM_v110)</_PlatformToolsetFriendlyNameFor_LLVM_v110>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v110_xp>LLVM for Visual Studio 2012 - Windows XP (LLVM_v110_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v110_xp>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v100>LLVM for Visual Studio 2010 (LLVM_v100)</_PlatformToolsetFriendlyNameFor_LLVM_v100>
+    <_PlatformToolsetFriendlyNameFor_LLVM_v90>LLVM for Visual Studio 2008 (LLVM_v90)</_PlatformToolsetFriendlyNameFor_LLVM_v90>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

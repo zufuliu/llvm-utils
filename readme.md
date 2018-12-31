@@ -5,7 +5,7 @@
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases).
 
 ## LLVM for Visual Studio 2017 and 2019
-The Platform Toolset is "LLVM for Visual Studio 2017 (v141)" (`LLVM_v141`) and "LLVM for Visual Studio 2017 - Windows XP (v141_xp)" (`LLVM_v141_xp`).
+The Platform Toolset is "LLVM for Visual Studio 2017 (`LLVM_v141`)" and "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
@@ -32,7 +32,7 @@ Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x8
 `VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015.
 
 ### Visual Studio 2015
-The Platform Toolset is "LLVM for Visual Studio 2015 (v140)" (`LLVM_v140`) and "LLVM for Visual Studio 2015 - Windows XP (v140_xp)" (`LLVM_v140_xp`).
+The Platform Toolset is "LLVM for Visual Studio 2015 (`LLVM_v140`)" and "LLVM for Visual Studio 2015 - Windows XP (`LLVM_v140_xp`)".
 
 | Folder | Target Path |
 |------|-------------|
@@ -43,7 +43,7 @@ The Platform Toolset is "LLVM for Visual Studio 2015 (v140)" (`LLVM_v140`) and "
 |`VS2015\LLVM_v140_xp` | `%MB_PATH%\V140\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2013
-The Platform Toolset is "LLVM for Visual Studio 2013 (v120)" (`LLVM_v120`) and "LLVM for Visual Studio 2013 - Windows XP (v120_xp)" (`LLVM_v120_xp`).
+The Platform Toolset is "LLVM for Visual Studio 2013 (`LLVM_v120`)" and "LLVM for Visual Studio 2013 - Windows XP (`LLVM_v120_xp`)".
 
 | Folder | Target Path |
 |------|-------------|
@@ -54,7 +54,7 @@ The Platform Toolset is "LLVM for Visual Studio 2013 (v120)" (`LLVM_v120`) and "
 |`VS2015\LLVM_v120_xp` | `%MB_PATH%\v120\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2012
-The Platform Toolset is "LLVM for Visual Studio 2012 (v110)" (`LLVM_v110`) and "LLVM for Visual Studio 2012 - Windows XP (v110_xp)" (`LLVM_v110_xp`).
+The Platform Toolset is "LLVM for Visual Studio 2012 (`LLVM_v110`)" and "LLVM for Visual Studio 2012 - Windows XP (`LLVM_v110_xp`)".
 
 | Folder | Target Path |
 |------|-------------|
@@ -65,7 +65,7 @@ The Platform Toolset is "LLVM for Visual Studio 2012 (v110)" (`LLVM_v110`) and "
 |`VS2015\Win32\LLVM_v110_xp` | `%MB_PATH%\v110\Platforms\Win32\PlatformToolsets\` |
 
 ### Visual Studio 2010
-The Platform Toolset is "LLVM for Visual Studio 2010 (v100)" (`LLVM_v100`) and "LLVM for Visual Studio 2008 (v90)" (`LLVM_v90`).
+The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM for Visual Studio 2008 (`LLVM_v90`)".
 
 | Folder | Target Path |
 |------|-------------|
