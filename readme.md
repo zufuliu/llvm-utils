@@ -24,8 +24,6 @@ please manually copy folder `LLVM_v141` and `LLVM_v141_xp` under `VS2017` to fol
 
 or run `VS2017\install.bat` directly (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
-Because `vswhere` doesn't print the installation path for Visual Studio 2019 Preview, please call the script with installation path, e.g: `CALL VS2017\install.bat "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview"` or call vsdevcmd.bat (or vcvarsall.bat, etc.) before this script.
-
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
 Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to following target paths.
 
