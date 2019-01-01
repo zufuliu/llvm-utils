@@ -1,5 +1,5 @@
 @ECHO OFF
-ECHO DON'T run this script (which will overwrite Visual C++ Platform Toolsets for Visual Studio 2013 and 2015), it's for my test only.
+ECHO DON'T run this script ^(which will overwrite Visual C++ Platform Toolsets for Visual Studio 2013 and 2015^), it's for my test only.
 PAUSE
 
 CD "%~dp0\..\VS2015"
