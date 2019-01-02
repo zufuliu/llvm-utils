@@ -1,5 +1,5 @@
 @ECHO OFF
-SETLOCAL ENABLEEXTENSIONS
+SETLOCAL EnableExtensions EnableDelayedExpansion
 
 SET "EXIT_ON_ERROR=%~1"
 SET SUCCESS=0
@@ -9,7 +9,8 @@ PUSHD %~dp0
 SET VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe
 @rem Visual Studio 2017 and 2019
 FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -version [15.0^,17.0^)') DO (
-	IF EXIST "%%A\Common7\IDE\VC\VCTargets\Platforms" CALL :SUB_VS2017 "%%A\Common7\IDE\VC\VCTargets\Platforms"
+	SET VCT_PATH=%%A\Common7\IDE\VC\VCTargets\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!"
 )
 
 IF %SUCCESS% == 0 (
