@@ -76,14 +76,14 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor Build Image
 ### Install from release archives
 
-| Visual Studio Version | Archive Name |
+| Archive Name | Visual Studio Version |
 |------|-------------|
-| 2017 and 2019 | LLVM_VS2017.zip |
-| 2010, 2012, 2013 and 2015 | LLVM_VS2010_2015.zip |
-| 2015 | LLVM_VS2015.zip |
-| 2013 | LLVM_VS2013.zip |
-| 2012 | LLVM_VS2012.zip |
-| 2010 | LLVM_VS2010.zip |
+| LLVM_VS2017.zip | 2017 and 2019 |
+| LLVM_VS2010_2015.zip | 2010, 2012, 2013 and 2015 |
+| LLVM_VS2015.zip | 2015 |
+| LLVM_VS2013.zip | 2013 |
+| LLVM_VS2012.zip | 2012 | 
+| LLVM_VS2010.zip | 2010 |
 
 Examples:
 
