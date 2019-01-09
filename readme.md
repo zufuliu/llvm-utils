@@ -2,7 +2,8 @@
 
 ![LLVM for Visual Studio](../master/images/VS2017.png)
 
-[![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases).
+[![License](https://img.shields.io/badge/License-University%20of%20Illinois%2FNCSA-blue.svg)](https://opensource.org/licenses/NCSA)
+[![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
 ## LLVM for Visual Studio 2017 and 2019
 The Platform Toolset is "LLVM for Visual Studio 2017 (`LLVM_v141`)" and "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
@@ -82,7 +83,7 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 | LLVM_VS2010_2015.zip | 2010, 2012, 2013 and 2015 |
 | LLVM_VS2015.zip | 2015 |
 | LLVM_VS2013.zip | 2013 |
-| LLVM_VS2012.zip | 2012 | 
+| LLVM_VS2012.zip | 2012 |
 | LLVM_VS2010.zip | 2010 |
 
 Examples:
@@ -115,8 +116,6 @@ The huge size of LLVM Windows installation can be reduced dramatically by using 
 
 ### Usage
 Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
-
-## [License](../master/license.txt)
 
 ## Related Links
 * [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace
