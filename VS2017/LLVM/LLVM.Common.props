@@ -10,6 +10,7 @@
 
   <PropertyGroup>
     <!-- Short names for platform toolsets (added to project name in Solution Explorer) -->
+    <_PlatformToolsetShortNameFor_LLVM_v142>LLVM v142</_PlatformToolsetShortNameFor_LLVM_v142>
     <_PlatformToolsetShortNameFor_LLVM_v141>LLVM v141</_PlatformToolsetShortNameFor_LLVM_v141>
     <_PlatformToolsetShortNameFor_LLVM_v141_xp>LLVM v141_xp</_PlatformToolsetShortNameFor_LLVM_v141_xp>
     <_PlatformToolsetShortNameFor_LLVM_v140>LLVM v140</_PlatformToolsetShortNameFor_LLVM_v140>
@@ -22,6 +23,7 @@
     <_PlatformToolsetShortNameFor_LLVM_v90>LLVM v90</_PlatformToolsetShortNameFor_LLVM_v90>
 
     <!-- Friendly names added to the PlatformToolset in the property pages. -->
+    <_PlatformToolsetFriendlyNameFor_LLVM_v142>LLVM for Visual Studio 2019 (LLVM_v142)</_PlatformToolsetFriendlyNameFor_LLVM_v142>
     <_PlatformToolsetFriendlyNameFor_LLVM_v141>LLVM for Visual Studio 2017 (LLVM_v141)</_PlatformToolsetFriendlyNameFor_LLVM_v141>
     <_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>LLVM for Visual Studio 2017 - Windows XP (LLVM_v141_xp)</_PlatformToolsetFriendlyNameFor_LLVM_v141_xp>
     <_PlatformToolsetFriendlyNameFor_LLVM_v140>LLVM for Visual Studio 2015 (LLVM_v140)</_PlatformToolsetFriendlyNameFor_LLVM_v140>

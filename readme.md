@@ -6,13 +6,27 @@
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
 ## LLVM for Visual Studio 2017 and 2019
-The Platform Toolset is "LLVM for Visual Studio 2017 (`LLVM_v141`)" and "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
-
 ### Installation
 Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
 
-Assume `VS_PATH` is your Visual Studio 2017 (or 2019) installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community` or `C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview`),
-please manually copy folder `LLVM_v141` and `LLVM_v141_xp` under `VS2017` to following target paths:
+`VS2017\install.bat` can be used to install MSBuild script for Visual Studio 2017 and 2019. (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
+
+### Visual Studio 2019
+The Platform Toolset is "LLVM for Visual Studio 2019 (`LLVM_v142`)".
+
+Assume `VS_PATH` is your Visual Studio 2019 installation path (`C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\`), please manually copy folders under `VS2017` to their target paths.
+
+| Folder | Target Path |
+|------|-------------|
+|`VS2017\LLVM` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\` |
+|`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\x64\PlatformToolsets\` |
+|`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\Win32\PlatformToolsets\` |
+|`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\ARM64\PlatformToolsets\` |
+
+### Visual Studio 2017
+The Platform Toolset is "LLVM for Visual Studio 2017 (`LLVM_v141`)" and "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
+
+Assume `VS_PATH` is your Visual Studio 2017 installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
@@ -23,10 +37,8 @@ please manually copy folder `LLVM_v141` and `LLVM_v141_xp` under `VS2017` to fol
 |`VS2017\LLVM_v141_xp` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\Common7\IDE\VC\VCTargets\Platforms\ARM64\PlatformToolsets\` |
 
-or run `VS2017\install.bat` directly (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
-
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
-Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to following target paths.
+Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to their target paths.
 
 `VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015.
 
