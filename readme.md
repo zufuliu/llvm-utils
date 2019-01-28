@@ -2,7 +2,9 @@
 
 ![LLVM for Visual Studio](../master/images/VS2017.png)
 
-[![License](https://img.shields.io/badge/License-University%20of%20Illinois%2FNCSA-blue.svg)](https://opensource.org/licenses/NCSA)
+[![License](https://img.shields.io/badge/License-Apache%20License,%20Version%202.0-blue.svg)](../master/license.txt)
+[![License](https://img.shields.io/badge/License-University%20of%20Illinois%2FNCSA-blue.svg)](../master/license.txt)
+
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
 ## LLVM for Visual Studio 2017 and 2019
@@ -22,6 +24,7 @@ Assume `VS_PATH` is your Visual Studio 2019 installation path (`C:\Program Files
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\ARM64\PlatformToolsets\` |
+|`VS2017\LLVM` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\ARM64\PlatformToolsets\` |
