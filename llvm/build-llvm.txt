@@ -3,37 +3,10 @@ http://clang.llvm.org/get_started.html
 http://lldb.llvm.org/build.html
 
 llvm
-	svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm
+	git clone --config core.autocrlf=false https://github.com/llvm/llvm-project.git
 
-llvm/tools/clang
-	svn co http://llvm.org/svn/llvm-project/cfe/trunk clang
-llvm/tools/clang/tools/extra
-	svn co http://llvm.org/svn/llvm-project/clang-tools-extra/trunk extra
-
-llvm/tools/lld
-	svn co http://llvm.org/svn/llvm-project/lld/trunk lld
-llvm/tools/lldb
-	svn co http://llvm.org/svn/llvm-project/lldb/trunk lldb
-
-llvm/tools/llgo
-	svn co http://llvm.org/svn/llvm-project/llgo/trunk llgo
-llvm/tools/polly
-	svn co http://llvm.org/svn/llvm-project/polly/trunk polly
-
-llvm/projects/compiler-rt
-	svn co http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt
 llvm/projects/dragonegg
 	svn co http://llvm.org/svn/llvm-project/dragonegg/trunk dragonegg
-llvm/projects/libcxx
-	svn co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-llvm/projects/libcxxabi
-	svn co http://llvm.org/svn/llvm-project/libcxxabi/trunk libcxxabi
-llvm/projects/libunwind
-	svn co http://llvm.org/svn/llvm-project/libunwind/trunk libunwind
-llvm/projects/openmp
-	svn co http://llvm.org/svn/llvm-project/openmp/trunk openmp
-llvm/projects/parallel-libs
-	svn co http://llvm.org/svn/llvm-project/parallel-libs/trunk parallel-libs
 
 
 CMakeLists.txt
