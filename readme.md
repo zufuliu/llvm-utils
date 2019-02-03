@@ -139,6 +139,10 @@ Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program File
 * [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace
 * Original source for MSBuild
 
+	https://github.com/llvm/llvm-project/tree/master/llvm/tools/msbuild
+
+	svn co https://github.com/llvm/llvm-project/trunk/llvm/tools/msbuild msbuild
+
 	svn co http://llvm.org/svn/llvm-project/llvm/trunk/tools/msbuild msbuild
 
 * Outdated [LLVM for Visual Studio 2017](https://github.com/WubbaLubba/LlvmForVS2017) by @WubbaLubba
