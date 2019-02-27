@@ -41,15 +41,24 @@ see all projects defined by LLVM_ALL_PROJECTS
 
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='llvm;clang;clang-tools-extra;lld;lldb;compiler-rt;openmp;parallel-libs;polly;libclc' -DLLVM_ENABLE_ASSERTIONS=ON -DLLDB_RELOCATABLE_PYTHON=1 -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
 
-mingw32-make -j4 libclang
-mingw32-make -j4 clang
-mingw32-make -j4 clang-tidy
+mingw32-make libclang
+mingw32-make clang
+mingw32-make clang-tidy
 
+two-stage build based on llvm\utils\release\
+
+1. build with MSVC
 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='llvm;clang;clang-tools-extra;lld;lldb;compiler-rt;openmp;parallel-libs;polly;libclc' -DLLVM_ENABLE_ASSERTIONS=ON -DLLDB_RELOCATABLE_PYTHON=1 -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
+ninja all
 
-ninja -j4 libclang
-ninja -j4 clang
-ninja -j4 clang-tidy
+2. rebuild using clang-cl
+set CC=../build-msvc/bin/clang-cl.exe
+set CXX=../build-msvc/bin/clang-cl.exe
+
+3. others
+ninja libclang
+ninja clang
+ninja clang-tidy
 
 Z3 for Clang Static Analyzer
 https://github.com/Z3Prover/z3/releases
