@@ -38,10 +38,8 @@ XCOPY /Q /Y "LLVM" "%~1\..\LLVM\"
 XCOPY /Q /Y "LLVM_v141" "%~1\x64\PlatformToolsets\LLVM_v141\"
 XCOPY /Q /Y "LLVM_v141" "%~1\Win32\PlatformToolsets\LLVM_v141\"
 XCOPY /Q /Y "LLVM_v141" "%~1\ARM64\PlatformToolsets\LLVM_v141\"
-IF /I "%~2" == "2017" (
-	XCOPY /Q /Y "LLVM_v141_xp" "%~1\Win32\PlatformToolsets\LLVM_v141_xp\"
-	XCOPY /Q /Y "LLVM_v141_xp" "%~1\x64\PlatformToolsets\LLVM_v141_xp\"
-)
+XCOPY /Q /Y "LLVM_v141_xp" "%~1\Win32\PlatformToolsets\LLVM_v141_xp\"
+XCOPY /Q /Y "LLVM_v141_xp" "%~1\x64\PlatformToolsets\LLVM_v141_xp\"
 SET SUCCESS=1
 EXIT /B
 
