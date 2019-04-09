@@ -2,8 +2,7 @@
 
 ![LLVM for Visual Studio](../master/images/VS2017.png)
 
-[![License](https://img.shields.io/badge/License-Apache%20License,%20Version%202.0-blue.svg)](../master/license.txt)
-[![License](https://img.shields.io/badge/License-University%20of%20Illinois%2FNCSA-blue.svg)](../master/license.txt)
+[![License](https://img.shields.io/badge/License-Apache%20License%20v2.0%20with%20LLVM%20Exceptions-blue.svg)](../master/license.txt)
 
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
