@@ -13,11 +13,13 @@ CMakeLists.txt
 	add_definitions(-D__STDC_FORMAT_MACROS)
 	add_definitions(-D__USE_MINGW_ANSI_STDIO)
 
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /source-charset:utf-8")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /source-charset:utf-8")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /source-charset:utf-8")
+
+manually edit  CMakeCache.txt, update compiler/linker flags after run cmake.
 
 llvm/tools/lldb/cmake/modules/LLDBConfig.cmake
 	function(find_python_libs_windows)
@@ -49,6 +51,7 @@ two-stage build based on llvm\utils\release\
 
 1. build with MSVC
 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='llvm;clang;clang-tools-extra;lld;lldb;compiler-rt;openmp;parallel-libs;polly;libclc' -DLLVM_ENABLE_ASSERTIONS=ON -DLLDB_RELOCATABLE_PYTHON=1 -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DLLVM_ENABLE_PROJECTS='llvm;clang;clang-tools-extra;lld;lldb;compiler-rt;openmp;parallel-libs;polly;libclc' -DLLVM_ENABLE_ASSERTIONS=ON -DLLDB_RELOCATABLE_PYTHON=1 -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
 ninja all
 
 2. rebuild using clang-cl
