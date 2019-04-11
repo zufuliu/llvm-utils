@@ -13,7 +13,7 @@ Please download and install LLVM from http://llvm.org/builds/ or http://releases
 `VS2017\install.bat` can be used to install MSBuild script for Visual Studio 2017 and 2019. (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
 ### Visual Studio 2019
-The Platform Toolset is "LLVM for Visual Studio 2019 (`LLVM_v142`)" and "LLVM for Visual Studio 2017 (`LLVM_v141`)".
+The Platform Toolset is "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
 Assume `VS_PATH` is your Visual Studio 2019 installation path (`C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\`), please manually copy folders under `VS2017` to their target paths.
 
@@ -25,7 +25,9 @@ Assume `VS_PATH` is your Visual Studio 2019 installation path (`C:\Program Files
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\ARM64\PlatformToolsets\` |
 |`VS2017\LLVM` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\x64\PlatformToolsets\` |
+|`VS2017\LLVM_v141_xp` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\Win32\PlatformToolsets\` |
+|`VS2017\LLVM_v141_xp` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\ARM64\PlatformToolsets\` |
 
 ### Visual Studio 2017
