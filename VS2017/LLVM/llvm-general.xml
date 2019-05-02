@@ -22,7 +22,7 @@
                   DisplayName="clang-cl Executable"
                   Description="Specifies the path to clang-cl.exe."
                   Category="General"
-                  Default="$(LLVMInstallDir)\bin\clang-cl.exe"
+                  Default="$(LLVMInstallDir)bin\clang-cl.exe"
                   Subtype="file">
   </StringProperty>
 
@@ -42,7 +42,7 @@
                   DisplayName="lld-link Executable"
                   Description="Specifies the path to lld-link.exe."
                   Category="General"
-                  Default="$(LLVMInstallDir)\bin\lld-link.exe"
+                  Default="$(LLVMInstallDir)bin\lld-link.exe"
                   Subtype="file">
   </StringProperty>
 

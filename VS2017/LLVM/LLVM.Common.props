@@ -2,8 +2,9 @@
   <PropertyGroup>
     <LLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</LLVMInstallDir>
     <LLVMInstallDir Condition="'$(LLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</LLVMInstallDir>
-    <ClangClExecutable>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClExecutable>
-    <LldLinkExecutable>$(LLVMInstallDir)\bin\lld-link.exe</LldLinkExecutable>
+    <LLVMInstallDir Condition="'$(LLVMInstallDir)' != ''">$(LLVMInstallDir)\</LLVMInstallDir>
+    <ClangClExecutable>$(LLVMInstallDir)bin\clang-cl.exe</ClangClExecutable>
+    <LldLinkExecutable>$(LLVMInstallDir)bin\lld-link.exe</LldLinkExecutable>
     <UseClangCl>true</UseClangCl>
     <UseLldLink>false</UseLldLink>
   </PropertyGroup>
