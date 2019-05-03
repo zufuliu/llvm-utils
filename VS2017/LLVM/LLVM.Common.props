@@ -38,17 +38,4 @@
     <_PlatformToolsetFriendlyNameFor_LLVM_v100>LLVM for Visual Studio 2010 (LLVM_v100)</_PlatformToolsetFriendlyNameFor_LLVM_v100>
     <_PlatformToolsetFriendlyNameFor_LLVM_v90>LLVM for Visual Studio 2008 (LLVM_v90)</_PlatformToolsetFriendlyNameFor_LLVM_v90>
   </PropertyGroup>
-
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <!-- Set this to "Default" (which means not passing any /RTC option) so that any other value will
-           be treated as having been overridden by the user.  This Serves as a hint to the user that
-           Default is the value we support, and other values will generate a warning.  It also means
-           that if the user simply creates a new project in MSVC (which uses /RTCu by default), then
-           switches the toolset to Clang, we will still treat the value as default (which for us is to
-           not pass the option).  Only if the user explicitly overrode this setting in a project to use
-           /RTCu would we see the warning. -->
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-    </ClCompile>
-  </ItemDefinitionGroup>
 </Project>
