@@ -5,8 +5,10 @@
     <LLVMInstallDir Condition="'$(LLVMInstallDir)' != ''">$(LLVMInstallDir)\</LLVMInstallDir>
     <ClangClExecutable>$(LLVMInstallDir)bin\clang-cl.exe</ClangClExecutable>
     <LldLinkExecutable>$(LLVMInstallDir)bin\lld-link.exe</LldLinkExecutable>
+    <LlvmLibExecutable>$(LLVMInstallDir)bin\llvm-lib.exe</LlvmLibExecutable>
     <UseClangCl>true</UseClangCl>
     <UseLldLink>false</UseLldLink>
+    <UseLlvmLib>false</UseLlvmLib>
   </PropertyGroup>
 
   <PropertyGroup>

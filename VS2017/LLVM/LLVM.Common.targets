@@ -7,8 +7,9 @@
          that the user may have overridden in the UI. -->
     <CLToolExe Condition="$(UseClangCl)">$(ClangClExecutable)</CLToolExe>
     <LinkToolExe Condition="$(UseLldLink)">$(LldLinkExecutable)</LinkToolExe>
+    <LIBToolExe Condition="$(UseLlvmLib)">$(LlvmLibExecutable)</LIBToolExe>
     <!-- TRACKER : error TRK0002: Failed to execute command. -->
-    <TrackFileAccess Condition="$(UseClangCl) or $(UseLldLink)">false</TrackFileAccess>
+    <TrackFileAccess Condition="$(UseClangCl) or $(UseLldLink) or $(UseLlvmLib)">false</TrackFileAccess>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,13 @@
       <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'DebugFastLink'">DebugFull</GenerateDebugInformation>
       <AdditionalOptions>$(LldLinkAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
     </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="$(UseLlvmLib)">
+    <Lib>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+      <AdditionalOptions>$(LlvmLibAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
 
   <!-- We hook up a target to run every time ClCompile is about to run, the
