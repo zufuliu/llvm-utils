@@ -28,6 +28,9 @@
 
   <ItemDefinitionGroup Condition="$(UseLldLink)">
     <Link>
+      <!-- Map /DEBUG and /DEBUG:FASTLINK to /DEBUG:FULL. -->
+      <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'true'">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'DebugFastLink'">DebugFull</GenerateDebugInformation>
       <AdditionalOptions>$(LldLinkAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -131,15 +134,4 @@
       </ClCompile>
     </ItemGroup>
   </Target>
-  <!-- Map /DEBUG and /DEBUG:FASTLINK to /DEBUG:FULL. -->
-  <!--
-  <Target Name="BeforeLink" BeforeTargets="Link" Condition="$(UseLldLink)">
-    <ItemGroup>
-      <Link>
-        <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'true'">DebugFull</GenerateDebugInformation>
-        <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'DebugFastLink'">DebugFull</GenerateDebugInformation>
-      </Link>
-    </ItemGroup>
-  </Target>
-  -->
 </Project>
