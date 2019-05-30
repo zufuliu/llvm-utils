@@ -1,0 +1,60 @@
+diff -r -wBu "Python37\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutils/_msvccompiler.py"
+--- "Python37\\Lib\\distutils/_msvccompiler.py"	2019-05-30 17:25:57.894932300 +0800
++++ "Python3\\Lib\\distutils/_msvccompiler.py"	2019-05-30 17:28:35.406972600 +0800
+@@ -217,11 +217,12 @@
+     exe_extension = '.exe'
+ 
+ 
+-    def __init__(self, verbose=0, dry_run=0, force=0):
++    def __init__(self, verbose=0, dry_run=0, force=0, use_clang_cl=False):
+         CCompiler.__init__ (self, verbose, dry_run, force)
+         # target platform (.plat_name is consistent with 'bdist')
+         self.plat_name = None
+         self.initialized = False
++        self.use_clang_cl = use_clang_cl
+ 
+     def initialize(self, plat_name=None):
+         # multi-init means we would need to check platform same each time...
+@@ -243,7 +244,7 @@
+ 
+         self._paths = vc_env.get('path', '')
+         paths = self._paths.split(os.pathsep)
+-        self.cc = _find_exe('cl.exe', paths)
++        self.cc = _find_exe("clang-cl.exe" if self.use_clang_cl else 'cl.exe', paths)
+         self.linker = _find_exe("link.exe", paths)
+         self.lib = _find_exe("lib.exe", paths)
+         self.rc = _find_exe("rc.exe", paths)   # resource compiler
+@@ -282,6 +283,11 @@
+             '/nologo', '/INCREMENTAL:NO', '/LTCG', '/DEBUG:FULL'
+         ]
+ 
++        if self.use_clang_cl:
++            self.compile_options.remove('/GL')
++            ldflags.remove('/LTCG')
++            ldflags_debug.remove('/LTCG')
++
+         self.ldflags_exe = [*ldflags, '/MANIFEST:EMBED,ID=1']
+         self.ldflags_exe_debug = [*ldflags_debug, '/MANIFEST:EMBED,ID=1']
+         self.ldflags_shared = [*ldflags, '/DLL', '/MANIFEST:EMBED,ID=2', '/MANIFESTUAC:NO']
+@@ -573,3 +579,9 @@
+         else:
+             # Oops, didn't find it in *any* of 'dirs'
+             return None
++
++class ClangMSVCCompiler(MSVCCompiler):
++    compiler_type = 'clang-cl'
++
++    def __init__(self, verbose=0, dry_run=0, force=0):
++        MSVCCompiler.__init__(self, verbose, dry_run, force, True)
+diff -r -wBu "Python37\\Lib\\distutils/ccompiler.py" "Python3\\Lib\\distutils/ccompiler.py"
+--- "Python37\\Lib\\distutils/ccompiler.py"	2019-05-30 17:25:20.808443200 +0800
++++ "Python3\\Lib\\distutils/ccompiler.py"	2019-05-30 14:28:06.399830100 +0800
+@@ -961,6 +961,8 @@
+                                "standard UNIX-style compiler"),
+                    'msvc':    ('_msvccompiler', 'MSVCCompiler',
+                                "Microsoft Visual C++"),
++                   'clang-cl':('_msvccompiler', 'ClangMSVCCompiler',
++                               "clang-cl for Microsoft Visual C++"),
+                    'cygwin':  ('cygwinccompiler', 'CygwinCCompiler',
+                                "Cygwin port of GNU C Compiler for Win32"),
+                    'mingw32': ('cygwinccompiler', 'Mingw32CCompiler',
