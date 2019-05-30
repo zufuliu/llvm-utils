@@ -1,7 +1,48 @@
 diff -r -wBu "Python37\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutils/_msvccompiler.py"
---- "Python37\\Lib\\distutils/_msvccompiler.py"	2019-05-30 17:25:57.894932300 +0800
-+++ "Python3\\Lib\\distutils/_msvccompiler.py"	2019-05-30 17:28:35.406972600 +0800
-@@ -217,11 +217,12 @@
+--- "Python37\\Lib\\distutils/_msvccompiler.py"	2019-03-25 21:21:20.000000000 +0800
++++ "Python3\\Lib\\distutils/_msvccompiler.py"	2019-05-30 19:19:32.243676500 +0800
+@@ -172,6 +172,27 @@
+             return fn
+     return exe
+ 
++def _find_llvm():
++    try:
++        key = winreg.OpenKeyEx(
++            winreg.HKEY_LOCAL_MACHINE,
++            r"SOFTWARE\LLVM\LLVM",
++            access=winreg.KEY_READ|winreg.KEY_WOW64_32KEY
++        )
++    except OSError:
++        log.debug("LLVM is not registered")
++        return None
++
++    with key:
++        for i in count():
++            try:
++                v, llvm_dir, vt = winreg.EnumValue(key, i)
++            except OSError:
++                break
++            if vt == winreg.REG_SZ and os.path.isdir(llvm_dir):
++               return llvm_dir
++    return None
++
+ # A map keyed by get_platform() return values to values accepted by
+ # 'vcvarsall.bat'. Always cross-compile from x86 to work with the
+ # lighter-weight MSVC installs that do not include native 64-bit tools.
+@@ -180,6 +201,12 @@
+     'win-amd64' : 'x86_amd64',
+ }
+ 
++PLAT_TO_LLVM_TARGETS = {
++    'win32': '-m32',
++    'win-amd64': '-m64',
++    'win-arm64': '--target=aarch64-pc-windows-msvc',
++}
++
+ # A set containing the DLLs that are guaranteed to be available for
+ # all micro versions of this Python version. Known extension
+ # dependencies that are not in this set will be copied to the output
+@@ -217,11 +244,12 @@
      exe_extension = '.exe'
  
  
@@ -15,28 +56,38 @@ diff -r -wBu "Python37\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
  
      def initialize(self, plat_name=None):
          # multi-init means we would need to check platform same each time...
-@@ -243,7 +244,7 @@
+@@ -243,7 +271,14 @@
  
          self._paths = vc_env.get('path', '')
          paths = self._paths.split(os.pathsep)
--        self.cc = _find_exe('cl.exe', paths)
-+        self.cc = _find_exe("clang-cl.exe" if self.use_clang_cl else 'cl.exe', paths)
+-        self.cc = _find_exe("cl.exe", paths)
++        if self.use_clang_cl:
++            llvm_dir = _find_llvm()
++            if llvm_dir:
++                self.cc = os.path.join(llvm_dir, 'bin', 'clang-cl.exe')
++            else:
++                self.cc = _find_exe("clang-cl.exe", paths)
++        else:
++            self.cc = _find_exe('cl.exe', paths)
          self.linker = _find_exe("link.exe", paths)
          self.lib = _find_exe("lib.exe", paths)
          self.rc = _find_exe("rc.exe", paths)   # resource compiler
-@@ -282,6 +283,11 @@
+@@ -282,6 +317,14 @@
              '/nologo', '/INCREMENTAL:NO', '/LTCG', '/DEBUG:FULL'
          ]
  
 +        if self.use_clang_cl:
++            target_flag = PLAT_TO_LLVM_TARGETS[plat_name]
 +            self.compile_options.remove('/GL')
++            self.compile_options.append(target_flag)
++            self.compile_options_debug.append(target_flag)
 +            ldflags.remove('/LTCG')
 +            ldflags_debug.remove('/LTCG')
 +
          self.ldflags_exe = [*ldflags, '/MANIFEST:EMBED,ID=1']
          self.ldflags_exe_debug = [*ldflags_debug, '/MANIFEST:EMBED,ID=1']
          self.ldflags_shared = [*ldflags, '/DLL', '/MANIFEST:EMBED,ID=2', '/MANIFESTUAC:NO']
-@@ -573,3 +579,9 @@
+@@ -573,3 +616,9 @@
          else:
              # Oops, didn't find it in *any* of 'dirs'
              return None
@@ -47,7 +98,7 @@ diff -r -wBu "Python37\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
 +    def __init__(self, verbose=0, dry_run=0, force=0):
 +        MSVCCompiler.__init__(self, verbose, dry_run, force, True)
 diff -r -wBu "Python37\\Lib\\distutils/ccompiler.py" "Python3\\Lib\\distutils/ccompiler.py"
---- "Python37\\Lib\\distutils/ccompiler.py"	2019-05-30 17:25:20.808443200 +0800
+--- "Python37\\Lib\\distutils/ccompiler.py"	2019-03-25 21:21:20.000000000 +0800
 +++ "Python3\\Lib\\distutils/ccompiler.py"	2019-05-30 14:28:06.399830100 +0800
 @@ -961,6 +961,8 @@
                                 "standard UNIX-style compiler"),
