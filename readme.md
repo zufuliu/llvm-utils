@@ -15,7 +15,7 @@ Please download and install LLVM from http://llvm.org/builds/ or http://releases
 ### Visual Studio 2019
 The Platform Toolset is "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
-Assume `VS_PATH` is your Visual Studio 2019 installation path (`C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\`), please manually copy folders under `VS2017` to their target paths.
+Assume `VS_PATH` is your Visual Studio 2019 installation path (`C:\Program Files (x86)\Microsoft Visual Studio\2019\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
