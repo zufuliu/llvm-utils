@@ -128,8 +128,6 @@ or
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
 	CALL "c:\projects\llvm-utils\VS2015\install.bat" 1
 
-Please note that preinstalled LLVM 7.0.0 in AppVeyor build image doesn't support ARM64.
-
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
@@ -137,7 +135,7 @@ The huge size of LLVM Windows installation can be reduced dramatically by using 
 Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
 
 ## Related Links
-* [LLVM Extensions for Visual Studio 2017 and 2019](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace
+* [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace, not works for Visual Studio 2019 alone.
 * Original source for MSBuild
 
 	https://github.com/llvm/llvm-project/tree/master/llvm/tools/msbuild
