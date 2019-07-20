@@ -16,10 +16,23 @@ CMakeLists.txt
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /source-charset:utf-8")
+	set source-charset and execution-charset to UTF-8:
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
 
 manually edit  CMakeCache.txt, update compiler/linker flags after run cmake.
+
+Fix compiler-rt\lib\sanitizer_common\sanitizer_win.cc(42): error C3437: #pragma execution_character_set is not supported when /source-charset, /execution-charset, or /utf-8 has been specified
+open Windows Kits\10\Include\10.0.17763.0\shared\TraceLoggingProvider.h
+change the code block, disable _TlgPragmaUtf8Begin and _TlgPragmaUtf8End
+
+	#if defined(_MSC_VER) && (_MSC_VER != 1700)
+	#define _TlgPragmaUtf8Begin __pragma(execution_character_set(push, "UTF-8"))
+	#define _TlgPragmaUtf8End   __pragma(execution_character_set(pop))
+	#else
+	#define _TlgPragmaUtf8Begin
+	#define _TlgPragmaUtf8End
+	#endif
 
 llvm/tools/lldb/cmake/modules/LLDBConfig.cmake
 	function(find_python_libs_windows)
