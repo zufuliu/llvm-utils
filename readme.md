@@ -135,7 +135,7 @@ The huge size of LLVM Windows installation can be reduced dramatically by using 
 Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
 
 ## Related Links
-* [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace, not works for Visual Studio 2019 alone.
+* [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace, [not works for Visual Studio 2019 alone](https://bugs.llvm.org/show_bug.cgi?id=41948).
 * Original source for MSBuild
 
 	https://github.com/llvm/llvm-project/tree/master/llvm/tools/msbuild
