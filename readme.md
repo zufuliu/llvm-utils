@@ -128,6 +128,12 @@ or
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
 	CALL "c:\projects\llvm-utils\VS2015\install.bat" 1
 
+## clang-cl for Python3 distutils
+See `clang\clang-cl-py3.diff` for the changes on hwo to use clang-cl as distutils compiler.
+After apply these changes, you can build your extension with
+
+	python setup.py build --compiler=clang-cl 
+
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
