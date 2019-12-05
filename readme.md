@@ -8,7 +8,7 @@
 
 ## LLVM for Visual Studio 2017 and 2019
 ### Installation
-Please download and install LLVM from http://llvm.org/builds/ or http://releases.llvm.org/.
+Please download and install LLVM from https://llvm.org/builds/ or https://releases.llvm.org/.
 
 `VS2017\install.bat` can be used to install MSBuild script for Visual Studio 2017 and 2019. (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
@@ -47,7 +47,7 @@ Assume `VS_PATH` is your Visual Studio 2017 installation path (e.g: `C:\Program 
 ## LLVM for Visual Studio 2010, 2012, 2013 and 2015
 Assume `MB_PATH` is the MSBuild path for Visual C++ (e.g.: `C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0` or `C:\Program Files\MSBuild\Microsoft.Cpp\v4.0`), please manually copy `VS2017\LLVM` and related folders under `VS2015` to their target paths.
 
-`VS2015\install.bat` (based on install script for [LLVM 6.0.1](http://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015.
+`VS2015\install.bat` (based on install script for [LLVM 6.0.1](https://releases.llvm.org/download.html#6.0.1)) can be used to install MSBuild script for Visual Studio 2010, 2012, 2013 and 2015.
 
 ### Visual Studio 2015
 The Platform Toolset is "LLVM for Visual Studio 2015 (`LLVM_v140`)" and "LLVM for Visual Studio 2015 - Windows XP (`LLVM_v140_xp`)".
@@ -148,7 +148,7 @@ Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program File
 
 	svn co https://github.com/llvm/llvm-project/trunk/llvm/tools/msbuild msbuild
 
-	svn co http://llvm.org/svn/llvm-project/llvm/trunk/tools/msbuild msbuild
+	svn co https://llvm.org/svn/llvm-project/llvm/trunk/tools/msbuild msbuild
 
 * Outdated [LLVM for Visual Studio 2017](https://github.com/WubbaLubba/LlvmForVS2017) by @WubbaLubba
 * [Failed to find MSBuild toolsets directory](https://bugs.llvm.org/show_bug.cgi?id=33672) in LLVM Bugzilla
