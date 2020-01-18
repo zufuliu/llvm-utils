@@ -8,7 +8,7 @@
 
 ## LLVM for Visual Studio 2017 and 2019
 ### Installation
-Please download and install LLVM from https://llvm.org/builds/ or https://releases.llvm.org/.
+Please download and install LLVM from https://github.com/llvm/llvm-project/releases, https://llvm.org/builds/ or https://releases.llvm.org/.
 
 `VS2017\install.bat` can be used to install MSBuild script for Visual Studio 2017 and 2019. (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
