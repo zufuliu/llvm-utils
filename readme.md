@@ -131,7 +131,7 @@ or
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
 	CALL "c:\projects\llvm-utils\VS2015\install.bat" 1
 
-## clang-cl for Python3 distutils
+## clang-cl for Python 3 distutils
 See `clang\clang-cl-py3.diff` for the changes on hwo to use clang-cl as distutils compiler.
 After apply these changes, you can build your extension with
 

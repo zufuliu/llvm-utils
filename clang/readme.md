@@ -1,6 +1,6 @@
 # Clang Utils
 
-## clang-cl for Python3 distutils
+## clang-cl for Python 3 distutils
 See `clang-cl-py3.diff` for the changes on hwo to use clang-cl as distutils compiler.
 After apply these changes, you can build your extension with
 
