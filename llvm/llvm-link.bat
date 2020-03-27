@@ -8,14 +8,14 @@ IF NOT EXIST "%LLVM%" (
 	EXIT /b
 )
 
-CD "%LLVM%"
+PUSHD "%LLVM%"
 
 @rem delete MSVC runtime library
 DEL api-ms*.dll
 DEL concrt140.dll
 DEL msvcp140.dll
 DEL ucrtbase.dll
-DEL vcruntime140.dll
+DEL vcruntime140*.dll
 
 @rem make symbolic link
 DEL clang++.exe
@@ -48,11 +48,25 @@ MKLINK llvm-ranlib.exe llvm-ar.exe
 @rem DEL libiomp5md.dll
 @rem MKLINK libiomp5md.dll libomp.dll
 
-@rem LLVM 8.0 no longer contains this folder
-@rem MKDIR ..\msbuild-bin
-@rem CD ..\msbuild-bin
-@rem 
+POPD
+
+@rem Python lldb
+PUSHD lib\site-packages\lldb
+
+DEL _lldb.pyd
+MKLINK _lldb.pyd ..\..\..\bin\liblldb.dll
+
+DEL lldb-argdumper.exe
+MKLINK lldb-argdumper.exe ..\..\..\bin\lldb-argdumper.exe
+
+POPD
+
+@rem LLVM 8.0 and later no longer contains this folder
+@rem MKDIR msbuild-bin
+@rem PUSHD msbuild-bin
+@rem
 @rem DEL cl.exe
 @rem MKLINK cl.exe ..\bin\clang.exe
+@rem POPD
 
 PAUSE
