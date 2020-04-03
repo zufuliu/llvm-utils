@@ -8,8 +8,9 @@
     <CLToolExe Condition="$(UseClangCl)">$(ClangClExecutable)</CLToolExe>
     <LinkToolExe Condition="$(UseLldLink)">$(LldLinkExecutable)</LinkToolExe>
     <LIBToolExe Condition="$(UseLlvmLib)">$(LlvmLibExecutable)</LIBToolExe>
+    <RCToolExe Condition="$(UseLlvmRc)">$(LlvmRcExecutable)</RCToolExe>
     <!-- TRACKER : error TRK0002: Failed to execute command. -->
-    <TrackFileAccess Condition="$(UseClangCl) or $(UseLldLink) or $(UseLlvmLib)">false</TrackFileAccess>
+    <TrackFileAccess Condition="$(UseClangCl) or $(UseLldLink) or $(UseLlvmLib) or $(UseLlvmRc)">false</TrackFileAccess>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,6 +52,12 @@
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>$(LlvmLibAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="$(UseLlvmRc)">
+    <ResourceCompile>
+      <AdditionalOptions>$(LlvmRcAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
 
   <!-- We hook up a target to run every time ClCompile is about to run, the

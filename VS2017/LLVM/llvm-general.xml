@@ -71,4 +71,24 @@
                   Description="Additional options to pass to llvm-lib.  This is essentially the same as General > Librarian > Command Line > Additional Options, except that it is safe to put options here that will be rejected by lib.exe in case you switch toolchains back and forth."
                   Category="General">
   </StringProperty>
+
+  <BoolProperty Name="UseLlvmRc"
+                DisplayName="Use llvm-rc"
+                Description="Use llvm-rc for compiling resources.  If this option is disabled, the Microsoft resource compiler (rc.exe) will be used instead."
+                Category="General"
+                Default="false">
+  </BoolProperty>
+  <StringProperty Name="LlvmRcExecutable"
+                  DisplayName="llvm-rc Executable"
+                  Description="Specifies the path to llvm-rc.exe."
+                  Category="General"
+                  Default="$(LLVMInstallDir)bin\llvm-rc.exe"
+                  Subtype="file">
+  </StringProperty>
+
+  <StringProperty Name="LlvmRcAdditionalOptions"
+                  DisplayName="Additional Resources Options"
+                  Description="Additional options to pass to llvm-rc.  This is essentially the same as General > Resources > Command Line > Additional Options, except that it is safe to put options here that will be rejected by rc.exe in case you switch toolchains back and forth."
+                  Category="General">
+  </StringProperty>
 </Rule>
