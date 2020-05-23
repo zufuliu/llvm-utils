@@ -96,7 +96,12 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 |`VS2015\Win32\LLVM_v100` | `%MB_PATH%\Platforms\Win32\PlatformToolsets\` |
 |`VS2015\Win32\LLVM_v90` | `%MB_PATH%\Platforms\Win32\PlatformToolsets\` |
 
-## Install to AppVeyor Build Image
+## Install to AppVeyor or GitHub Actions Build Image
+### Install LLVM on the build image
+
+	curl -Ls -o "LLVM-10.0.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe"
+	LLVM-10.0.0-win64.exe /S
+
 ### Install from release archives
 
 | Archive Name | Visual Studio Version |
@@ -135,7 +140,7 @@ or
 See `clang\clang-cl-py3.diff` for the changes on hwo to use clang-cl as distutils compiler.
 After apply these changes, you can build your extension with
 
-	python setup.py build --compiler=clang-cl 
+	python setup.py build --compiler=clang-cl
 
 ## LLVM Windows Symbolic Link Maker
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
