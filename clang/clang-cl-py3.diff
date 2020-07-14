@@ -1,7 +1,7 @@
 diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutils/_msvccompiler.py"
---- "Python38\\Lib\\distutils/_msvccompiler.py"	2020-02-28 07:14:35.913264300 +0800
-+++ "Python3\\Lib\\distutils/_msvccompiler.py"	2020-02-28 07:16:36.205506000 +0800
-@@ -184,6 +184,27 @@
+--- "Python38\\Lib\\distutils/_msvccompiler.py"	2020-07-13 16:52:40.000000000 +0800
++++ "Python3\\Lib\\distutils/_msvccompiler.py"	2020-07-14 15:29:38.491012500 +0800
+@@ -161,6 +161,27 @@
              return fn
      return exe
  
@@ -29,7 +29,7 @@ diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
  # A map keyed by get_platform() return values to values accepted by
  # 'vcvarsall.bat'. Always cross-compile from x86 to work with the
  # lighter-weight MSVC installs that do not include native 64-bit tools.
-@@ -194,6 +215,13 @@
+@@ -171,6 +192,13 @@
      'win-arm64' : 'x86_arm64'
  }
  
@@ -40,10 +40,10 @@ diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
 +    'win-arm64': 'aarch64-pc-windows-msvc',
 +}
 +
- # A set containing the DLLs that are guaranteed to be available for
- # all micro versions of this Python version. Known extension
- # dependencies that are not in this set will be copied to the output
-@@ -231,11 +259,12 @@
+ class MSVCCompiler(CCompiler) :
+     """Concrete class that implements an interface to Microsoft Visual C++,
+        as defined by the CCompiler abstract class."""
+@@ -202,11 +230,12 @@
      exe_extension = '.exe'
  
  
@@ -57,10 +57,11 @@ diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
  
      def initialize(self, plat_name=None):
          # multi-init means we would need to check platform same each time...
-@@ -257,6 +286,13 @@
+@@ -228,7 +257,14 @@
  
          self._paths = vc_env.get('path', '')
          paths = self._paths.split(os.pathsep)
+-        self.cc = _find_exe("cl.exe", paths)
 +        if self.use_clang_cl:
 +            llvm_dir = _find_llvm()
 +            if llvm_dir:
@@ -68,10 +69,11 @@ diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
 +            else:
 +                self.cc = _find_exe("clang-cl.exe", paths)
 +        else:
-         self.cc = _find_exe('cl.exe', paths)
++            self.cc = _find_exe('cl.exe', paths)
          self.linker = _find_exe("link.exe", paths)
          self.lib = _find_exe("lib.exe", paths)
-@@ -296,6 +332,17 @@
+         self.rc = _find_exe("rc.exe", paths)   # resource compiler
+@@ -263,6 +299,17 @@
              '/nologo', '/INCREMENTAL:NO', '/LTCG', '/DEBUG:FULL'
          ]
  
@@ -89,7 +91,7 @@ diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
          self.ldflags_exe = [*ldflags, '/MANIFEST:EMBED,ID=1']
          self.ldflags_exe_debug = [*ldflags_debug, '/MANIFEST:EMBED,ID=1']
          self.ldflags_shared = [*ldflags, '/DLL', '/MANIFEST:EMBED,ID=2', '/MANIFESTUAC:NO']
-@@ -587,3 +634,9 @@
+@@ -541,3 +588,9 @@
          else:
              # Oops, didn't find it in *any* of 'dirs'
              return None
@@ -100,8 +102,8 @@ diff -r -wBu "Python38\\Lib\\distutils/_msvccompiler.py" "Python3\\Lib\\distutil
 +    def __init__(self, verbose=0, dry_run=0, force=0):
 +        super().__init__(verbose, dry_run, force, True)
 diff -r -wBu "Python38\\Lib\\distutils/ccompiler.py" "Python3\\Lib\\distutils/ccompiler.py"
---- "Python38\\Lib\\distutils/ccompiler.py"	2020-02-28 07:13:24.454796200 +0800
-+++ "Python3\\Lib\\distutils/ccompiler.py"	2020-02-28 07:16:27.720815000 +0800
+--- "Python38\\Lib\\distutils/ccompiler.py"	2020-07-13 16:52:40.000000000 +0800
++++ "Python3\\Lib\\distutils/ccompiler.py"	2020-07-14 15:27:26.076494700 +0800
 @@ -962,6 +962,8 @@
                                 "standard UNIX-style compiler"),
                     'msvc':    ('_msvccompiler', 'MSVCCompiler',
