@@ -4,12 +4,9 @@ http://lldb.llvm.org/build.html
 
 llvm
 	git clone --config core.autocrlf=false https://github.com/llvm/llvm-project.git
-
-llvm/projects/dragonegg
 	svn co http://llvm.org/svn/llvm-project/dragonegg/trunk dragonegg
 
-
-CMakeLists.txt
+CMakeLists.txt or  CMakeCache.txt
 	add_definitions(-D__STDC_FORMAT_MACROS)
 	add_definitions(-D__USE_MINGW_ANSI_STDIO)
 
@@ -40,45 +37,90 @@ llvm/tools/lldb/cmake/modules/LLDBConfig.cmake
 pyconfig.h
 	#define hypot _hypot
 
-gendef python27.dll
-dlltool --dllname python27.dll --def python27.def --output-lib libpython27.a
-ranlib libpython27.a
+MinGW
+	gendef python27.dll
+	dlltool --dllname python27.dll --def python27.def --output-lib libpython27.a
+	ranlib libpython27.a
 
-gendef python36.dll
-dlltool --dllname python36.dll --def python36.def --output-lib libpython36.a
-ranlib libpython36.a
+	gendef python36.dll
+	dlltool --dllname python36.dll --def python36.def --output-lib libpython36.a
+	ranlib libpython36.a
 
-gendef python37.dll
-dlltool --dllname python37.dll --def python37.def --output-lib libpython37.a
-ranlib libpython37.a
+	gendef python37.dll
+	dlltool --dllname python37.dll --def python37.def --output-lib libpython37.a
+	ranlib libpython37.a
 
-gendef python38.dll
-dlltool --dllname python38.dll --def python38.def --output-lib libpython38.a
-ranlib libpython38.a
+	gendef python38.dll
+	dlltool --dllname python38.dll --def python38.def --output-lib libpython38.a
+	ranlib libpython38.a
 
-see all projects defined by LLVM_ALL_PROJECTS in llvm/CMakeLists.txt
+	gendef python39.dll
+	dlltool --dllname python39.dll --def python39.def --output-lib libpython39.a
+	ranlib libpython39.a
 
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;compiler-rt;libclc;lld;lldb;mlir;openmp;parallel-libs;polly' -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
 
-mingw32-make libclang
-mingw32-make clang
-mingw32-make clang-tidy
+two-stage build based on llvm\utils\release\build_llvm_package.bat
 
-two-stage build based on llvm\utils\release\
+1. build with LLVM
+mkdir build-first
+set PATH=F:/Dev/LLVM11/bin;%PATH%
+set CC=F:/Dev/LLVM11/bin/clang-cl.exe
+set CXX=F:/Dev/LLVM11/bin/clang-cl.exe
 
-1. build with MSVC
-cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;compiler-rt;libclc;lld;lldb;mlir;openmp;parallel-libs;polly' -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
-cmake -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;compiler-rt;libclc;lld;lldb;mlir;openmp;parallel-libs;polly' -DLLVM_ENABLE_ASSERTIONS=ON -DPYTHON_HOME=D:/Dev/Python3 -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-SVN ../llvm/llvm
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
+	-DLLVM_ENABLE_ASSERTIONS=ON ^
+	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
+	-DLLVM_ENABLE_PROJECTS="clang;compiler-rt;lld;openmp" ^
+	-DLLVM_TARGETS_TO_BUILD="AArch64;X86" ^
+	../llvm/llvm
+
 ninja all
+ninja clang
+ninja compiler-rt
 
 2. rebuild using clang-cl
-set CC=../build-msvc/bin/clang-cl.exe
-set CXX=../build-msvc/bin/clang-cl.exe
+mkdir build
+set PATH=../build-first/bin;%PATH%
+set CC=../build-first/bin/clang-cl.exe
+set CXX=../build-first/bin/clang-cl.exe
+
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
+	-DLLVM_ENABLE_ASSERTIONS=ON ^
+	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
+	-DLLVM_BUILD_LLVM_C_DYLIB=ON ^
+	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;openmp" ^
+	-DLLVM_TARGETS_TO_BUILD="AArch64;X86" ^
+	-DPYTHON_HOME=D:/Dev/Python3 ^
+	-DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-Main ^
+	../llvm/llvm
+
+without lldb:
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
+	-DLLVM_ENABLE_ASSERTIONS=ON ^
+	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
+	-DLLVM_BUILD_LLVM_C_DYLIB=ON ^
+	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;openmp" ^
+	-DLLVM_TARGETS_TO_BUILD="AArch64;X86" ^
+	-DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-Main ^
+	../llvm/llvm
+
+ninja all
+ninja clang
+ninja compiler-rt
 
 3. others
-ninja libclang
-ninja clang
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
+	-DLLVM_ENABLE_ASSERTIONS=ON ^
+	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
+	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" ^
+	-DLLVM_TARGETS_TO_BUILD="X86" ^
+	../llvm/llvm
+
 ninja clang-tidy
+ninja clang-format
+
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo ^
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ^
 
 Z3 for Clang Static Analyzer
 https://github.com/Z3Prover/z3/releases
