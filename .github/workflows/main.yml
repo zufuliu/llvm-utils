@@ -1,0 +1,28 @@
+name: CI
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: cmd
+
+jobs:
+  vs2019:
+    name: Visual Studio 2019
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install llvm utils
+      run: |
+        CALL "VS2017\install.bat" 1
+
+  vs2017:
+    name: Visual Studio 2017
+    runs-on: windows-2016
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install llvm utils
+      run: |
+        CALL "VS2017\install.bat" 1
