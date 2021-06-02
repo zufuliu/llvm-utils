@@ -150,6 +150,13 @@
         <UseFullPaths/>
         <RemoveUnreferencedCodeData/>
         <SupportJustMyCode/>
+        <!-- Ignore options added in Visual Studio 2019. -->
+        <ExternalDirectoriesEnv /> <!-- External Directories Environment Variables: /external:env:EXTERNAL_INCLUDE -->
+        <TreatAngleIncludeAsExternal /> <!-- Treat Files Included with Angle Brackets as External: external:anglebrackets -->
+        <ExternalWarningLevel /> <!-- External Header Warning Level: /external:W0 ... /external:W4 -->
+        <ExternalTemplatesDiagnostics /> <!-- Template Diagnostics in External Headers: external:templates- -->
+        <DisableAnalyzeExternal /> <!-- Disable Code Analysis for External Headers: analyze:external- -->
+        <AnalyzeExternalRuleset /> <!-- Analysis Ruleset for External Headers: /analyze:external:ruleset[path] -->
         <!-- Ignore C++ Language Standard for C, and vice versa -->
         <LanguageStandard Condition="('%(ClCompile.CompileAs)' == 'CompileAsC') or ('%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' == '.c')"/>
         <LanguageStandard_C/>
