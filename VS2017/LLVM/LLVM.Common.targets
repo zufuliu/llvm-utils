@@ -94,11 +94,6 @@
            File="@(ClCompile)(0,0)"
            Text="clang-cl does not support Windows Runtime Language Extensions (/ZW, /ZW:nostdlib).  This file cannot be compiled."/>
 
-    <!-- Error if OpenMP language extensions are enabled. -->
-    <Error Condition="'%(ClCompile.OpenMPSupport)' == 'true'"
-           File="@(ClCompile)(0,0)"
-           Text="clang-cl does not support OpenMP (/openmp).  This file cannot be compiled."/>
-
     <!-- Error if C++ Modules are enabled.  Clang has its own notion of modules that are not compatible. -->
     <Error Condition="'%(ClCompile.EnableModules)' == 'true'"
            File="@(ClCompile)(0,0)"
@@ -118,48 +113,9 @@
              -->
         <DebugInformationFormat Condition="'%(ClCompile.DebugInformationFormat)' == 'ProgramDatabase'">OldStyle</DebugInformationFormat>
         <DebugInformationFormat Condition="'%(ClCompile.DebugInformationFormat)' == 'EditAndContinue'">OldStyle</DebugInformationFormat>
-
-        <!-- Unset any options that we either silently ignore or warn about due to compatibility.
-             Generally when an option is set to no value, that means "Don't pass an option to the
-             compiler at all."
-             -->
-        <WholeProgramOptimization/>
-        <EnableFiberSafeOptimizations/>
-        <IgnoreStandardIncludePath/>
-        <EnableParallelCodeGeneration/>
-        <ForceConformanceInForLoopScope/>
-        <TreatWChar_tAsBuiltInType/>
-        <SDLCheck/>
-        <GenerateXMLDocumentationFiles/>
-        <BrowseInformation/>
-        <EnablePREfast/>
-        <MinimalRebuild/>
-        <StringPooling/>
-        <ExpandAttributedSource/>
-        <EnforceTypeConversionRules/>
-        <ErrorReporting/>
-        <DisableLanguageExtensions/>
-        <ProgramDataBaseFileName/>
-        <DisableSpecificWarnings/>
-        <TreatSpecificWarningsAsErrors/>
-        <ForcedUsingFiles/>
-        <PREfastLog/>
-        <PREfastAdditionalOptions/>
-        <PREfastAdditionalPlugins/>
-        <MultiProcessorCompilation/>
-        <UseFullPaths/>
-        <RemoveUnreferencedCodeData/>
-        <SupportJustMyCode/>
-        <!-- Ignore options added in Visual Studio 2019. -->
-        <ExternalDirectoriesEnv /> <!-- External Directories Environment Variables: /external:env:EXTERNAL_INCLUDE -->
-        <TreatAngleIncludeAsExternal /> <!-- Treat Files Included with Angle Brackets as External: external:anglebrackets -->
-        <ExternalWarningLevel /> <!-- External Header Warning Level: /external:W0 ... /external:W4 -->
-        <ExternalTemplatesDiagnostics /> <!-- Template Diagnostics in External Headers: external:templates- -->
-        <DisableAnalyzeExternal /> <!-- Disable Code Analysis for External Headers: analyze:external- -->
-        <AnalyzeExternalRuleset /> <!-- Analysis Ruleset for External Headers: /analyze:external:ruleset[path] -->
         <!-- Ignore C++ Language Standard for C, and vice versa -->
         <LanguageStandard Condition="('%(ClCompile.CompileAs)' == 'CompileAsC') or ('%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' == '.c')"/>
-        <LanguageStandard_C/>
+        <LanguageStandard_C/> <!-- https://bugs.llvm.org/show_bug.cgi?id=48185 -->
         <!--
         <LanguageStandard_C Condition="('%(ClCompile.CompileAs)' == 'CompileAsCpp') or ('%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' != '.c')"/>
         -->
@@ -167,6 +123,73 @@
         <!-- We can't just unset BasicRuntimeChecks, as that will pass /RTCu to the compiler.
              We have to explicitly set it to 'Default' to avoid passing anything. -->
         <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+        <!-- only /FA is supported -->
+        <AssemblerOutput Condition="'%(ClCompile.AssemblerOutput)' == 'AssemblyAndMachineCode'">AssemblyCode</AssemblerOutput>
+        <AssemblerOutput Condition="'%(ClCompile.AssemblerOutput)' == 'AssemblyAndSourceCode'">AssemblyCode</AssemblerOutput>
+        <AssemblerOutput Condition="'%(ClCompile.AssemblerOutput)' == 'All'">AssemblyCode</AssemblerOutput>
+        <!-- Unset any options that we either silently ignore or warn about due to compatibility.
+             Generally when an option is set to no value, that means "Don't pass an option to the
+             compiler at all."
+             -->
+        <AdditionalBMIDirectories/>
+        <AdditionalHeaderUnitDependencies/>
+        <AdditionalModuleDependencies/>
+        <AdditionalUsingDirectories/>
+        <BrowseInformation/>
+        <ConformanceMode/>
+        <CreateHotpatchableImage/>
+        <DisableLanguageExtensions/>
+        <DisableSpecificWarnings/>
+        <EnableASAN/>
+        <EnableFiberSafeOptimizations/>
+        <EnableParallelCodeGeneration/>
+        <EnablePREfast/>
+        <EnforceTypeConversionRules/>
+        <ErrorReporting/>
+        <ExpandAttributedSource/>
+        <ForceConformanceInForLoopScope/>
+        <ForcedUsingFiles/>
+        <ForceSynchronousPDBWrites/>
+        <GenerateModuleDependencies/>
+        <GenerateSourceDependencies/>
+        <GenerateXMLDocumentationFiles/>
+        <GuardEHContMetadata/>
+        <GuardSignedReturns/>
+        <IntelJCCErratum/>
+        <MinimalRebuild/>
+        <ModuleOutputFile/>
+        <MultiProcessorCompilation/>
+        <PREfastAdditionalOptions/>
+        <PREfastAdditionalPlugins/>
+        <PREfastLog/>
+        <PREfastProjectDirectory/>
+        <PREfastRulesetDirectories/>
+        <PREfastRulesetFile/>
+        <ProgramDataBaseFileName/>
+        <RemoveUnreferencedCodeData/>
+        <SDLCheck/>
+        <SmallerTypeCheck/>
+        <SpectreMitigation/>
+        <StdIfcDirectory/>
+        <SupportJustMyCode/>
+        <SuppressStartupBanner/>
+        <TranslateIncludes/>
+        <TreatSpecificWarningsAsErrors/>
+        <TreatWChar_tAsBuiltInType/>
+        <UndefineAllPreprocessorDefinitions/>
+        <UseFullPaths/>
+        <UseStandardPreprocessor/>
+        <UseUnicodeForAssemblerListing/>
+        <WarningVersion/>
+        <WholeProgramOptimization/>
+        <WinRTNoStdLib/>
+        <!-- https://bugs.llvm.org/show_bug.cgi?id=36003 -->
+        <AnalyzeExternalRuleset/>
+        <DisableAnalyzeExternal/>
+        <ExternalDirectoriesEnv/>
+        <ExternalTemplatesDiagnostics/>
+        <ExternalWarningLevel/>
+        <TreatAngleIncludeAsExternal/>
       </ClCompile>
     </ItemGroup>
   </Target>
