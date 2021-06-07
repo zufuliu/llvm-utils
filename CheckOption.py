@@ -16,9 +16,13 @@ def decode_stdout(doc):
 		except UnicodeDecodeError:
 			return doc.decode(sys.getdefaultencoding())
 
-def get_clang_cl_help(filename):
+def get_clang_cl_help(filename, saveLog=True):
 	with subprocess.Popen([filename, '/?'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
+		if saveLog:
+			path = os.path.splitext(os.path.basename(filename))[0] + '.log'
+			with open(path, 'wb') as fd:
+				fd.write(doc)
 		return decode_stdout(doc)
 
 def get_visual_studio_cl_rule_path(filename):
@@ -82,7 +86,7 @@ def parse_clang_cl_ignored_options(path):
 								ignored.add(item.tagName)
 	return ignored
 
-def parse_cl_rule_xml(path, options, switchMap):
+def parse_msvc_rule_xml(path, options, switchMap):
 	def fix_swicth(value):
 		value = value.strip()
 		return '/' + value if value else ''
@@ -136,7 +140,7 @@ def parse_cl_rule_xml(path, options, switchMap):
 					print('    ignore:', tagName, name)
 	return options
 
-def dump_cl_rule_as_yaml(path, options):
+def dump_msvc_rule_as_yaml(path, options):
 	with open(path, 'w', encoding='utf-8') as fd:
 		fd.write('Rule:\n')
 		for option in options.values():
@@ -160,8 +164,6 @@ def dump_cl_rule_as_yaml(path, options):
 
 def check_clang_cl_options():
 	doc = get_clang_cl_help('clang-cl.exe')
-	with open('clang-cl.log', 'w', encoding='utf-8') as fd:
-		fd.write(doc)
 	supported = parse_clang_cl_help(doc)
 	prefixList = [item[:-1] for item in supported if item[-1] == '*']
 
@@ -172,8 +174,8 @@ def check_clang_cl_options():
 	switchMap = {}
 	result = get_visual_studio_cl_rule_path('cl.xml')
 	for path in result:
-		parse_cl_rule_xml(path, options, switchMap)
-	dump_cl_rule_as_yaml('cl.yml', options)
+		parse_msvc_rule_xml(path, options, switchMap)
+	dump_msvc_rule_as_yaml('cl.yml', options)
 
 	# remove previous ignored but now supported options
 	for item in supported:
@@ -229,15 +231,64 @@ def check_clang_cl_options():
 				value = item['Switch']
 				check_switch(name, option, value)
 
-	print('total option count:', len( options), 'unsupported:', len(unsupported))
+	print('total cl option count:', len( options), 'unsupported:', len(unsupported))
 	if unsupported:
 		unsupported = dict(sorted(unsupported.items()))
-		dump_cl_rule_as_yaml('new-unsupported.yml', unsupported)
+		dump_msvc_rule_as_yaml('cl-unsupported.yml', unsupported)
 	for name in ignored:
 		if name in options:
 			unsupported[name] = options[name]
 	unsupported = dict(sorted(unsupported.items()))
-	dump_cl_rule_as_yaml('all-unsupported.yml', unsupported)
+	dump_msvc_rule_as_yaml('all-cl-unsupported.yml', unsupported)
+
+def check_program_options(llvmName, msvcName):
+	doc = get_clang_cl_help(llvmName)
+	supported = parse_clang_cl_help(doc)
+	prefixList = [item[:-1] for item in supported if item[-1] == '*']
+
+	options = {}
+	switchMap = {}
+	result = get_visual_studio_cl_rule_path(f'{msvcName}.xml')
+	for path in result:
+		parse_msvc_rule_xml(path, options, switchMap)
+	dump_msvc_rule_as_yaml(f'{msvcName}.yml', options)
+
+	# find unsupported options
+	unsupported = {}
+
+	def check_switch(name, option, value):
+		if not value:
+			return
+		# case insensitive?
+		lower = value.lower()
+		upper = value.upper()
+		if value in supported or lower in supported or upper in supported:
+			return
+		unsupported[name] = option
+		if ':' in value:
+			if any(value.startswith(prefix) or lower.startswith(prefix) or upper.startswith(prefix) for prefix in prefixList):
+				print('maybe supported option:', name, value)
+
+	for option in options.values():
+		name = option['Name']
+		value = option['Switch']
+		check_switch(name, option, value)
+		value = option['ReverseSwitch']
+		check_switch(name, option, value)
+		values = option['Options']
+		if values:
+			for item in values.values():
+				value = item['Switch']
+				check_switch(name, option, value)
+
+	print(f'total {msvcName} option count:', len( options), 'unsupported:', len(unsupported))
+	if unsupported:
+		unsupported = dict(sorted(unsupported.items()))
+		dump_msvc_rule_as_yaml(f'{msvcName}-unsupported.yml', unsupported)
 
 if __name__ == '__main__':
 	check_clang_cl_options()
+	#check_program_options('lld-link.exe', 'link')
+	#check_program_options('llvm-lib.exe', 'lib')
+	#check_program_options('llvm-rc.exe', 'rc')
+
