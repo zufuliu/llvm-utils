@@ -16,16 +16,14 @@ def decode_stdout(doc):
 		except UnicodeDecodeError:
 			return doc.decode(sys.getdefaultencoding())
 
-def get_clang_cl_help():
-	with subprocess.Popen(['clang-cl.exe', '/?'], stdout=subprocess.PIPE) as proc:
+def get_clang_cl_help(filename):
+	with subprocess.Popen([filename, '/?'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
 		return decode_stdout(doc)
 
-def get_visual_studio_cl_rule_path():
+def get_visual_studio_cl_rule_path(filename):
 	result = []
-	path = os.getenv('ProgramFiles(x86)')
-	if not path:
-		path = r'C:\Program Files (x86)'
+	path = os.getenv('ProgramFiles(x86)') or r'C:\Program Files (x86)'
 	vswhere = os.path.join(path, r'Microsoft Visual Studio\Installer\vswhere.exe')
 	# Visual Studio 2019
 	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[16.0,17.0]'], stdout=subprocess.PIPE) as proc:
@@ -33,11 +31,11 @@ def get_visual_studio_cl_rule_path():
 		lines = decode_stdout(doc).splitlines()
 		for line in lines:
 			if os.path.exists(line):
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v160\1033\cl.xml')
+				path = os.path.join(line, r'MSBuild\Microsoft\VC\v160\1033', filename)
 				if os.path.isfile(path):
 					print('find:', path)
 					result.append(path)
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v150\1033\cl.xml')
+				path = os.path.join(line, r'MSBuild\Microsoft\VC\v150\1033', filename)
 				if os.path.isfile(path):
 					print('find:', path)
 					result.append(path)
@@ -47,7 +45,7 @@ def get_visual_studio_cl_rule_path():
 		lines = decode_stdout(doc).splitlines()
 		for line in lines:
 			if os.path.exists(line):
-				path = os.path.join(line, r'Common7\IDE\VC\VCTargets\1033\cl.xml')
+				path = os.path.join(line, r'Common7\IDE\VC\VCTargets\1033', filename)
 				if os.path.isfile(path):
 					print('find:', path)
 					result.append(path)
@@ -64,8 +62,8 @@ def parse_clang_cl_help(doc):
 				index = item.find('<')
 				if index > 0:
 					item = item[:index]
-				if item[-1] == ':':
-					item = item[:-1]
+					if ':' in item:
+						item = item + '*'
 				supported.add(item)
 	return supported
 
@@ -87,9 +85,7 @@ def parse_clang_cl_ignored_options(path):
 def parse_cl_rule_xml(path, options, switchMap):
 	def fix_swicth(value):
 		value = value.strip()
-		if not value:
-			return ''
-		return '/' + value
+		return '/' + value if value else ''
 
 	print('parse:', path)
 	with xml.dom.minidom.parse(path) as dom:
@@ -100,23 +96,26 @@ def parse_cl_rule_xml(path, options, switchMap):
 			if not tagName.endswith('Property'):
 				continue
 			name = node.getAttribute('Name')
-			if name in options:
+			values = {}
+			if tagName == 'EnumProperty':
+				if name in options:
+					values = options[name]['Options']
+				for enumValue in node.getElementsByTagName('EnumValue'):
+					valueName = enumValue.getAttribute('Name')
+					if valueName not in values:
+						valueSwitch = fix_swicth(enumValue.getAttribute('Switch'))
+						if valueSwitch:
+							switchMap[valueSwitch] = name
+						values[valueName] = {
+							'Name': valueName,
+							'Switch': valueSwitch,
+							'DisplayName': enumValue.getAttribute('DisplayName'),
+							'Description': enumValue.getAttribute('Description'),
+						}
+			elif name in options:
 				continue
 			switch = fix_swicth(node.getAttribute('Switch'))
 			reverseSwitch = fix_swicth(node.getAttribute('ReverseSwitch'))
-			values = {}
-			if tagName == 'EnumProperty':
-				for enumValue in node.getElementsByTagName('EnumValue'):
-					valueSwitch = fix_swicth(enumValue.getAttribute('Switch'))
-					if valueSwitch:
-						switchMap[valueSwitch] = name
-					valueName = enumValue.getAttribute('Name')
-					values[valueName] = {
-						'Name': valueName,
-						'Switch': valueSwitch,
-						'DisplayName': enumValue.getAttribute('DisplayName'),
-						'Description': enumValue.getAttribute('Description'),
-					}
 			if switch or reverseSwitch or values or tagName == 'DynamicEnumProperty':
 				if switch:
 					switchMap[switch] = name
@@ -159,15 +158,19 @@ def dump_cl_rule_as_yaml(path, options):
 					fd.write(f"        DisplayName: {value['DisplayName']}\n")
 					fd.write(f"        Description: {value['Description']}\n")
 
-def main():
-	doc = get_clang_cl_help()
+def check_clang_cl_options():
+	doc = get_clang_cl_help('clang-cl.exe')
+	with open('clang-cl.log', 'w', encoding='utf-8') as fd:
+		fd.write(doc)
 	supported = parse_clang_cl_help(doc)
+	prefixList = [item[:-1] for item in supported if item[-1] == '*']
+
 	path = r'VS2017\LLVM\LLVM.Common.targets'
 	ignored = parse_clang_cl_ignored_options(path)
 
 	options = {}
 	switchMap = {}
-	result = get_visual_studio_cl_rule_path()
+	result = get_visual_studio_cl_rule_path('cl.xml')
 	for path in result:
 		parse_cl_rule_xml(path, options, switchMap)
 	dump_cl_rule_as_yaml('cl.yml', options)
@@ -197,22 +200,22 @@ def main():
 		'StructMemberAlignment',
 		'LanguageStandard',
 	])
-	ignored |= hardcoded
+
 	# find unsupported options
 	unsupported = {}
 
 	def check_switch(name, option, value):
 		if not value:
 			return
-		if value not in supported:
-			if name not in ignored:
-				unsupported[name] = option
-			if name not in hardcoded and ':' in value:
-				value = value[:value.index(':')]
-				if value in supported:
-					print('maybe supported option:', name, value)
-		elif name in ignored:
-			print('supported option:', name, value)
+		if value in supported:
+			if name in ignored:
+				print('supported option:', name, value)
+			return
+		if name not in ignored and name not in hardcoded:
+			unsupported[name] = option
+		if name not in hardcoded and ':' in value:
+			if any(value.startswith(prefix) for prefix in prefixList):
+				print('maybe supported option:', name, value)
 
 	for option in options.values():
 		name = option['Name']
@@ -230,11 +233,11 @@ def main():
 	if unsupported:
 		unsupported = dict(sorted(unsupported.items()))
 		dump_cl_rule_as_yaml('new-unsupported.yml', unsupported)
-	for name in ignored - hardcoded:
+	for name in ignored:
 		if name in options:
 			unsupported[name] = options[name]
 	unsupported = dict(sorted(unsupported.items()))
 	dump_cl_rule_as_yaml('all-unsupported.yml', unsupported)
 
 if __name__ == '__main__':
-	main()
+	check_clang_cl_options()
