@@ -25,7 +25,7 @@ def get_clang_cl_help(filename, saveLog=True):
 				fd.write(doc)
 		return decode_stdout(doc)
 
-def get_visual_studio_cl_rule_path(filename):
+def get_msvc_rule_path(filename):
 	result = []
 	path = os.getenv('ProgramFiles(x86)') or r'C:\Program Files (x86)'
 	vswhere = os.path.join(path, r'Microsoft Visual Studio\Installer\vswhere.exe')
@@ -172,7 +172,7 @@ def check_clang_cl_options():
 
 	options = {}
 	switchMap = {}
-	result = get_visual_studio_cl_rule_path('cl.xml')
+	result = get_msvc_rule_path('cl.xml')
 	for path in result:
 		parse_msvc_rule_xml(path, options, switchMap)
 	dump_msvc_rule_as_yaml('cl.yml', options)
@@ -211,13 +211,13 @@ def check_clang_cl_options():
 			return
 		if value in supported:
 			if name in ignored:
-				print('supported option:', name, value)
+				print('supported cl option:', name, value)
 			return
 		if name not in ignored and name not in hardcoded:
 			unsupported[name] = option
 		if name not in hardcoded and ':' in value:
 			if any(value.startswith(prefix) for prefix in prefixList):
-				print('maybe supported option:', name, value)
+				print('maybe supported cl option:', name, value)
 
 	for option in options.values():
 		name = option['Name']
@@ -248,7 +248,7 @@ def check_program_options(llvmName, msvcName):
 
 	options = {}
 	switchMap = {}
-	result = get_visual_studio_cl_rule_path(f'{msvcName}.xml')
+	result = get_msvc_rule_path(f'{msvcName}.xml')
 	for path in result:
 		parse_msvc_rule_xml(path, options, switchMap)
 	dump_msvc_rule_as_yaml(f'{msvcName}.yml', options)
@@ -267,7 +267,7 @@ def check_program_options(llvmName, msvcName):
 		unsupported[name] = option
 		if ':' in value:
 			if any(value.startswith(prefix) or lower.startswith(prefix) or upper.startswith(prefix) for prefix in prefixList):
-				print('maybe supported option:', name, value)
+				print(f'maybe supported {msvcName} option:', name, value)
 
 	for option in options.values():
 		name = option['Name']
