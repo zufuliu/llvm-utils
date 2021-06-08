@@ -30,7 +30,7 @@ def get_msvc_rule_path(filename):
 	path = os.getenv('ProgramFiles(x86)') or r'C:\Program Files (x86)'
 	vswhere = os.path.join(path, r'Microsoft Visual Studio\Installer\vswhere.exe')
 	# Visual Studio 2019
-	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[16.0,17.0]'], stdout=subprocess.PIPE) as proc:
+	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[16.0,17.0)'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
 		lines = decode_stdout(doc).splitlines()
 		for line in lines:
@@ -44,7 +44,7 @@ def get_msvc_rule_path(filename):
 					print('find:', path)
 					result.append(path)
 	# Visual Studio 2017
-	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[15.0,16.0]'], stdout=subprocess.PIPE) as proc:
+	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[15.0,16.0)'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
 		lines = decode_stdout(doc).splitlines()
 		for line in lines:
@@ -162,28 +162,85 @@ def dump_msvc_rule_as_yaml(path, options):
 					fd.write(f"        DisplayName: {value['DisplayName']}\n")
 					fd.write(f"        Description: {value['Description']}\n")
 
-def check_clang_cl_options():
-	doc = get_clang_cl_help('clang-cl.exe')
+def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
+	doc = get_clang_cl_help(llvmName)
 	supported = parse_clang_cl_help(doc)
 	prefixList = [item[:-1] for item in supported if item[-1] == '*']
 
-	path = r'VS2017\LLVM\LLVM.Common.targets'
-	ignored = parse_clang_cl_ignored_options(path)
-
 	options = {}
 	switchMap = {}
-	result = get_msvc_rule_path('cl.xml')
+	result = get_msvc_rule_path(f'{msvcName}.xml')
 	for path in result:
 		parse_msvc_rule_xml(path, options, switchMap)
-	dump_msvc_rule_as_yaml('cl.yml', options)
+	dump_msvc_rule_as_yaml(f'{msvcName}.yml', options)
 
 	# remove previous ignored but now supported options
-	for item in supported:
-		if item in switchMap:
-			name = switchMap[item]
-			if name in ignored:
-				print('supported option:', name, item)
+	if ignored:
+		for item in supported:
+			if item in switchMap:
+				name = switchMap[item]
+				if name in ignored:
+					print(f'supported {msvcName} option:', name, item)
 
+	# find unsupported options
+	unsupported = {}
+
+	def check_switch_match_case(name, option, value):
+		if not value:
+			return
+		if value in supported:
+			if name in ignored:
+				print(f'supported {msvcName} option:', name, value)
+			return
+		if name not in ignored and name not in hardcoded:
+			unsupported[name] = option
+		if name not in hardcoded and ':' in value:
+			if any(value.startswith(prefix) for prefix in prefixList):
+				print(f'maybe supported {msvcName} option:', name, value)
+
+	def check_switch_ignore_case(name, option, value):
+		if not value:
+			return
+		lower = value.lower()
+		upper = value.upper()
+		if value in supported or lower in supported or upper in supported:
+			if name in ignored:
+				print(f'supported {msvcName} option:', name, value)
+			return
+		if name not in ignored and name not in hardcoded:
+			unsupported[name] = option
+		if name not in hardcoded and ':' in value:
+			if any(value.startswith(prefix) or lower.startswith(prefix) or upper.startswith(prefix) for prefix in prefixList):
+				print(f'maybe supported {msvcName} option:', name, value)
+
+	check_switch = check_switch_match_case if msvcName == 'cl' else check_switch_ignore_case
+	for option in options.values():
+		name = option['Name']
+		value = option['Switch']
+		check_switch(name, option, value)
+		value = option['ReverseSwitch']
+		check_switch(name, option, value)
+		values = option['Options']
+		if values:
+			for item in values.values():
+				value = item['Switch']
+				check_switch(name, option, value)
+
+	print(f'total {msvcName} option count:', len( options), 'unsupported:', len(unsupported))
+	if unsupported:
+		unsupported = dict(sorted(unsupported.items()))
+		dump_msvc_rule_as_yaml(f'{msvcName}-unsupported.yml', unsupported)
+	if ignored:
+		for name in ignored:
+			if name in options:
+				unsupported[name] = options[name]
+		unsupported = dict(sorted(unsupported.items()))
+		dump_msvc_rule_as_yaml(f'all-{msvcName}-unsupported.yml', unsupported)
+
+
+def check_clang_cl_options():
+	path = r'VS2017\LLVM\LLVM.Common.targets'
+	ignored = parse_clang_cl_ignored_options(path)
 	hardcoded = set([
 		# error
 		'CompileAsManaged',
@@ -202,93 +259,46 @@ def check_clang_cl_options():
 		'StructMemberAlignment',
 		'LanguageStandard',
 	])
+	check_program_options('clang-cl.exe', 'cl', ignored=ignored, hardcoded=hardcoded)
 
-	# find unsupported options
-	unsupported = {}
+def check_lld_link_options():
+	hardcoded = set([
+		# supported
+		'AdditionalLibraryDirectories',
+		'AdditionalManifestDependencies',
+		'CreateHotPatchableImage',
+		'DelayLoadDLLs',
+		'EnableCOMDATFolding',
+		'EnableUAC',
+		'ForceSymbolReferences',
+		'GenerateDebugInformation',
+		'GenerateManifest',
+		'IgnoreSpecificDefaultLibraries',
+		'LinkControlFlowGuard',
+		'ManifestEmbed',
+		'ManifestInput',
+		'Natvis',
+		'OptimizeReferences',
+		'SpecifySectionAttributes',
+		'SubSystem',
+		'TargetMachine',
+	])
+	check_program_options('lld-link.exe', 'link', hardcoded=hardcoded)
 
-	def check_switch(name, option, value):
-		if not value:
-			return
-		if value in supported:
-			if name in ignored:
-				print('supported cl option:', name, value)
-			return
-		if name not in ignored and name not in hardcoded:
-			unsupported[name] = option
-		if name not in hardcoded and ':' in value:
-			if any(value.startswith(prefix) for prefix in prefixList):
-				print('maybe supported cl option:', name, value)
+def check_llvm_lib_options():
+	hardcoded = set([
+		# supported
+		'AdditionalLibraryDirectories',
+		'TargetMachine',
+	])
+	check_program_options('llvm-lib.exe', 'lib', hardcoded=hardcoded)
 
-	for option in options.values():
-		name = option['Name']
-		value = option['Switch']
-		check_switch(name, option, value)
-		value = option['ReverseSwitch']
-		check_switch(name, option, value)
-		values = option['Options']
-		if values:
-			for item in values.values():
-				value = item['Switch']
-				check_switch(name, option, value)
-
-	print('total cl option count:', len( options), 'unsupported:', len(unsupported))
-	if unsupported:
-		unsupported = dict(sorted(unsupported.items()))
-		dump_msvc_rule_as_yaml('cl-unsupported.yml', unsupported)
-	for name in ignored:
-		if name in options:
-			unsupported[name] = options[name]
-	unsupported = dict(sorted(unsupported.items()))
-	dump_msvc_rule_as_yaml('all-cl-unsupported.yml', unsupported)
-
-def check_program_options(llvmName, msvcName):
-	doc = get_clang_cl_help(llvmName)
-	supported = parse_clang_cl_help(doc)
-	prefixList = [item[:-1] for item in supported if item[-1] == '*']
-
-	options = {}
-	switchMap = {}
-	result = get_msvc_rule_path(f'{msvcName}.xml')
-	for path in result:
-		parse_msvc_rule_xml(path, options, switchMap)
-	dump_msvc_rule_as_yaml(f'{msvcName}.yml', options)
-
-	# find unsupported options
-	unsupported = {}
-
-	def check_switch(name, option, value):
-		if not value:
-			return
-		# case insensitive?
-		lower = value.lower()
-		upper = value.upper()
-		if value in supported or lower in supported or upper in supported:
-			return
-		unsupported[name] = option
-		if ':' in value:
-			if any(value.startswith(prefix) or lower.startswith(prefix) or upper.startswith(prefix) for prefix in prefixList):
-				print(f'maybe supported {msvcName} option:', name, value)
-
-	for option in options.values():
-		name = option['Name']
-		value = option['Switch']
-		check_switch(name, option, value)
-		value = option['ReverseSwitch']
-		check_switch(name, option, value)
-		values = option['Options']
-		if values:
-			for item in values.values():
-				value = item['Switch']
-				check_switch(name, option, value)
-
-	print(f'total {msvcName} option count:', len( options), 'unsupported:', len(unsupported))
-	if unsupported:
-		unsupported = dict(sorted(unsupported.items()))
-		dump_msvc_rule_as_yaml(f'{msvcName}-unsupported.yml', unsupported)
+def check_llvm_rc_options():
+	check_program_options('llvm-rc.exe', 'rc')
 
 if __name__ == '__main__':
 	check_clang_cl_options()
-	#check_program_options('lld-link.exe', 'link')
-	#check_program_options('llvm-lib.exe', 'lib')
-	#check_program_options('llvm-rc.exe', 'rc')
+	#check_lld_link_options()
+	#check_llvm_lib_options()
+	#check_llvm_rc_options()
 
