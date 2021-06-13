@@ -4,6 +4,9 @@ import os.path
 import subprocess
 import string
 import xml.dom.minidom
+import ctypes
+
+CP_ACP = 'cp' + str(ctypes.windll.kernel32.GetACP())
 
 def decode_stdout(doc):
 	if not doc:
@@ -11,10 +14,7 @@ def decode_stdout(doc):
 	try:
 		return doc.decode('utf-8')
 	except UnicodeDecodeError:
-		try:
-			return doc.decode(sys.stdout.encoding)
-		except UnicodeDecodeError:
-			return doc.decode(sys.getdefaultencoding())
+		return doc.decode(CP_ACP)
 
 def get_clang_cl_help(filename, saveLog=True):
 	with subprocess.Popen([filename, '/?'], stdout=subprocess.PIPE) as proc:
