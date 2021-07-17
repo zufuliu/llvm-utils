@@ -23,7 +23,7 @@ FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.B
 @rem Visual Studio 2019
 FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -version [16.0^,17.0^)') DO (
 	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v160\Platforms
-	IF EXIST "!VCT_PATH!" CALL :SUB_VS2019 "!VCT_PATH!"
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2019 "!VCT_PATH!" 2019
 	@rem Visual C++ 2017 v141 toolset
 	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v150\Platforms
 	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!" 2019
@@ -32,14 +32,38 @@ FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -ve
 @rem Visual Studio 2019 Build Tools
 FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.BuildTools -property installationPath -prerelease -version [16.0^,17.0^)') DO (
 	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v160\Platforms
-	IF EXIST "!VCT_PATH!" CALL :SUB_VS2019 "!VCT_PATH!"
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2019 "!VCT_PATH!" 2019
 	@rem Visual C++ 2017 v141 toolset
 	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v150\Platforms
 	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!" 2019
 )
 
+@rem Visual Studio 2022
+FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -version [17.0^,18.0^)') DO (
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v170\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2022 "!VCT_PATH!" 2022
+	@rem Visual C++ 2019 v142 toolset
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v160\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2019 "!VCT_PATH!" 2022
+	@rem Visual C++ 2017 v141 toolset
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v150\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!" 2022
+)
+
+@rem Visual Studio 2022 Build Tools
+FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.BuildTools -property installationPath -prerelease -version [17.0^,18.0^)') DO (
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v170\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2022 "!VCT_PATH!" 2022
+	@rem Visual C++ 2019 v142 toolset
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v160\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2019 "!VCT_PATH!" 2022
+	@rem Visual C++ 2017 v141 toolset
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v150\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!" 2022
+)
+
 IF %SUCCESS% == 0 (
-	ECHO Visual C++ 2017 or 2019 NOT Installed.
+	ECHO Visual C++ 2017, 2019 or 2022 NOT Installed.
 	IF "%EXIT_ON_ERROR%" == "" PAUSE
 )
 
@@ -60,13 +84,22 @@ XCOPY /Q /Y "LLVM_v141_xp" "%~1\x64\PlatformToolsets\LLVM_v141_xp\"
 SET SUCCESS=1
 EXIT /B
 
-
 :SUB_VS2019
-ECHO VCTargetsPath for Visual Studio 2019: %~1
+ECHO VCTargetsPath for Visual Studio %~2: %~1
 XCOPY /Q /Y "LLVM" "%~1\..\LLVM\"
 XCOPY /Q /Y "LLVM_v142" "%~1\x64\PlatformToolsets\LLVM_v142\"
 XCOPY /Q /Y "LLVM_v142" "%~1\Win32\PlatformToolsets\LLVM_v142\"
 XCOPY /Q /Y "LLVM_v142" "%~1\ARM64\PlatformToolsets\LLVM_v142\"
 XCOPY /Q /Y "LLVM_v142" "%~1\ARM\PlatformToolsets\LLVM_v142\"
+SET SUCCESS=1
+EXIT /B
+
+:SUB_VS2022
+ECHO VCTargetsPath for Visual Studio %~2: %~1
+XCOPY /Q /Y "LLVM" "%~1\..\LLVM\"
+XCOPY /Q /Y "LLVM_v143" "%~1\x64\PlatformToolsets\LLVM_v143\"
+XCOPY /Q /Y "LLVM_v143" "%~1\Win32\PlatformToolsets\LLVM_v143\"
+XCOPY /Q /Y "LLVM_v143" "%~1\ARM64\PlatformToolsets\LLVM_v143\"
+XCOPY /Q /Y "LLVM_v143" "%~1\ARM\PlatformToolsets\LLVM_v143\"
 SET SUCCESS=1
 EXIT /B

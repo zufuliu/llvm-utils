@@ -6,7 +6,7 @@ SET "MAKE_ZIP_ARCHIVE=%~2"
 CD /D %~dp0
 DEL /Q LLVM_VS*.zip
 
-ECHO Visual Studio 2017 and 2019
+ECHO Visual Studio 2017, 2019 and 2022
 RD /Q /S LLVM_VS2017
 XCOPY /Q /Y ..\license.txt                 LLVM_VS2017\license.txt*
 XCOPY /Q /Y ..\llvm\llvm-link.bat          LLVM_VS2017\llvm-link.bat*
