@@ -29,35 +29,15 @@ def get_msvc_rule_path(filename):
 	result = []
 	path = os.getenv('ProgramFiles(x86)') or r'C:\Program Files (x86)'
 	vswhere = os.path.join(path, r'Microsoft Visual Studio\Installer\vswhere.exe')
-	# Visual Studio 2022
-	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[17.0,18.0)'], stdout=subprocess.PIPE) as proc:
+	# Visual Studio 2019, 2022
+	with subprocess.Popen([vswhere, '-sort', '-property', 'installationPath', '-prerelease', '-version', '[16.0,18.0)'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
 		lines = decode_stdout(doc).splitlines()
 		for line in lines:
-			if os.path.exists(line):
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v170\1033', filename)
-				if os.path.isfile(path):
-					print('find:', path)
-					result.append(path)
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v160\1033', filename)
-				if os.path.isfile(path):
-					print('find:', path)
-					result.append(path)
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v150\1033', filename)
-				if os.path.isfile(path):
-					print('find:', path)
-					result.append(path)
-	# Visual Studio 2019
-	with subprocess.Popen([vswhere, '-property', 'installationPath', '-prerelease', '-version', '[16.0,17.0)'], stdout=subprocess.PIPE) as proc:
-		doc = proc.stdout.read()
-		lines = decode_stdout(doc).splitlines()
-		for line in lines:
-			if os.path.exists(line):
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v160\1033', filename)
-				if os.path.isfile(path):
-					print('find:', path)
-					result.append(path)
-				path = os.path.join(line, r'MSBuild\Microsoft\VC\v150\1033', filename)
+			if not os.path.exists(line):
+				continue
+			for version in ['v170', 'v160', 'v150']:
+				path = os.path.join(line, rf'MSBuild\Microsoft\VC\{version}\1033', filename)
 				if os.path.isfile(path):
 					print('find:', path)
 					result.append(path)
@@ -316,7 +296,6 @@ def check_llvm_rc_options():
 
 if __name__ == '__main__':
 	check_clang_cl_options()
-	check_lld_link_options()
-	check_llvm_lib_options()
-	check_llvm_rc_options()
-
+	#check_lld_link_options()
+	#check_llvm_lib_options()
+	#check_llvm_rc_options()
