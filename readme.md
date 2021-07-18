@@ -6,9 +6,9 @@
 
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
-## LLVM for Visual Studio 2017 , 2019 and 2022
+## LLVM for Visual Studio 2017, 2019 and 2022
 ### Installation
-Please download and install LLVM from https://github.com/llvm/llvm-project/releases, https://llvm.org/builds/ or https://releases.llvm.org/.
+Please download and install LLVM from https://github.com/llvm/llvm-project/releases, https://releases.llvm.org/ or https://llvm.org/builds/.
 
 `VS2017\install.bat` can be used to install MSBuild script for Visual Studio 2017, 2019 and 2022. (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
 
@@ -124,8 +124,8 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor or GitHub Actions Build Image
 ### Install LLVM on the build image
 
-	curl -fsSL -o "LLVM-10.0.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe"
-	LLVM-10.0.0-win64.exe /S
+	curl -fsSL -o "LLVM-12.0.1-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe"
+	LLVM-12.0.1-win64.exe /S
 
 ### Install from release archives
 
@@ -140,11 +140,11 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 
 Examples:
 
-	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v19.05/LLVM_VS2017.zip"
+	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v21.06/LLVM_VS2017.zip"
 	7z x -y "LLVM_VS2017.zip" >NUL
 	CALL "LLVM_VS2017\install.bat" 1
 
-	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v19.05/LLVM_VS2010_2015.zip"
+	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v21.06/LLVM_VS2010_2015.zip"
 	7z x -y "LLVM_VS2010_2015.zip" >NUL
 	CALL "LLVM_VS2010_2015\install.bat" 1
 
