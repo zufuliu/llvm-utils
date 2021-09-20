@@ -142,6 +142,7 @@
         <DisableSpecificWarnings/>
         <EnableASAN/>
         <EnableFiberSafeOptimizations/>
+        <EnableFuzzer/>
         <EnableParallelCodeGeneration/>
         <EnablePREfast/>
         <EnforceTypeConversionRules/>
