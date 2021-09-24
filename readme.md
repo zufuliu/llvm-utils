@@ -1,8 +1,8 @@
 # LLVM Utils
 
-![LLVM for Visual Studio](../master/images/VS2017.png)
+![LLVM for Visual Studio](../main/images/VS2017.png)
 
-[![License](https://img.shields.io/badge/License-Apache%20License%20v2.0%20with%20LLVM%20Exceptions-blue.svg)](../master/license.txt)
+[![License](https://img.shields.io/badge/License-Apache%20License%20v2.0%20with%20LLVM%20Exceptions-blue.svg)](../main/license.txt)
 
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
@@ -148,16 +148,16 @@ Examples:
 	7z x -y "LLVM_VS2010_2015.zip" >NUL
 	CALL "LLVM_VS2010_2015\install.bat" 1
 
-### Install from latest master source code
+### Install from latest main source code
 
-	curl -fsSL -o "llvm-utils-master.zip" "https://github.com/zufuliu/llvm-utils/archive/master.zip"
-	7z x -y "llvm-utils-master.zip" >NUL
-	CALL "llvm-utils-master\VS2017\install.bat" 1
-	CALL "llvm-utils-master\VS2015\install.bat" 1
+	curl -fsSL -o "llvm-utils-main.zip" "https://github.com/zufuliu/llvm-utils/archive/main.zip"
+	7z x -y "llvm-utils-main.zip" >NUL
+	CALL "llvm-utils-main\VS2017\install.bat" 1
+	CALL "llvm-utils-main\VS2015\install.bat" 1
 
 or
 
-	git clone -q --depth=1 --branch=master https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
+	git clone -q --depth=1 --branch=main https://github.com/zufuliu/llvm-utils.git c:\projects\llvm-utils
 	CALL "c:\projects\llvm-utils\VS2017\install.bat" 1
 	CALL "c:\projects\llvm-utils\VS2015\install.bat" 1
 
@@ -177,7 +177,7 @@ Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program File
 * [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace, [not works for Visual Studio 2019 alone](https://bugs.llvm.org/show_bug.cgi?id=41948).
 * Original source for MSBuild
 
-	https://github.com/llvm/llvm-project/tree/master/llvm/tools/msbuild
+	https://github.com/llvm/llvm-project/tree/main/llvm/tools/msbuild
 
 	svn co https://github.com/llvm/llvm-project/trunk/llvm/tools/msbuild msbuild
 
