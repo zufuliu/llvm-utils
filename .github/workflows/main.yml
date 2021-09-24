@@ -7,6 +7,16 @@ defaults:
     shell: cmd
 
 jobs:
+  vs2022:
+    name: Visual Studio 2022
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install llvm utils
+      run: |
+        CALL "VS2017\install.bat" 1
+
   vs2019:
     name: Visual Studio 2019
     runs-on: windows-2019
