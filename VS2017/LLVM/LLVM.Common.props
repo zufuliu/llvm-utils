@@ -1,12 +1,12 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</LLVMInstallDir>
-    <LLVMInstallDir Condition="'$(LLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</LLVMInstallDir>
-    <LLVMInstallDir Condition="'$(LLVMInstallDir)' != ''">$(LLVMInstallDir)\</LLVMInstallDir>
-    <ClangClExecutable>$(LLVMInstallDir)bin\clang-cl.exe</ClangClExecutable>
-    <LldLinkExecutable>$(LLVMInstallDir)bin\lld-link.exe</LldLinkExecutable>
-    <LlvmLibExecutable>$(LLVMInstallDir)bin\llvm-lib.exe</LlvmLibExecutable>
-    <LlvmRcExecutable>$(LLVMInstallDir)bin\llvm-rc.exe</LlvmRcExecutable>
+    <OfficialLLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</OfficialLLVMInstallDir>
+    <OfficialLLVMInstallDir Condition="'$(OfficialLLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</OfficialLLVMInstallDir>
+    <LLVMInstallDir Condition="Exists('$(OfficialLLVMInstallDir)\bin\clang-cl.exe')">$(OfficialLLVMInstallDir)</LLVMInstallDir>
+    <ClangClExecutable>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClExecutable>
+    <LldLinkExecutable>$(LLVMInstallDir)\bin\lld-link.exe</LldLinkExecutable>
+    <LlvmLibExecutable>$(LLVMInstallDir)\bin\llvm-lib.exe</LlvmLibExecutable>
+    <LlvmRcExecutable>$(LLVMInstallDir)\bin\llvm-rc.exe</LlvmRcExecutable>
     <UseClangCl>true</UseClangCl>
     <UseLldLink>false</UseLldLink>
     <UseLlvmLib>false</UseLlvmLib>
