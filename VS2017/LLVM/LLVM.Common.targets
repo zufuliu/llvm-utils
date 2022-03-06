@@ -115,10 +115,7 @@
         <DebugInformationFormat Condition="'%(ClCompile.DebugInformationFormat)' == 'EditAndContinue'">OldStyle</DebugInformationFormat>
         <!-- Ignore C++ Language Standard for C, and vice versa -->
         <LanguageStandard Condition="('%(ClCompile.CompileAs)' == 'CompileAsC') or ('%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' == '.c')"/>
-        <LanguageStandard_C/> <!-- https://bugs.llvm.org/show_bug.cgi?id=48185 -->
-        <!--
         <LanguageStandard_C Condition="('%(ClCompile.CompileAs)' == 'CompileAsCpp') or ('%(ClCompile.CompileAs)' == 'Default' and '%(ClCompile.Extension)' != '.c')"/>
-        -->
 
         <!-- We can't just unset BasicRuntimeChecks, as that will pass /RTCu to the compiler.
              We have to explicitly set it to 'Default' to avoid passing anything. -->
@@ -184,10 +181,9 @@
         <WarningVersion/>
         <WholeProgramOptimization/>
         <WinRTNoStdLib/>
-        <!-- https://bugs.llvm.org/show_bug.cgi?id=36003 -->
+        <!-- https://github.com/llvm/llvm-project/issues/35351 -->
         <AnalyzeExternalRuleset/>
         <DisableAnalyzeExternal/>
-        <ExternalDirectoriesEnv/>
         <ExternalTemplatesDiagnostics/>
         <ExternalWarningLevel/>
         <TreatAngleIncludeAsExternal/>

@@ -246,7 +246,6 @@ def check_clang_cl_options():
 		'EnableModules',
 		# unsupported
 		'BasicRuntimeChecks',
-		'LanguageStandard_C',
 		# full or partial supported
 		'AssemblerOutput',
 		'CompileAs',
@@ -254,8 +253,10 @@ def check_clang_cl_options():
 		'DebugInformationFormat',
 		'EnableEnhancedInstructionSet',
 		'ExceptionHandling',
+		'ExternalDirectoriesEnv',
 		'StructMemberAlignment',
 		'LanguageStandard',
+		'LanguageStandard_C',
 	])
 	check_program_options('clang-cl.exe', 'cl', ignored=ignored, hardcoded=hardcoded)
 

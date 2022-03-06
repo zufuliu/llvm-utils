@@ -63,9 +63,9 @@ two-stage build based on llvm\utils\release\build_llvm_package.bat
 
 1. build with LLVM
 mkdir build-first
-set PATH=F:/Dev/LLVM11/bin;%PATH%
-set CC=F:/Dev/LLVM11/bin/clang-cl.exe
-set CXX=F:/Dev/LLVM11/bin/clang-cl.exe
+set PATH=D:/Dev/LLVM/bin;%PATH%
+set CC=D:/Dev/LLVM/bin/clang-cl.exe
+set CXX=D:/Dev/LLVM/bin/clang-cl.exe
 
 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
 	-DLLVM_ENABLE_ASSERTIONS=ON ^
