@@ -53,8 +53,19 @@ POPD
 @rem Python lldb
 PUSHD lib\site-packages\lldb
 
-DEL _lldb.pyd
-MKLINK _lldb.pyd ..\..\..\bin\liblldb.dll
+IF EXIST _lldb.pyd (
+	DEL _lldb.pyd
+	MKLINK _lldb.pyd ..\..\..\bin\liblldb.dll
+)
+@rem LLVM 14.0.0
+IF EXIST _lldb.cp310-win_amd64.pyd (
+	DEL _lldb.cp310-win_amd64.pyd
+	MKLINK _lldb.cp310-win_amd64.pyd ..\..\..\bin\liblldb.dll
+)
+IF EXIST _lldb.cp310-win32.pyd (
+	DEL _lldb.cp310-win32.pyd
+	MKLINK _lldb.cp310-win32.pyd ..\..\..\bin\liblldb.dll
+)
 
 DEL lldb-argdumper.exe
 MKLINK lldb-argdumper.exe ..\..\..\bin\lldb-argdumper.exe
