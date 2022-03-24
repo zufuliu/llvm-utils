@@ -29,6 +29,7 @@ jobs:
 
   vs2017:
     name: Visual Studio 2017
+    if: false
     runs-on: windows-2016
     steps:
     - uses: actions/checkout@v2
