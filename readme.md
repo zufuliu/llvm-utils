@@ -1,8 +1,8 @@
 # LLVM Utils
 
-![LLVM for Visual Studio](../main/images/VS2017.png)
+![LLVM for Visual Studio](images/VS2017.png)
 
-[![License](https://img.shields.io/badge/License-Apache%20License%20v2.0%20with%20LLVM%20Exceptions-blue.svg)](../main/license.txt)
+[![License](https://img.shields.io/badge/License-Apache%20License%20v2.0%20with%20LLVM%20Exceptions-blue.svg)](license.txt)
 
 [![Latest release](https://img.shields.io/github/release/zufuliu/llvm-utils.svg)](https://github.com/zufuliu/llvm-utils/releases)
 
@@ -124,8 +124,8 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor or GitHub Actions Build Image
 ### Install LLVM on the build image
 
-	curl -fsSL -o "LLVM-13.0.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/LLVM-13.0.0-win64.exe"
-	LLVM-13.0.0-win64.exe /S
+	curl -fsSL -o "LLVM-14.0.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/LLVM-14.0.0-win64.exe"
+	LLVM-14.0.0-win64.exe /S
 
 ### Install from release archives
 
@@ -140,11 +140,11 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 
 Examples:
 
-	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v21.11/LLVM_VS2017.zip"
+	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v22.03/LLVM_VS2017.zip"
 	7z x -y "LLVM_VS2017.zip" >NUL
 	CALL "LLVM_VS2017\install.bat" 1
 
-	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v21.11/LLVM_VS2010_2015.zip"
+	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v22.03/LLVM_VS2010_2015.zip"
 	7z x -y "LLVM_VS2010_2015.zip" >NUL
 	CALL "LLVM_VS2010_2015\install.bat" 1
 
