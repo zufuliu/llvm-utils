@@ -19,13 +19,13 @@ DEL vcruntime140*.dll
 
 @rem make symbolic link
 DEL clang++.exe
-MKLINK clang++.exe clang.exe
+MKLINK clang++.exe clang-cl.exe
 
-DEL clang-cl.exe
-MKLINK clang-cl.exe clang.exe
+DEL clang.exe
+MKLINK clang.exe clang-cl.exe
 
 DEL clang-cpp.exe
-MKLINK clang-cpp.exe clang.exe
+MKLINK clang-cpp.exe clang-cl.exe
 
 DEL lld-link.exe
 MKLINK lld-link.exe lld.exe
