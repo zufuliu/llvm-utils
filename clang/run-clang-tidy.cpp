@@ -84,161 +84,171 @@ class JsonParser {
 			|| ch >= 0x80;
 	}
 
-    std::string ScanString() {
-        std::string value;
-        while (index < doc.length()) {
-            const char ch = doc[index++];
-            if (ch == '\"' || IsControl(ch)) {
-                break;
-            }
-            if (ch == '\\' && index < doc.length()) {
-                const char chNext = doc[index++];
-                switch (chNext) {
-                case '\"':
-                case '\\':
-                case '/':
-                    value.push_back(chNext);
-                    break;
-                case 'b':
-                    value.push_back('\b');
-                    break;
-                case 'f':
-                    value.push_back('\f');
-                    break;
-                case 'n':
-                    value.push_back('\n');
-                    break;
-                case 'r':
-                    value.push_back('\r');
-                    break;
-                case 't':
-                    value.push_back('\t');
-                    break;
-                default:
-                    value.push_back('\\');
-                    value.push_back(chNext);
-                    break;
-                }
-            } else {
-                value.push_back(ch);
-            }
-        }
-        return value;
-    }
+	std::string ScanString() {
+		std::string value;
+		while (index < doc.length()) {
+			const char ch = doc[index++];
+			if (ch == '\"' || IsControl(ch)) {
+				break;
+			}
+			if (ch == '\\' && index < doc.length()) {
+				const char chNext = doc[index++];
+				switch (chNext) {
+				case '\"':
+				case '\\':
+				case '/':
+					value.push_back(chNext);
+					break;
+				case 'b':
+					value.push_back('\b');
+					break;
+				case 'f':
+					value.push_back('\f');
+					break;
+				case 'n':
+					value.push_back('\n');
+					break;
+				case 'r':
+					value.push_back('\r');
+					break;
+				case 't':
+					value.push_back('\t');
+					break;
+				//case 'u':
+				//	break;
+				default:
+					value.push_back('\\');
+					if (IsControl(chNext)) {
+						return value;
+					}
+					value.push_back(chNext);
+					break;
+				}
+			} else {
+				value.push_back(ch);
+			}
+		}
+		return value;
+	}
 
-    JsonValuePtr ParseValue() {
-        while (index < doc.length()) {
-            const uint8_t ch = doc[index++];
-            switch (ch) {
-            case '[':
-                return ParseArray();
+	JsonValuePtr ParseValue() {
+		while (index < doc.length()) {
+			const uint8_t ch = doc[index++];
+			switch (ch) {
+			case '[':
+				return ParseArray();
 
-            case '{':
-                return ParseObject();
+			case '{':
+				return ParseObject();
 
-            case '\"': {
-                const std::string value = ScanString();
-                return std::make_unique<JsonValue>(JsonValue::Type::String, value);
-            } break;
+			case '\"': {
+				const std::string value = ScanString();
+				return std::make_unique<JsonValue>(JsonValue::Type::String, value);
+			} break;
 
-            default:
-                if (IsWordChar(ch)) {
-                	const size_t start = index - 1;
-                    while (index < doc.length() && IsWordChar(doc[index])) {
-                    	++index;
-                    }
-                    const std::string value(doc.substr(start, index - start));
-                    return std::make_unique<JsonValue>(JsonValue::Type::Number, value);
-                }
-                if (!IsWhiteSpace(ch)) {
-                    fprintf(stderr, "%s unexpected character %02X at %zu\n", __func__, ch, index);
-                    index = doc.length();
-                    return {};
-                }
-                break;
-            }
-        }
-        return {};
-    }
+			default:
+				if (IsWordChar(ch)) {
+					const size_t start = index - 1;
+					while (index < doc.length() && IsWordChar(doc[index])) {
+						++index;
+					}
+					const std::string value(doc.substr(start, index - start));
+					return std::make_unique<JsonValue>(JsonValue::Type::Number, value);
+				}
+				if (!IsWhiteSpace(ch)) {
+					fprintf(stderr, "%s unexpected character %02X at %zu\n", __func__, ch, index);
+					index = doc.length();
+					return {};
+				}
+				break;
+			}
+		}
+		return {};
+	}
 
-    JsonValuePtr ParseArray() {
-        std::unique_ptr<JsonArray> array = std::make_unique<JsonArray>();
-        while (index < doc.length()) {
-            const uint8_t ch = doc[index];
-            switch (ch) {
-            case ',':
-                ++index;
-                break;
+	JsonValuePtr ParseArray() {
+		std::unique_ptr<JsonArray> array = std::make_unique<JsonArray>();
+		while (index < doc.length()) {
+			const uint8_t ch = doc[index];
+			switch (ch) {
+			case ',':
+				++index;
+				break;
 
-            case ']':
-                ++index;
+			case ']':
+				++index;
 				return std::make_unique<JsonValue>(array);
 
-            default:
-            	if (IsWhiteSpace(ch)) {
-            		++index;
-            	} else {
+			default:
+				if (IsWhiteSpace(ch)) {
+					++index;
+				} else {
 					auto value = ParseValue();
 					if (value) {
 						array->push_back(std::move(value));
 					}
-            	}
-                break;
-            }
-        }
-        return std::make_unique<JsonValue>(array);
-    }
+				}
+				break;
+			}
+		}
+		return std::make_unique<JsonValue>(array);
+	}
 
-    JsonValuePtr ParseObject() {
-        std::unique_ptr<JsonObject> object = std::make_unique<JsonObject>();
-        std::string key;
-        bool hasKey = false;
-        while (index < doc.length()) {
-            const uint8_t ch = doc[index];
-            switch (ch) {
-            case ',':
-                ++index;
-                break;
+	JsonValuePtr ParseObject() {
+		std::unique_ptr<JsonObject> object = std::make_unique<JsonObject>();
+		std::string key;
+		bool hasKey = false;
+		while (index < doc.length()) {
+			const uint8_t ch = doc[index];
+			switch (ch) {
+			case ',':
+				++index;
+				break;
 
-            case ':':
-                ++index;
-                if (hasKey) {
-                    hasKey = false;
-                    auto value = ParseValue();
-                    if (value) {
-                    	object->insert_or_assign(key, std::move(value));
-                    }
-                }
-                break;
+			case ':':
+				++index;
+				if (hasKey) {
+					hasKey = false;
+					auto value = ParseValue();
+					if (value) {
+						object->insert_or_assign(key, std::move(value));
+					}
+				}
+				break;
 
-            case '}':
-                ++index;
-                return std::make_unique<JsonValue>(object);
+			case '}':
+				++index;
+				return std::make_unique<JsonValue>(object);
 
-            default:
-            	if (IsWhiteSpace(ch)) {
-            		++index;
-            	} else if (!hasKey) {
-                    const auto value = ParseValue();
-                    if (value && value->type < JsonValue::Type::Object) {
-                        key = value->value;
-                        hasKey = true;
-                    }
-                } else {
-                    fprintf(stderr, "%s unexpected character %02X at %zu\n", __func__, ch, index);
-                    index = doc.length();
-                }
-                break;
-            }
-        }
-        return std::make_unique<JsonValue>(object);
-    }
+			default:
+				if (IsWhiteSpace(ch)) {
+					++index;
+				} else if (!hasKey) {
+					const auto value = ParseValue();
+					if (value && value->type < JsonValue::Type::Object) {
+						key = value->value;
+						hasKey = true;
+					}
+				} else {
+					fprintf(stderr, "%s unexpected character %02X at %zu\n", __func__, ch, index);
+					index = doc.length();
+				}
+				break;
+			}
+		}
+		return std::make_unique<JsonValue>(object);
+	}
 
 public:
-    JsonParser(std::string_view doc_) noexcept : doc{doc_} {}
-    std::unique_ptr<JsonValue> Parse() {
-    	return ParseValue();
-    }
+	JsonParser(std::string_view doc_) noexcept : doc{doc_} {
+		// URF-8 BOM
+		if (doc[0] == '\xEF' && doc[1] == '\xBB' && doc[2] == '\xBF') {
+			doc.remove_prefix(3);
+		}
+	}
+	JsonValuePtr Parse() {
+		return ParseValue();
+	}
 };
 
 std::vector<std::string> pathList;
@@ -248,7 +258,7 @@ std::string commandLinePrefix;
 HANDLE hStdOutput;
 HANDLE hStdError;
 
-bool PathIsFile(const char *path) noexcept {
+inline bool PathIsFile(const char *path) noexcept {
 	const DWORD attr = GetFileAttributesA(path);
 	return (attr & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
@@ -297,11 +307,11 @@ std::string FindCompileDatebase(std::string &directory) {
 
 void ParseCompileDatebase(const char *databasePath) {
 	HANDLE hFile = CreateFileA(databasePath,
-					   GENERIC_READ,
-					   FILE_SHARE_READ | FILE_SHARE_WRITE,
-					   nullptr, OPEN_EXISTING,
-					   FILE_ATTRIBUTE_NORMAL,
-					   nullptr);
+						GENERIC_READ,
+						FILE_SHARE_READ | FILE_SHARE_WRITE,
+						nullptr, OPEN_EXISTING,
+						FILE_ATTRIBUTE_NORMAL,
+						nullptr);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		return;
 	}
