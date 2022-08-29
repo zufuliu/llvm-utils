@@ -13,7 +13,7 @@ PUSHD "%LLVM%"
 @rem delete MSVC runtime library
 DEL api-ms*.dll
 DEL concrt140.dll
-DEL msvcp140.dll
+DEL msvcp140*.dll
 DEL ucrtbase.dll
 DEL vcruntime140*.dll
 
