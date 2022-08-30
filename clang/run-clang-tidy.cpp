@@ -16,7 +16,6 @@
 #include <shlwapi.h>
 
 #ifdef _MSC_VER
-#pragma comment(lib, "user32.lib")
 #pragma comment(lib, "shlwapi.lib")
 #endif
 
@@ -109,10 +108,15 @@ class JsonParser {
 		}
 	}
 
-	void ShowError(const char *prefix, int ch, size_t pos) noexcept {
+	void ShowError(const char *prefix, int line, int ch, size_t pos) noexcept {
 		const unsigned column = static_cast<unsigned>(pos - lineStart + 1);
 		char msg[1024];
-		const int len = wsprintfA(msg, "%s unexpected character U+%04X at (%u, %u)\n", prefix, ch, lineno, column);
+		char name[4] = {' '};
+		if (ch > ' ' && ch < 0x7f) {
+			name[1] = static_cast<char>(ch);
+		}
+		const int len = wnsprintfA(msg, _countof(msg), "%s:%d unexpected character U+%04X%s at (%u, %u)\n",
+			prefix, line, ch, name, lineno, column);
 		WriteConsoleA(hStdError, msg, len, nullptr, nullptr);
 		index = doc.length();
 	}
@@ -213,7 +217,7 @@ class JsonParser {
 				if (IsWhiteSpace(ch)) {
 					HandleLine(ch);
 				} else {
-					ShowError(__func__, ch, index);
+					ShowError(__func__, __LINE__, ch, index);
 					return {};
 				}
 				break;
@@ -224,11 +228,17 @@ class JsonParser {
 
 	JsonValuePtr ParseArray() {
 		std::unique_ptr<JsonArray> array = std::make_unique<JsonArray>();
+		bool hasValue = false;
 		while (index < doc.length()) {
 			const wchar_t ch = doc[index];
 			switch (ch) {
 			case L',':
-				++index;
+				if (hasValue) {
+					hasValue = false;
+					++index;
+				} else {
+					ShowError(__func__, __LINE__, ch, index);
+				}
 				break;
 
 			case L']':
@@ -239,11 +249,14 @@ class JsonParser {
 				if (IsWhiteSpace(ch)) {
 					++index;
 					HandleLine(ch);
-				} else {
+				} else if (!hasValue) {
 					auto value = ParseValue();
 					if (value) {
+						hasValue = true;
 						array->push_back(std::move(value));
 					}
+				} else {
+					ShowError(__func__, __LINE__, ch, index);
 				}
 				break;
 			}
@@ -255,21 +268,32 @@ class JsonParser {
 		std::unique_ptr<JsonObject> object = std::make_unique<JsonObject>();
 		std::wstring key;
 		bool hasKey = false;
+		bool hasValue = false;
 		while (index < doc.length()) {
 			const wchar_t ch = doc[index];
 			switch (ch) {
 			case L',':
-				++index;
+				if (hasValue && !hasKey) {
+					hasValue = false;
+					++index;
+				} else {
+					ShowError(__func__, __LINE__, ch, index);
+				}
 				break;
 
 			case L':':
-				++index;
 				if (hasKey) {
 					hasKey = false;
+					const size_t backup = index++;
 					auto value = ParseValue();
 					if (value) {
+						hasValue = true;
 						object->insert_or_assign(key, std::move(value));
+					} else {
+						ShowError(__func__, __LINE__, ch, backup);
 					}
+				} else {
+					ShowError(__func__, __LINE__, ch, index);
 				}
 				break;
 
@@ -282,13 +306,18 @@ class JsonParser {
 					++index;
 					HandleLine(ch);
 				} else if (!hasKey) {
+					const size_t backup = index;
 					const auto value = ParseValue();
-					if (value && value->type < JsonValue::Type::Object) {
-						key = value->value;
-						hasKey = true;
+					if (value) {
+						if (value->type < JsonValue::Type::Object) {
+							hasKey = true;
+							key = value->value;
+						} else {
+							ShowError(__func__, __LINE__, ch, backup);
+						}
 					}
 				} else {
-					ShowError(__func__, ch, index);
+					ShowError(__func__, __LINE__, ch, index);
 				}
 				break;
 			}
@@ -469,7 +498,7 @@ int wmain(int argc, wchar_t *argv[]) {
 			case L'j':
 				if (IsDigit(arg[2])) {
 					handled = true;
-					jobCount = wcstol(arg + 2, nullptr, 10);
+					jobCount = StrToIntW(arg + 2);
 				}
 				break;
 			}
