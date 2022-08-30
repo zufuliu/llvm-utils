@@ -1,6 +1,6 @@
-// cl /EHsc /std:c++20 /O2 /W4 /MD /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
-// clang-cl /EHsc /std:c++20 /O2 /W4 -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -Wcomma /MD /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
-// g++ -std=gnu++20 -O2 -Wall -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -DNDEBUG -DNOMINMAX -DWIN32_LEAN_AND_MEAN -DSTRICT_TYPED_ITEMIDS -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp -lshlwapi
+// cl /std:c++20 /EHsc /O2 /GR- /W4 /MD /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /DUNICODE /D_UNICODE /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
+// clang-cl /std:c++20 /EHsc /O2 /GR- /W4 -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -Wcomma /MD /DUNICODE /D_UNICODE /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
+// g++ -std=gnu++20 -O2 -municode -fno-rtti -Wall -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -DNDEBUG -DNOMINMAX -DWIN32_LEAN_AND_MEAN -DUNICODE -D_UNICODE -DSTRICT_TYPED_ITEMIDS -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp -lshlwapi
 
 #include <cstdlib>
 #include <cstdio>
@@ -16,18 +16,34 @@
 #include <shlwapi.h>
 
 #ifdef _MSC_VER
+#pragma comment(lib, "user32.lib")
 #pragma comment(lib, "shlwapi.lib")
 #endif
 
 namespace {
 
+HANDLE hStdOutput;
+HANDLE hStdError;
+
 constexpr bool IsDigit(int ch) noexcept {
 	return ch >= '0' && ch <= '9';
 }
 
+constexpr int GetHexDigit(int ch) noexcept {
+	uint32_t diff = ch - '0';
+	if (diff < 10) {
+		return diff;
+	}
+	diff = (ch | 0x20) - 'a';
+	if (diff < 6) {
+		return diff + 10;
+	}
+	return -1;
+}
+
 struct JsonValue;
 using JsonValuePtr = std::unique_ptr<JsonValue>;
-using JsonObject = std::map<std::string, JsonValuePtr, std::less<>>;
+using JsonObject = std::map<std::wstring, JsonValuePtr, std::less<>>;
 using JsonArray = std::vector<JsonValuePtr>;
 
 struct JsonValue {
@@ -39,11 +55,11 @@ struct JsonValue {
 	};
 
 	Type type;
-	std::string value;
+	std::wstring value;
 	std::unique_ptr<JsonObject> object;
 	std::unique_ptr<JsonArray> array;
 
-	JsonValue(Type type_, std::string value_): type{type_} {
+	JsonValue(Type type_, std::wstring value_): type{type_} {
 		value = std::move(value_);
 	}
 	JsonValue(std::unique_ptr<JsonObject>& object_): type{Type::Object} {
@@ -53,7 +69,7 @@ struct JsonValue {
 		array.swap(array_);
 	}
 
-	bool GetStringValue(std::string_view key, std::string &value_) const {
+	bool GetStringValue(std::wstring_view key, std::wstring &value_) const {
 		if (type == JsonValue::Type::Object && object) {
 			const auto it = object->find(key);
 			if (it != object->end() && it->second && it->second->type == JsonValue::Type::String) {
@@ -66,16 +82,18 @@ struct JsonValue {
 };
 
 class JsonParser {
-	std::string_view doc;
+	std::wstring_view doc;
 	size_t index = 0;
+	size_t lineStart = 0;
+	unsigned lineno = 1;
 
-	static constexpr bool IsWhiteSpace(uint8_t ch) noexcept {
+	static constexpr bool IsWhiteSpace(int ch) noexcept {
 		return ch <= ' ';
 	}
-	static constexpr bool IsControl(uint8_t ch) noexcept {
+	static constexpr bool IsControl(int ch) noexcept {
 		return ch < ' ';
 	}
-	static constexpr bool IsWordChar(uint8_t ch) noexcept {
+	static constexpr bool IsWordChar(int ch) noexcept {
 		return (ch >= '0' && ch <= '9')
 			|| (ch >= 'a' && ch <= 'z')
 			|| (ch >= 'A' && ch <= 'Z')
@@ -84,41 +102,78 @@ class JsonParser {
 			|| ch >= 0x80;
 	}
 
-	std::string ScanString() {
-		std::string value;
+	void HandleLine(wchar_t ch) noexcept {
+		if (ch == L'\n') {
+			lineStart = index;
+			++lineno;
+		}
+	}
+
+	void ShowError(const char *prefix, int ch, size_t pos) noexcept {
+		const unsigned column = static_cast<unsigned>(pos - lineStart + 1);
+		char msg[1024];
+		const int len = wsprintfA(msg, "%s unexpected character U+%04X at (%u, %u)\n", prefix, ch, lineno, column);
+		WriteConsoleA(hStdError, msg, len, nullptr, nullptr);
+		index = doc.length();
+	}
+
+	std::wstring ScanString() {
+		std::wstring value;
 		while (index < doc.length()) {
-			const char ch = doc[index++];
-			if (ch == '\"' || IsControl(ch)) {
+			const wchar_t ch = doc[index++];
+			if (ch == L'\"') {
 				break;
 			}
-			if (ch == '\\' && index < doc.length()) {
-				const char chNext = doc[index++];
+			if (IsControl(ch)) {
+				HandleLine(ch);
+				break;
+			}
+			if (ch == L'\\' && index < doc.length()) {
+				const wchar_t chNext = doc[index++];
 				switch (chNext) {
-				case '\"':
-				case '\\':
-				case '/':
+				case L'\"':
+				case L'\\':
+				case L'/':
 					value.push_back(chNext);
 					break;
-				case 'b':
-					value.push_back('\b');
+				case L'b':
+					value.push_back(L'\b');
 					break;
-				case 'f':
-					value.push_back('\f');
+				case L'f':
+					value.push_back(L'\f');
 					break;
-				case 'n':
-					value.push_back('\n');
+				case L'n':
+					value.push_back(L'\n');
 					break;
-				case 'r':
-					value.push_back('\r');
+				case L'r':
+					value.push_back(L'\r');
 					break;
-				case 't':
-					value.push_back('\t');
+				case L't':
+					value.push_back(L'\t');
 					break;
-				//case 'u':
-				//	break;
+				case L'u': {
+					int digit = 0;
+					uint32_t code = 0;
+					for (size_t pos = index; pos < doc.length() && digit < 4; pos++, digit++) {
+						const int hex = GetHexDigit(doc[pos]);
+						if (hex < 0) {
+							break;
+						}
+						code <<= 4;
+						code |= hex;
+					}
+					if (digit == 4) {
+						index += 4;
+						value.push_back(static_cast<wchar_t>(code));
+					} else {
+						value.push_back(L'\\');
+						value.push_back(L'u');
+					}
+				} break;
 				default:
-					value.push_back('\\');
+					value.push_back(L'\\');
 					if (IsControl(chNext)) {
+						HandleLine(ch);
 						return value;
 					}
 					value.push_back(chNext);
@@ -133,16 +188,16 @@ class JsonParser {
 
 	JsonValuePtr ParseValue() {
 		while (index < doc.length()) {
-			const uint8_t ch = doc[index++];
+			const wchar_t ch = doc[index++];
 			switch (ch) {
-			case '[':
+			case L'[':
 				return ParseArray();
 
-			case '{':
+			case L'{':
 				return ParseObject();
 
-			case '\"': {
-				const std::string value = ScanString();
+			case L'\"': {
+				const std::wstring value = ScanString();
 				return std::make_unique<JsonValue>(JsonValue::Type::String, value);
 			} break;
 
@@ -152,12 +207,13 @@ class JsonParser {
 					while (index < doc.length() && IsWordChar(doc[index])) {
 						++index;
 					}
-					const std::string value(doc.substr(start, index - start));
+					const std::wstring value(doc.substr(start, index - start));
 					return std::make_unique<JsonValue>(JsonValue::Type::Number, value);
 				}
-				if (!IsWhiteSpace(ch)) {
-					fprintf(stderr, "%s unexpected character %02X at %zu\n", __func__, ch, index);
-					index = doc.length();
+				if (IsWhiteSpace(ch)) {
+					HandleLine(ch);
+				} else {
+					ShowError(__func__, ch, index);
 					return {};
 				}
 				break;
@@ -169,19 +225,20 @@ class JsonParser {
 	JsonValuePtr ParseArray() {
 		std::unique_ptr<JsonArray> array = std::make_unique<JsonArray>();
 		while (index < doc.length()) {
-			const uint8_t ch = doc[index];
+			const wchar_t ch = doc[index];
 			switch (ch) {
-			case ',':
+			case L',':
 				++index;
 				break;
 
-			case ']':
+			case L']':
 				++index;
 				return std::make_unique<JsonValue>(array);
 
 			default:
 				if (IsWhiteSpace(ch)) {
 					++index;
+					HandleLine(ch);
 				} else {
 					auto value = ParseValue();
 					if (value) {
@@ -196,16 +253,16 @@ class JsonParser {
 
 	JsonValuePtr ParseObject() {
 		std::unique_ptr<JsonObject> object = std::make_unique<JsonObject>();
-		std::string key;
+		std::wstring key;
 		bool hasKey = false;
 		while (index < doc.length()) {
-			const uint8_t ch = doc[index];
+			const wchar_t ch = doc[index];
 			switch (ch) {
-			case ',':
+			case L',':
 				++index;
 				break;
 
-			case ':':
+			case L':':
 				++index;
 				if (hasKey) {
 					hasKey = false;
@@ -216,13 +273,14 @@ class JsonParser {
 				}
 				break;
 
-			case '}':
+			case L'}':
 				++index;
 				return std::make_unique<JsonValue>(object);
 
 			default:
 				if (IsWhiteSpace(ch)) {
 					++index;
+					HandleLine(ch);
 				} else if (!hasKey) {
 					const auto value = ParseValue();
 					if (value && value->type < JsonValue::Type::Object) {
@@ -230,8 +288,7 @@ class JsonParser {
 						hasKey = true;
 					}
 				} else {
-					fprintf(stderr, "%s unexpected character %02X at %zu\n", __func__, ch, index);
-					index = doc.length();
+					ShowError(__func__, ch, index);
 				}
 				break;
 			}
@@ -240,111 +297,123 @@ class JsonParser {
 	}
 
 public:
-	JsonParser(std::string_view doc_) noexcept : doc{doc_} {
-		// URF-8 BOM
-		if (doc[0] == '\xEF' && doc[1] == '\xBB' && doc[2] == '\xBF') {
-			doc.remove_prefix(3);
-		}
-	}
+	JsonParser(std::wstring_view doc_) noexcept : doc{doc_} {}
 	JsonValuePtr Parse() {
 		return ParseValue();
 	}
 };
 
-std::vector<std::string> pathList;
+std::vector<std::wstring> pathList;
 std::atomic<uint32_t> pathIndex;
-char clangTidyPath[MAX_PATH];
-std::string commandLinePrefix;
-HANDLE hStdOutput;
-HANDLE hStdError;
+wchar_t clangTidyPath[MAX_PATH];
+std::wstring commandLinePrefix;
 
-inline bool PathIsFile(const char *path) noexcept {
-	const DWORD attr = GetFileAttributesA(path);
+inline bool PathIsFile(const wchar_t *path) noexcept {
+	const DWORD attr = GetFileAttributesW(path);
 	return (attr & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
 
 bool FindClangTidyPath() noexcept {
-	char dir[MAX_PATH]{};
-	GetModuleFileNameA(nullptr, dir, sizeof(dir));
-	char path[MAX_PATH]{};
-	PathCombineA(path, dir, "clang-tidy.exe");
+	wchar_t dir[MAX_PATH]{};
+	GetModuleFileNameW(nullptr, dir, _countof(dir));
+	wchar_t path[MAX_PATH]{};
+	PathCombineW(path, dir, L"clang-tidy.exe");
 	if (PathIsFile(path)) {
 		memcpy(clangTidyPath, path, sizeof(path));
 		return true;
 	}
 
-	if (SearchPathA(nullptr, "clang-tidy.exe", nullptr, sizeof(path), path, nullptr)) {
-		GetFullPathNameA(path, sizeof(clangTidyPath), clangTidyPath, nullptr);
+	if (SearchPathW(nullptr, L"clang-tidy.exe", nullptr, _countof(path), path, nullptr)) {
+		GetFullPathNameW(path, _countof(clangTidyPath), clangTidyPath, nullptr);
 		return true;
 	}
 	return false;
 }
 
-std::string FindCompileDatebase(std::string &directory) {
-	char dir[MAX_PATH]{};
+std::wstring FindCompileDatebase(std::wstring &directory) {
+	wchar_t dir[MAX_PATH]{};
 	if (!directory.empty()) {
-		PathCombineA(dir, directory.c_str(), "compile_commands.json");
+		PathCombineW(dir, directory.c_str(), L"compile_commands.json");
 		if (PathIsFile(dir)) {
 			return dir;
 		}
 	}
 
-	GetCurrentDirectoryA(sizeof(dir), dir);
+	GetCurrentDirectoryW(_countof(dir), dir);
 	while (true) {
-		char path[MAX_PATH]{};
-		PathCombineA(path, dir, "compile_commands.json");
+		wchar_t path[MAX_PATH]{};
+		PathCombineW(path, dir, L"compile_commands.json");
 		if (PathIsFile(path)) {
 			directory = dir;
 			return path;
 		}
-		if (PathIsRootA(dir)) {
+		if (PathIsRootW(dir)) {
 			break;
 		}
-		PathRemoveFileSpecA(dir);
+		PathRemoveFileSpecW(dir);
 	}
-	return "";
+	return {};
 }
 
-void ParseCompileDatebase(const char *databasePath) {
-	HANDLE hFile = CreateFileA(databasePath,
+bool ReadTextFile(const wchar_t *path, std::wstring &content) {
+	HANDLE hFile = CreateFileW(path,
 						GENERIC_READ,
 						FILE_SHARE_READ | FILE_SHARE_WRITE,
 						nullptr, OPEN_EXISTING,
 						FILE_ATTRIBUTE_NORMAL,
 						nullptr);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		return;
+		return false;
 	}
 
-	// https://clang.llvm.org/docs/JSONCompilationDatabase.html
-	constexpr DWORD minSize = sizeof(R"(["file":""])");
 	LARGE_INTEGER fileSize;
 	fileSize.QuadPart = 0;
-	if (!GetFileSizeEx(hFile, &fileSize) || fileSize.QuadPart < minSize) {
+	if (!GetFileSizeEx(hFile, &fileSize) || fileSize.QuadPart == 0) {
 		CloseHandle(hFile);
-		return;
+		return false;
 	}
 
-	std::string doc;
-	doc.resize(fileSize.QuadPart + 1);
+	const std::unique_ptr<char[]> doc = std::make_unique<char[]>(fileSize.QuadPart + 1);
 	DWORD cbData = 0;
-	const BOOL bReadSuccess = ReadFile(hFile, doc.data(), (DWORD)(fileSize.QuadPart), &cbData, nullptr);
+	const BOOL bReadSuccess = ReadFile(hFile, doc.get(), static_cast<DWORD>(fileSize.QuadPart), &cbData, nullptr);
 	CloseHandle(hFile);
-	if (!bReadSuccess || cbData < minSize) {
+	if (!bReadSuccess || cbData == 0) {
+		return false;
+	}
+
+	const char *data = doc.get();
+	if (cbData >= 3 && data[0] == '\xEF' && data[1] == '\xBB' && data[2] == '\xBF') {
+		// UTF-8 BOM
+		data += 3;
+		cbData -= 3;
+	}
+
+	content.resize(cbData + 1);
+	cbData = MultiByteToWideChar(CP_UTF8, 0, data, cbData, content.data(), static_cast<int>(content.size()));
+	content.resize(cbData);
+	return cbData != 0;
+}
+
+void ParseCompileDatebase(const wchar_t *databasePath) {
+	// https://clang.llvm.org/docs/JSONCompilationDatabase.html
+	constexpr size_t minSize = sizeof(R"(["file":""])");
+	std::wstring doc;
+	ReadTextFile(databasePath, doc);
+	if (doc.length() < minSize) {
 		return;
 	}
 
 	JsonParser parser(doc);
 	const auto database = parser.Parse();
 	if (database && database->type == JsonValue::Type::Array && database->array) {
-		std::string file;
+		std::wstring file;
 		for (const auto &it : *database->array) {
-			if (it && it->GetStringValue("file", file)) {
-				if (PathIsRelativeA(file.c_str())) {
-					std::string dir;
-					if (it->GetStringValue("directory", dir)) {
-						char path[MAX_PATH];
-						PathCombineA(path, dir.c_str(), file.c_str());
+			if (it && it->GetStringValue(L"file", file)) {
+				if (PathIsRelativeW(file.c_str())) {
+					std::wstring dir;
+					if (it->GetStringValue(L"directory", dir)) {
+						wchar_t path[MAX_PATH];
+						PathCombineW(path, dir.c_str(), file.c_str());
 						file = path;
 					}
 				}
@@ -363,19 +432,20 @@ VOID CALLBACK WorkCallback([[maybe_unused]] PTP_CALLBACK_INSTANCE instance, [[ma
 		}
 
 		PROCESS_INFORMATION procInfo{};
-		STARTUPINFOA startInfo{};
+		STARTUPINFOW startInfo{};
 		startInfo.cb = sizeof(STARTUPINFO);
 		startInfo.hStdInput = INVALID_HANDLE_VALUE;
 		startInfo.hStdOutput = hStdOutput;
 		startInfo.hStdError = hStdError;
 		startInfo.dwFlags = STARTF_USESTDHANDLES;
 
-		const std::string path = pathList[index];
-		std::string commandLine = commandLinePrefix + path + "\"";
-		if (!CreateProcessA(clangTidyPath, commandLine.data(),
+		const std::wstring &path = pathList[index];
+		std::wstring commandLine = commandLinePrefix + path + L"\"";
+		if (!CreateProcessW(clangTidyPath, commandLine.data(),
 			nullptr, nullptr, TRUE, 0, nullptr, nullptr,
 			&startInfo, &procInfo)) {
-			fprintf(stderr, "run clang-tidy fail: %s\n", commandLine.c_str());
+			const std::wstring msg = L"run clang-tidy fail: " + commandLine + L"\n";
+			WriteConsoleW(hStdError, msg.c_str(), static_cast<DWORD>(msg.length()), nullptr, nullptr);
 		} else {
 			WaitForSingleObject(procInfo.hProcess, INFINITE);
 			CloseHandle(procInfo.hProcess);
@@ -386,24 +456,26 @@ VOID CALLBACK WorkCallback([[maybe_unused]] PTP_CALLBACK_INSTANCE instance, [[ma
 
 }
 
-int main(int argc, char *argv[]) {
+int wmain(int argc, wchar_t *argv[]) {
+	hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	hStdError = GetStdHandle(STD_ERROR_HANDLE);
 	uint32_t jobCount = 1;
-	std::string directory;
+	std::wstring directory;
 	for (int i = 1; i < argc; i++) {
-		const char *arg = argv[i];
-		if (arg[0] == '-') {
+		const wchar_t *arg = argv[i];
+		if (arg[0] == L'-') {
 			bool handled = false;
 			switch (arg[1]) {
-			case 'j':
+			case L'j':
 				if (IsDigit(arg[2])) {
 					handled = true;
-					jobCount = atoi(arg + 2);
+					jobCount = wcstol(arg + 2, nullptr, 10);
 				}
 				break;
 			}
 			if (!handled) {
 				commandLinePrefix += arg;
-				commandLinePrefix += ' ';
+				commandLinePrefix += L' ';
 			}
 		}
 	}
@@ -412,7 +484,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	const std::string path = FindCompileDatebase(directory);
+	const std::wstring path = FindCompileDatebase(directory);
 	if (path.empty()) {
 		return 2;
 	}
@@ -422,10 +494,7 @@ int main(int argc, char *argv[]) {
 		return 3;
 	}
 
-	hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	hStdError = GetStdHandle(STD_ERROR_HANDLE);
-	commandLinePrefix += " -p=\"" + directory + "\" \"";
-
+	commandLinePrefix += L" -p=\"" + directory + L"\" \"";
 	SYSTEM_INFO info{};
 	GetNativeSystemInfo(&info);
 	jobCount = std::min<uint32_t>(jobCount, info.dwNumberOfProcessors - 1);
