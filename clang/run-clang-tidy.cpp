@@ -85,12 +85,10 @@ class JsonParser {
 	size_t index = 0;
 	size_t lineStart = 0;
 	unsigned lineno = 1;
+	static constexpr const char *filename = "compile_commands.json";
 
 	static constexpr bool IsWhiteSpace(int ch) noexcept {
 		return ch <= ' ';
-	}
-	static constexpr bool IsControl(int ch) noexcept {
-		return ch < ' ';
 	}
 	static constexpr bool IsWordChar(int ch) noexcept {
 		return (ch >= '0' && ch <= '9')
@@ -115,8 +113,8 @@ class JsonParser {
 		if (ch > ' ' && ch < 0x7f) {
 			name[1] = static_cast<char>(ch);
 		}
-		const int len = wnsprintfA(msg, _countof(msg), "%s:%d unexpected character U+%04X%s at (%u, %u)\n",
-			prefix, line, ch, name, lineno, column);
+		const int len = wnsprintfA(msg, _countof(msg), "%s:%d unexpected character U+%04X%s at %s(%u, %u)\n",
+			prefix, line, ch, name, filename, lineno, column);
 		WriteConsoleA(hStdError, msg, len, nullptr, nullptr);
 		index = doc.length();
 	}
@@ -128,10 +126,7 @@ class JsonParser {
 			if (ch == L'\"') {
 				break;
 			}
-			if (IsControl(ch)) {
-				HandleLine(ch);
-				break;
-			}
+			HandleLine(ch);
 			if (ch == L'\\' && index < doc.length()) {
 				const wchar_t chNext = doc[index++];
 				switch (chNext) {
@@ -175,11 +170,8 @@ class JsonParser {
 					}
 				} break;
 				default:
+					HandleLine(chNext);
 					value.push_back(L'\\');
-					if (IsControl(chNext)) {
-						HandleLine(ch);
-						return value;
-					}
 					value.push_back(chNext);
 					break;
 				}
@@ -188,6 +180,19 @@ class JsonParser {
 			}
 		}
 		return value;
+	}
+
+	wchar_t GetNextChar() noexcept {
+		wchar_t ch = L'\0';
+		while (index < doc.length()) {
+			ch = doc[index];
+			if (!IsWhiteSpace(ch)) {
+				break;
+			}
+			++index;
+			HandleLine(ch);
+		}
+		return ch;
 	}
 
 	JsonValuePtr ParseValue() {
@@ -217,7 +222,7 @@ class JsonParser {
 				if (IsWhiteSpace(ch)) {
 					HandleLine(ch);
 				} else {
-					ShowError(__func__, __LINE__, ch, index);
+					ShowError(__func__, __LINE__, ch, index - 1);
 					return {};
 				}
 				break;
@@ -266,32 +271,14 @@ class JsonParser {
 
 	JsonValuePtr ParseObject() {
 		std::unique_ptr<JsonObject> object = std::make_unique<JsonObject>();
-		std::wstring key;
-		bool hasKey = false;
 		bool hasValue = false;
 		while (index < doc.length()) {
 			const wchar_t ch = doc[index];
 			switch (ch) {
 			case L',':
-				if (hasValue && !hasKey) {
+				if (hasValue) {
 					hasValue = false;
 					++index;
-				} else {
-					ShowError(__func__, __LINE__, ch, index);
-				}
-				break;
-
-			case L':':
-				if (hasKey) {
-					hasKey = false;
-					const size_t backup = index++;
-					auto value = ParseValue();
-					if (value) {
-						hasValue = true;
-						object->insert_or_assign(key, std::move(value));
-					} else {
-						ShowError(__func__, __LINE__, ch, backup);
-					}
 				} else {
 					ShowError(__func__, __LINE__, ch, index);
 				}
@@ -305,13 +292,22 @@ class JsonParser {
 				if (IsWhiteSpace(ch)) {
 					++index;
 					HandleLine(ch);
-				} else if (!hasKey) {
+				} else if (!hasValue) {
 					const size_t backup = index;
-					const auto value = ParseValue();
-					if (value) {
-						if (value->type < JsonValue::Type::Object) {
-							hasKey = true;
-							key = value->value;
+					const auto key = ParseValue();
+					if (key) {
+						if (key->type < JsonValue::Type::Object) {
+							const wchar_t chNext = GetNextChar();
+							if (chNext == L':') {
+								++index;
+								auto value = ParseValue();
+								if (value) {
+									hasValue = true;
+									object->insert_or_assign(key->value, std::move(value));
+								}
+							} else {
+								ShowError(__func__, __LINE__, chNext, index);
+							}
 						} else {
 							ShowError(__func__, __LINE__, ch, backup);
 						}
