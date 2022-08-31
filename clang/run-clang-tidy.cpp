@@ -24,6 +24,22 @@ namespace {
 HANDLE hStdOutput;
 HANDLE hStdError;
 
+class ElapsedPeriod {
+	LARGE_INTEGER freq;
+	LARGE_INTEGER begin;
+public:
+	ElapsedPeriod() noexcept {
+		QueryPerformanceFrequency(&freq);
+		QueryPerformanceCounter(&begin);
+	}
+	double Duration() const noexcept {
+		LARGE_INTEGER end;
+		QueryPerformanceCounter(&end);
+		const LONGLONG diff = end.QuadPart - begin.QuadPart;
+		return (diff * 1000) / static_cast<double>(freq.QuadPart);
+	}
+};
+
 constexpr bool IsDigit(int ch) noexcept {
 	return ch >= '0' && ch <= '9';
 }
@@ -53,25 +69,35 @@ struct JsonValue {
 		Array,
 	};
 
-	Type type;
-	std::wstring value;
-	std::unique_ptr<JsonObject> object;
-	std::unique_ptr<JsonArray> array;
+	const Type type;
+	union {
+		std::wstring value;
+		JsonObject object;
+		JsonArray array;
+	};
 
-	JsonValue(Type type_, std::wstring value_): type{type_} {
-		value = std::move(value_);
-	}
-	JsonValue(std::unique_ptr<JsonObject>& object_): type{Type::Object} {
-		object.swap(object_);
-	}
-	JsonValue(std::unique_ptr<JsonArray>& array_): type{Type::Array} {
-		array.swap(array_);
+	JsonValue(Type type_, std::wstring&& value_): type{type_}, value{std::move(value_)} {}
+	JsonValue(JsonObject&& object_): type{Type::Object}, object{std::move(object_)} {}
+	JsonValue(JsonArray&& array_): type{Type::Array}, array{std::move(array_)} {}
+	~JsonValue() noexcept {
+		switch (type) {
+		case Type::Number:
+		case Type::String:
+			value.~basic_string();
+			break;
+		case Type::Object:
+			object.~map();
+			break;
+		case Type::Array:
+			array.~vector();
+			break;
+		}
 	}
 
 	bool GetStringValue(std::wstring_view key, std::wstring &value_) const {
-		if (type == JsonValue::Type::Object && object) {
-			const auto it = object->find(key);
-			if (it != object->end() && it->second && it->second->type == JsonValue::Type::String) {
+		if (type == Type::Object) {
+			const auto it = object.find(key);
+			if (it != object.end() && it->second->type == Type::String) {
 				value_ = it->second->value;
 				return true;
 			}
@@ -81,11 +107,11 @@ struct JsonValue {
 };
 
 class JsonParser {
-	std::wstring_view doc;
+	const std::wstring_view doc;
 	size_t index = 0;
 	size_t lineStart = 0;
 	unsigned lineno = 1;
-	static constexpr const char *filename = "compile_commands.json";
+	const char * const filename;
 
 	static constexpr bool IsWhiteSpace(int ch) noexcept {
 		return ch <= ' ';
@@ -206,8 +232,8 @@ class JsonParser {
 				return ParseObject();
 
 			case L'\"': {
-				const std::wstring value = ScanString();
-				return std::make_unique<JsonValue>(JsonValue::Type::String, value);
+				std::wstring value = ScanString();
+				return std::make_unique<JsonValue>(JsonValue::Type::String, std::move(value));
 			} break;
 
 			default:
@@ -216,8 +242,8 @@ class JsonParser {
 					while (index < doc.length() && IsWordChar(doc[index])) {
 						++index;
 					}
-					const std::wstring value(doc.substr(start, index - start));
-					return std::make_unique<JsonValue>(JsonValue::Type::Number, value);
+					std::wstring value(doc.substr(start, index - start));
+					return std::make_unique<JsonValue>(JsonValue::Type::Number, std::move(value));
 				}
 				if (IsWhiteSpace(ch)) {
 					HandleLine(ch);
@@ -232,7 +258,7 @@ class JsonParser {
 	}
 
 	JsonValuePtr ParseArray() {
-		std::unique_ptr<JsonArray> array = std::make_unique<JsonArray>();
+		JsonArray array;
 		bool hasValue = false;
 		while (index < doc.length()) {
 			const wchar_t ch = doc[index];
@@ -248,7 +274,7 @@ class JsonParser {
 
 			case L']':
 				++index;
-				return std::make_unique<JsonValue>(array);
+				return std::make_unique<JsonValue>(std::move(array));
 
 			default:
 				if (IsWhiteSpace(ch)) {
@@ -258,7 +284,7 @@ class JsonParser {
 					auto value = ParseValue();
 					if (value) {
 						hasValue = true;
-						array->push_back(std::move(value));
+						array.emplace_back(std::move(value));
 					}
 				} else {
 					ShowError(__func__, __LINE__, ch, index);
@@ -266,11 +292,11 @@ class JsonParser {
 				break;
 			}
 		}
-		return std::make_unique<JsonValue>(array);
+		return std::make_unique<JsonValue>(std::move(array));
 	}
 
 	JsonValuePtr ParseObject() {
-		std::unique_ptr<JsonObject> object = std::make_unique<JsonObject>();
+		JsonObject object;
 		bool hasValue = false;
 		while (index < doc.length()) {
 			const wchar_t ch = doc[index];
@@ -286,13 +312,32 @@ class JsonParser {
 
 			case L'}':
 				++index;
-				return std::make_unique<JsonValue>(object);
+				return std::make_unique<JsonValue>(std::move(object));
 
 			default:
 				if (IsWhiteSpace(ch)) {
 					++index;
 					HandleLine(ch);
 				} else if (!hasValue) {
+#if 1 // only quoted key
+					if (ch == L'\"') {
+						++index;
+						std::wstring key = ScanString();
+						const wchar_t chNext = GetNextChar();
+						if (chNext == L':') {
+							++index;
+							auto value = ParseValue();
+							if (value) {
+								hasValue = true;
+								object.insert_or_assign(std::move(key), std::move(value));
+							}
+						} else {
+							ShowError(__func__, __LINE__, chNext, index);
+						}
+					} else {
+						ShowError(__func__, __LINE__, ch, index);
+					}
+#else // allow unquoted key
 					const size_t backup = index;
 					const auto key = ParseValue();
 					if (key) {
@@ -303,7 +348,7 @@ class JsonParser {
 								auto value = ParseValue();
 								if (value) {
 									hasValue = true;
-									object->insert_or_assign(key->value, std::move(value));
+									object.insert_or_assign(std::move(key->value), std::move(value));
 								}
 							} else {
 								ShowError(__func__, __LINE__, chNext, index);
@@ -312,17 +357,18 @@ class JsonParser {
 							ShowError(__func__, __LINE__, ch, backup);
 						}
 					}
+#endif // !hasValue
 				} else {
 					ShowError(__func__, __LINE__, ch, index);
 				}
 				break;
 			}
 		}
-		return std::make_unique<JsonValue>(object);
+		return std::make_unique<JsonValue>(std::move(object));
 	}
 
 public:
-	JsonParser(std::wstring_view doc_) noexcept : doc{doc_} {}
+	JsonParser(std::wstring_view doc_, const char *name) noexcept : doc{doc_}, filename(name) {}
 	JsonValuePtr Parse() {
 		return ParseValue();
 	}
@@ -428,12 +474,13 @@ void ParseCompileDatebase(const wchar_t *databasePath) {
 		return;
 	}
 
-	JsonParser parser(doc);
+	//const ElapsedPeriod period;
+	JsonParser parser(doc, "compile_commands.json");
 	const auto database = parser.Parse();
-	if (database && database->type == JsonValue::Type::Array && database->array) {
+	if (database && database->type == JsonValue::Type::Array) {
 		std::wstring file;
-		for (const auto &it : *database->array) {
-			if (it && it->GetStringValue(L"file", file)) {
+		for (const auto &it : database->array) {
+			if (it->GetStringValue(L"file", file)) {
 				if (PathIsRelativeW(file.c_str())) {
 					std::wstring dir;
 					if (it->GetStringValue(L"directory", dir)) {
@@ -442,10 +489,13 @@ void ParseCompileDatebase(const wchar_t *databasePath) {
 						file = path;
 					}
 				}
-				pathList.push_back(file);
+				pathList.emplace_back(std::move(file));
 			}
 		}
 	}
+
+	//const double duration = period.Duration();
+	//printf("database parse time=%.6f, file: %zu\n", duration, pathList.size());
 }
 
 VOID CALLBACK WorkCallback([[maybe_unused]] PTP_CALLBACK_INSTANCE instance, [[maybe_unused]] PVOID context, [[maybe_unused]] PTP_WORK work) {
