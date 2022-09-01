@@ -1,5 +1,5 @@
-// cl /std:c++20 /EHsc /O2 /GR- /W4 /MD /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /DUNICODE /D_UNICODE /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
-// clang-cl /std:c++20 /EHsc /O2 /GR- /W4 -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -Wcomma /MD /DUNICODE /D_UNICODE /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
+// cl /std:c++20 /EHsc /O2 /GR- /GS- /W4 /MD /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /DUNICODE /D_UNICODE /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
+// clang-cl /std:c++20 /EHsc /O2 /GR- /GS- /W4 -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -Wcomma /MD /DUNICODE /D_UNICODE /DNDEBUG /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DSTRICT_TYPED_ITEMIDS /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp
 // g++ -std=gnu++20 -O2 -municode -fno-rtti -Wall -Wextra -Wshadow -Wimplicit-fallthrough -Wformat=2 -Wundef -DNDEBUG -DNOMINMAX -DWIN32_LEAN_AND_MEAN -DUNICODE -D_UNICODE -DSTRICT_TYPED_ITEMIDS -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS run-clang-tidy.cpp -lshlwapi
 
 #include <cstdlib>
@@ -113,10 +113,13 @@ class JsonParser {
 	unsigned lineno = 1;
 	const char * const filename;
 
-	static constexpr bool IsWhiteSpace(int ch) noexcept {
+	static constexpr bool IsWhiteSpace(wchar_t ch) noexcept {
 		return ch <= ' ';
 	}
-	static constexpr bool IsWordChar(int ch) noexcept {
+	static constexpr bool IsControl(wchar_t ch) noexcept {
+		return ch < ' ';
+	}
+	static constexpr bool IsWordChar(wchar_t ch) noexcept {
 		return (ch >= '0' && ch <= '9')
 			|| (ch >= 'a' && ch <= 'z')
 			|| (ch >= 'A' && ch <= 'Z')
@@ -147,34 +150,43 @@ class JsonParser {
 
 	std::wstring ScanString() {
 		std::wstring value;
+		size_t start = index;
+		size_t end = index;
 		while (index < doc.length()) {
 			const wchar_t ch = doc[index++];
 			if (ch == L'\"') {
 				break;
 			}
-			HandleLine(ch);
-			if (ch == L'\\' && index < doc.length()) {
-				const wchar_t chNext = doc[index++];
+			if (IsControl(ch)) {
+				ShowError(__func__, __LINE__, ch, index - 1);
+				break;
+			}
+			if (ch != L'\\' || index == doc.length()) {
+				++end;
+			} else {
+				if (start != end) {
+					value.append(doc.substr(start, end - start));
+				}
+				wchar_t chNext = doc[index++];
 				switch (chNext) {
 				case L'\"':
 				case L'\\':
 				case L'/':
-					value.push_back(chNext);
 					break;
 				case L'b':
-					value.push_back(L'\b');
+					chNext = L'\b';
 					break;
 				case L'f':
-					value.push_back(L'\f');
+					chNext = L'\f';
 					break;
 				case L'n':
-					value.push_back(L'\n');
+					chNext = L'\n';
 					break;
 				case L'r':
-					value.push_back(L'\r');
+					chNext = L'\r';
 					break;
 				case L't':
-					value.push_back(L'\t');
+					chNext = L'\t';
 					break;
 				case L'u': {
 					int digit = 0;
@@ -189,21 +201,25 @@ class JsonParser {
 					}
 					if (digit == 4) {
 						index += 4;
-						value.push_back(static_cast<wchar_t>(code));
+						chNext = static_cast<wchar_t>(code);
 					} else {
-						value.push_back(L'\\');
-						value.push_back(L'u');
+						chNext = L'\\';
+						--index;
 					}
 				} break;
 				default:
-					HandleLine(chNext);
-					value.push_back(L'\\');
-					value.push_back(chNext);
+					chNext = L'\\';
+					--index;
 					break;
 				}
-			} else {
-				value.push_back(ch);
+
+				start = index;
+				end = index;
+				value.push_back(chNext);
 			}
+		}
+		if (start != end) {
+			value.append(doc.substr(start, end - start));
 		}
 		return value;
 	}
@@ -531,7 +547,7 @@ VOID CALLBACK WorkCallback([[maybe_unused]] PTP_CALLBACK_INSTANCE instance, [[ma
 
 }
 
-int wmain(int argc, wchar_t *argv[]) {
+int __cdecl wmain(int argc, wchar_t *argv[]) {
 	hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	hStdError = GetStdHandle(STD_ERROR_HANDLE);
 	uint32_t jobCount = 1;
