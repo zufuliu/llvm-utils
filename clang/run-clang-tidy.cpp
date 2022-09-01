@@ -124,8 +124,7 @@ class JsonParser {
 			|| (ch >= 'a' && ch <= 'z')
 			|| (ch >= 'A' && ch <= 'Z')
 			|| ch == '+' || ch == '-'
-			|| ch == '_' || ch == '.'
-			|| ch >= 0x80;
+			|| ch == '_' || ch == '.';
 	}
 
 	void HandleLine(wchar_t ch) noexcept {
@@ -135,9 +134,10 @@ class JsonParser {
 		}
 	}
 
-	void ShowError(const char *prefix, int line, int ch, size_t pos) noexcept {
-		const unsigned column = static_cast<unsigned>(pos - lineStart + 1);
-		char msg[1024];
+	void ShowError(const char *prefix, int line, int ch) noexcept {
+		const unsigned column = static_cast<unsigned>(index - lineStart);
+		index = doc.length();
+		char msg[128];
 		char name[4] = {' '};
 		if (ch > ' ' && ch < 0x7f) {
 			name[1] = static_cast<char>(ch);
@@ -145,7 +145,6 @@ class JsonParser {
 		const int len = wnsprintfA(msg, _countof(msg), "%s:%d unexpected character U+%04X%s at %s(%u, %u)\n",
 			prefix, line, ch, name, filename, lineno, column);
 		WriteConsoleA(hStdError, msg, len, nullptr, nullptr);
-		index = doc.length();
 	}
 
 	std::wstring ScanString() {
@@ -158,7 +157,7 @@ class JsonParser {
 				break;
 			}
 			if (IsControl(ch)) {
-				ShowError(__func__, __LINE__, ch, index - 1);
+				ShowError(__func__, __LINE__, ch);
 				break;
 			}
 			if (ch != L'\\' || index == doc.length()) {
@@ -225,16 +224,14 @@ class JsonParser {
 	}
 
 	wchar_t GetNextChar() noexcept {
-		wchar_t ch = L'\0';
 		while (index < doc.length()) {
-			ch = doc[index];
+			const wchar_t ch = doc[index++];
 			if (!IsWhiteSpace(ch)) {
-				break;
+				return ch;
 			}
-			++index;
 			HandleLine(ch);
 		}
-		return ch;
+		return L'\0';
 	}
 
 	JsonValuePtr ParseValue() {
@@ -253,19 +250,17 @@ class JsonParser {
 			} break;
 
 			default:
-				if (IsWordChar(ch)) {
+				if (IsWhiteSpace(ch)) {
+					HandleLine(ch);
+				} else if (IsWordChar(ch)) {
 					const size_t start = index - 1;
 					while (index < doc.length() && IsWordChar(doc[index])) {
 						++index;
 					}
 					std::wstring value(doc.substr(start, index - start));
 					return std::make_unique<JsonValue>(JsonValue::Type::Number, std::move(value));
-				}
-				if (IsWhiteSpace(ch)) {
-					HandleLine(ch);
 				} else {
-					ShowError(__func__, __LINE__, ch, index - 1);
-					return {};
+					ShowError(__func__, __LINE__, ch);
 				}
 				break;
 			}
@@ -277,33 +272,31 @@ class JsonParser {
 		JsonArray array;
 		bool hasValue = false;
 		while (index < doc.length()) {
-			const wchar_t ch = doc[index];
+			const wchar_t ch = doc[index++];
 			switch (ch) {
 			case L',':
 				if (hasValue) {
 					hasValue = false;
-					++index;
 				} else {
-					ShowError(__func__, __LINE__, ch, index);
+					ShowError(__func__, __LINE__, ch);
 				}
 				break;
 
 			case L']':
-				++index;
 				return std::make_unique<JsonValue>(std::move(array));
 
 			default:
 				if (IsWhiteSpace(ch)) {
-					++index;
 					HandleLine(ch);
 				} else if (!hasValue) {
+					--index;
 					auto value = ParseValue();
 					if (value) {
 						hasValue = true;
 						array.emplace_back(std::move(value));
 					}
 				} else {
-					ShowError(__func__, __LINE__, ch, index);
+					ShowError(__func__, __LINE__, ch);
 				}
 				break;
 			}
@@ -315,67 +308,36 @@ class JsonParser {
 		JsonObject object;
 		bool hasValue = false;
 		while (index < doc.length()) {
-			const wchar_t ch = doc[index];
+			const wchar_t ch = doc[index++];
 			switch (ch) {
 			case L',':
 				if (hasValue) {
 					hasValue = false;
-					++index;
 				} else {
-					ShowError(__func__, __LINE__, ch, index);
+					ShowError(__func__, __LINE__, ch);
 				}
 				break;
 
 			case L'}':
-				++index;
 				return std::make_unique<JsonValue>(std::move(object));
 
 			default:
 				if (IsWhiteSpace(ch)) {
-					++index;
 					HandleLine(ch);
-				} else if (!hasValue) {
-#if 1 // only quoted key
-					if (ch == L'\"') {
-						++index;
-						std::wstring key = ScanString();
-						const wchar_t chNext = GetNextChar();
-						if (chNext == L':') {
-							++index;
-							auto value = ParseValue();
-							if (value) {
-								hasValue = true;
-								object.insert_or_assign(std::move(key), std::move(value));
-							}
-						} else {
-							ShowError(__func__, __LINE__, chNext, index);
+				} else if (ch == L'\"' && !hasValue) {
+					std::wstring key = ScanString();
+					const wchar_t chNext = GetNextChar();
+					if (chNext == L':') {
+						auto value = ParseValue();
+						if (value) {
+							hasValue = true;
+							object.insert_or_assign(std::move(key), std::move(value));
 						}
 					} else {
-						ShowError(__func__, __LINE__, ch, index);
+						ShowError(__func__, __LINE__, chNext);
 					}
-#else // allow unquoted key
-					const size_t backup = index;
-					const auto key = ParseValue();
-					if (key) {
-						if (key->type < JsonValue::Type::Object) {
-							const wchar_t chNext = GetNextChar();
-							if (chNext == L':') {
-								++index;
-								auto value = ParseValue();
-								if (value) {
-									hasValue = true;
-									object.insert_or_assign(std::move(key->value), std::move(value));
-								}
-							} else {
-								ShowError(__func__, __LINE__, chNext, index);
-							}
-						} else {
-							ShowError(__func__, __LINE__, ch, backup);
-						}
-					}
-#endif // !hasValue
 				} else {
-					ShowError(__func__, __LINE__, ch, index);
+					ShowError(__func__, __LINE__, ch);
 				}
 				break;
 			}
