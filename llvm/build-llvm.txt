@@ -70,7 +70,8 @@ set CXX=D:/Dev/LLVM/bin/clang-cl.exe
 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
 	-DLLVM_ENABLE_ASSERTIONS=ON ^
 	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
-	-DLLVM_ENABLE_PROJECTS="clang;compiler-rt;lld;openmp" ^
+	-DLLVM_ENABLE_PROJECTS="clang;lld;openmp" ^
+	-DLLVM_ENABLE_RUNTIMES=compiler-rt ^
 	-DLLVM_TARGETS_TO_BUILD="AArch64;X86" ^
 	../llvm/llvm
 
@@ -88,7 +89,8 @@ cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
 	-DLLVM_ENABLE_ASSERTIONS=ON ^
 	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
 	-DLLVM_BUILD_LLVM_C_DYLIB=ON ^
-	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;openmp" ^
+	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;lldb;openmp" ^
+	-DLLVM_ENABLE_RUNTIMES=compiler-rt ^
 	-DLLVM_TARGETS_TO_BUILD="AArch64;X86" ^
 	-DPYTHON_HOME=D:/Dev/Python3 ^
 	-DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-Main ^
@@ -99,7 +101,8 @@ cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
 	-DLLVM_ENABLE_ASSERTIONS=ON ^
 	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
 	-DLLVM_BUILD_LLVM_C_DYLIB=ON ^
-	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;openmp" ^
+	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;openmp" ^
+	-DLLVM_ENABLE_RUNTIMES=compiler-rt ^
 	-DLLVM_TARGETS_TO_BUILD="AArch64;X86" ^
 	-DCMAKE_INSTALL_PREFIX=F:/Dev/LLVM-Main ^
 	../llvm/llvm
@@ -112,7 +115,8 @@ ninja compiler-rt
 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
 	-DLLVM_ENABLE_ASSERTIONS=ON ^
 	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON ^
-	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" ^
+	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" ^
+	-DLLVM_ENABLE_RUNTIMES=compiler-rt ^
 	-DLLVM_TARGETS_TO_BUILD="X86" ^
 	../llvm/llvm
 
