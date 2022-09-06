@@ -254,9 +254,10 @@ def check_clang_cl_options():
 		'EnableEnhancedInstructionSet',
 		'ExceptionHandling',
 		'ExternalDirectoriesEnv',
-		'StructMemberAlignment',
+		'GuardEHContMetadata',
 		'LanguageStandard',
 		'LanguageStandard_C',
+		'StructMemberAlignment',
 	])
 	check_program_options('clang-cl.exe', 'cl', ignored=ignored, hardcoded=hardcoded)
 

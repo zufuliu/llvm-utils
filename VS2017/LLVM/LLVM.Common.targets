@@ -133,11 +133,8 @@
         <AdditionalModuleDependencies/>
         <AdditionalUsingDirectories/>
         <BrowseInformation/>
-        <ConformanceMode/>
-        <CreateHotpatchableImage/>
         <DisableLanguageExtensions/>
         <DisableSpecificWarnings/>
-        <EnableASAN/>
         <EnableFiberSafeOptimizations/>
         <EnableFuzzer/>
         <EnableParallelCodeGeneration/>
@@ -151,9 +148,7 @@
         <GenerateModuleDependencies/>
         <GenerateSourceDependencies/>
         <GenerateXMLDocumentationFiles/>
-        <GuardEHContMetadata/>
         <GuardSignedReturns/>
-        <IntelJCCErratum/>
         <MinimalRebuild/>
         <ModuleOutputFile/>
         <MultiProcessorCompilation/>
@@ -169,11 +164,9 @@
         <SmallerTypeCheck/>
         <SpectreMitigation/>
         <StdIfcDirectory/>
-        <SupportJustMyCode/>
         <SuppressStartupBanner/>
         <TranslateIncludes/>
         <TreatSpecificWarningsAsErrors/>
-        <TreatWChar_tAsBuiltInType/>
         <UndefineAllPreprocessorDefinitions/>
         <UseFullPaths/>
         <UseStandardPreprocessor/>
@@ -185,7 +178,7 @@
         <AnalyzeExternalRuleset/>
         <DisableAnalyzeExternal/>
         <ExternalTemplatesDiagnostics/>
-        <ExternalWarningLevel/>
+        <ExternalWarningLevel Condition="'%(ClCompile.ExternalWarningLevel)' == 'InheritWarningLevel'"/>
         <TreatAngleIncludeAsExternal/>
       </ClCompile>
     </ItemGroup>
