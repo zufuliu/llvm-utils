@@ -31,6 +31,7 @@
            not pass the option).  Only if the user explicitly overrode this setting in a project to use
            /RTCu would we see the warning. -->
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>__clang__;__llvm__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions Condition="'$(Platform)' == 'Win32'">--target=i686-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)' == 'x64'">--target=x86_64-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)' == 'ARM64'">--target=aarch64-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
