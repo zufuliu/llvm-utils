@@ -23,7 +23,7 @@
        general purpose list of command line flags. -->
   <ItemDefinitionGroup Condition="$(UseClangCl)">
     <ClCompile>
-       <!-- Set this to "Default" (which means not passing any /RTC option) so that any other value will
+      <!-- Set this to "Default" (which means not passing any /RTC option) so that any other value will
            be treated as having been overridden by the user.  This Serves as a hint to the user that
            Default is the value we support, and other values will generate a warning.  It also means
            that if the user simply creates a new project in MSVC (which uses /RTCu by default), then
@@ -45,6 +45,45 @@
       <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'true'">DebugFull</GenerateDebugInformation>
       <GenerateDebugInformation Condition="'%(Link.GenerateDebugInformation)' == 'DebugFastLink'">DebugFull</GenerateDebugInformation>
       <AdditionalOptions>$(LldLinkAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <!-- Ignore unsupported or ignored options. -->
+      <AddModuleNamesToAssembly/>
+      <AssemblyDebug/>
+      <AssemblyLinkResource/>
+      <CgThreads/>
+      <CLRImageType/>
+      <CLRSupportLastError/>
+      <CLRThreadAttribute/>
+      <CLRUnmanagedCodeCheck/>
+      <DetectOneDefinitionRule/>
+      <EmbedManagedResourceFile/>
+      <GenerateWindowsMetadata/>
+      <IgnoreEmbeddedIDL/>
+      <IncrementalLinkDatabaseFile/>
+      <KeyContainer/>
+      <LinkDelaySign/>
+      <LinkErrorReporting/>
+      <LinkKeyFile/>
+      <LinkStatus/>
+      <LinkTimeCodeGeneration/>
+      <LinkTimeCodeGenerationObjectFile/>
+      <MergedIDLBaseFileName/>
+      <MidlCommandFile/>
+      <PdbThreads/>
+      <ProfileGuidedDatabase/>
+      <SetChecksum/>
+      <SignHash/>
+      <SupportNobindOfDelayLoadedDLL/>
+      <SupportUnloadOfDelayLoadedDLL/>
+      <TurnOffAssemblyGeneration/>
+      <TypeLibraryFile/>
+      <TypeLibraryResourceID/>
+      <UACExecutionLevel/>
+      <UACUIAccess/>
+      <WindowsMetadataFile/>
+      <WindowsMetadataKeyContainer/>
+      <WindowsMetadataLinkDelaySign/>
+      <WindowsMetadataLinkKeyFile/>
+      <WindowsMetadataSignHash/>
     </Link>
   </ItemDefinitionGroup>
 
@@ -52,12 +91,25 @@
     <Lib>
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>$(LlvmLibAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <!-- Ignore unsupported or ignored options. -->
+      <ErrorReporting/>
+      <ExportNamedFunctions/>
+      <ForceSymbolReferences/>
+      <IgnoreAllDefaultLibraries/>
+      <IgnoreSpecificDefaultLibraries/>
+      <ModuleDefinitionFile/>
+      <Name/>
+      <OutputFile/>
+      <RemoveObjects/>
+      <SubSystem/>
+      <Verbose/>
     </Lib>
   </ItemDefinitionGroup>
 
   <ItemDefinitionGroup Condition="$(UseLlvmRc)">
     <ResourceCompile>
       <AdditionalOptions>$(LlvmRcAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <!-- Ignore unsupported or ignored options. -->
     </ResourceCompile>
   </ItemDefinitionGroup>
 

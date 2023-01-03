@@ -71,7 +71,10 @@ def parse_clang_cl_help(doc):
 
 def parse_clang_cl_ignored_options(path):
 	print('parse:', path)
-	ignored = set()
+	groups = {'ClCompile': 'cl', 'Link': 'link', 'Lib': 'lib', 'ResourceCompile': 'rc'}
+	ignored = {}
+	for group in groups.values():
+		ignored[group] = set(['SuppressStartupBanner']) # nologo
 	with xml.dom.minidom.parse(path) as dom:
 		doc = dom.documentElement
 		assert doc.tagName == 'Project'
@@ -81,7 +84,13 @@ def parse_clang_cl_ignored_options(path):
 					for tag in child.getElementsByTagName('ClCompile'):
 						for item in tag.getElementsByTagName('*'):
 							if not item.childNodes:
-								ignored.add(item.tagName)
+								ignored['cl'].add(item.tagName)
+		for node in doc.getElementsByTagName('ItemDefinitionGroup'):
+			for child in node.getElementsByTagName('*'):
+				if group := groups.get(child.tagName, None):
+					for item in child.getElementsByTagName('*'):
+						if not item.childNodes and not item.attributes:
+							ignored[group].add(item.tagName)
 	return ignored
 
 def parse_msvc_rule_xml(path, options, switchMap):
@@ -163,6 +172,8 @@ def dump_msvc_rule_as_yaml(path, options):
 def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
 	doc = get_clang_cl_help(llvmName)
 	supported = parse_clang_cl_help(doc)
+	if msvcName != 'cl':
+		supported = set(value.lower() for value in supported)
 	prefixList = [item[:-1] for item in supported if item[-1] == '*']
 
 	options = {}
@@ -200,15 +211,14 @@ def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
 		if not value:
 			return
 		lower = value.lower()
-		upper = value.upper()
-		if value in supported or lower in supported or upper in supported:
+		if lower in supported:
 			if name in ignored:
 				print(f'supported {msvcName} option:', name, value)
 			return
 		if name not in ignored and name not in hardcoded:
 			unsupported[name] = option
 		if name not in hardcoded and ':' in value:
-			if any(value.startswith(prefix) or lower.startswith(prefix) or upper.startswith(prefix) for prefix in prefixList):
+			if any(lower.startswith(prefix) for prefix in prefixList):
 				print(f'maybe supported {msvcName} option:', name, value)
 
 	check_switch = check_switch_match_case if msvcName == 'cl' else check_switch_ignore_case
@@ -236,16 +246,17 @@ def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
 		dump_msvc_rule_as_yaml(f'all-{msvcName}-unsupported.yml', unsupported)
 
 
-def check_clang_cl_options():
-	path = r'VS2017\LLVM\LLVM.Common.targets'
-	ignored = parse_clang_cl_ignored_options(path)
-	hardcoded = set([
+def check_clang_cl_options(ignored):
+	# https://github.com/llvm/llvm-project/tree/main/clang/include/clang/Driver/Options.td
+	ignored |= set([
 		# error
 		'CompileAsManaged',
 		'CompileAsWinRT',
 		'EnableModules',
 		# unsupported
 		'BasicRuntimeChecks',
+	])
+	hardcoded = set([
 		# full or partial supported
 		'AssemblerOutput',
 		'CompileAs',
@@ -254,6 +265,8 @@ def check_clang_cl_options():
 		'EnableEnhancedInstructionSet',
 		'ExceptionHandling',
 		'ExternalDirectoriesEnv',
+		'FloatingPointExceptions',
+		'FloatingPointModel',
 		'GuardEHContMetadata',
 		'LanguageStandard',
 		'LanguageStandard_C',
@@ -261,43 +274,71 @@ def check_clang_cl_options():
 	])
 	check_program_options('clang-cl.exe', 'cl', ignored=ignored, hardcoded=hardcoded)
 
-def check_lld_link_options():
+def check_lld_link_options(ignored):
+	# https://github.com/llvm/llvm-project/tree/main/lld/COFF/Options.td
 	hardcoded = set([
 		# supported
 		'AdditionalLibraryDirectories',
 		'AdditionalManifestDependencies',
+		'BaseAddress',
 		'CreateHotPatchableImage',
 		'DelayLoadDLLs',
 		'EnableCOMDATFolding',
 		'EnableUAC',
+		'EntryPointSymbol',
 		'ForceSymbolReferences',
+		'FunctionOrder',
 		'GenerateDebugInformation',
 		'GenerateManifest',
+		'GenerateMapFile',
+		'HeapReserveSize',
 		'IgnoreSpecificDefaultLibraries',
+		'ImportLibrary',
 		'LinkControlFlowGuard',
+		'LinkGuardEHContMetadata',
+		'LinkGuardSignedReturns',
 		'ManifestEmbed',
+		'ManifestFile',
 		'ManifestInput',
+		'MapExports',
+		'MergeSections',
+		'ModuleDefinitionFile',
+		'MSDOSStubFileName',
 		'Natvis',
 		'OptimizeReferences',
+		'OutputFile',
+		'Profile',
+		'ProgramDatabaseFile',
+		'SectionAlignment',
+		'ShowProgress',
 		'SpecifySectionAttributes',
+		'StackReserveSize',
+		'StripPrivateSymbols',
 		'SubSystem',
 		'TargetMachine',
+		'Version',
 	])
-	check_program_options('lld-link.exe', 'link', hardcoded=hardcoded)
+	check_program_options('lld-link.exe', 'link', ignored=ignored, hardcoded=hardcoded)
 
-def check_llvm_lib_options():
+def check_llvm_lib_options(ignored):
+	# https://github.com/llvm/llvm-project/tree/main/llvm/lib/ToolDrivers/llvm-lib/Options.td
+	ignored |= set([
+		'LinkTimeCodeGeneration',
+	])
 	hardcoded = set([
 		# supported
 		'AdditionalLibraryDirectories',
 		'TargetMachine',
 	])
-	check_program_options('llvm-lib.exe', 'lib', hardcoded=hardcoded)
+	check_program_options('llvm-lib.exe', 'lib', ignored=ignored, hardcoded=hardcoded)
 
-def check_llvm_rc_options():
-	check_program_options('llvm-rc.exe', 'rc')
+def check_llvm_rc_options(ignored):
+	# https://github.com/llvm/llvm-project/blob/main/llvm/tools/llvm-rc/Opts.td
+	check_program_options('llvm-rc.exe', 'rc', ignored=ignored)
 
 if __name__ == '__main__':
-	check_clang_cl_options()
-	#check_lld_link_options()
-	#check_llvm_lib_options()
-	#check_llvm_rc_options()
+	ignored = parse_clang_cl_ignored_options(r'VS2017\LLVM\LLVM.Common.targets')
+	check_clang_cl_options(ignored['cl'])
+	check_lld_link_options(ignored['link'])
+	check_llvm_lib_options(ignored['lib'])
+	check_llvm_rc_options(ignored['rc'])
