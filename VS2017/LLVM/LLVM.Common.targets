@@ -64,7 +64,7 @@
       <LinkErrorReporting/>
       <LinkKeyFile/>
       <LinkStatus/>
-      <LinkTimeCodeGeneration/>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <LinkTimeCodeGenerationObjectFile/>
       <MergedIDLBaseFileName/>
       <MidlCommandFile/>
@@ -215,7 +215,7 @@
         <RemoveUnreferencedCodeData/>
         <SDLCheck/>
         <SmallerTypeCheck/>
-        <SpectreMitigation/>
+        <SpectreMitigation>false</SpectreMitigation>
         <StdIfcDirectory/>
         <SuppressStartupBanner/>
         <TranslateIncludes/>

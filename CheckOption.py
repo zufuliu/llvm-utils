@@ -181,6 +181,7 @@ def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
 	result = get_msvc_rule_path(f'{msvcName}.xml')
 	for path in result:
 		parse_msvc_rule_xml(path, options, switchMap)
+	options = dict(sorted(options.items()))
 	dump_msvc_rule_as_yaml(f'{msvcName}.yml', options)
 
 	# remove previous ignored but now supported options
@@ -255,6 +256,7 @@ def check_clang_cl_options(ignored):
 		'EnableModules',
 		# unsupported
 		'BasicRuntimeChecks',
+		'SpectreMitigation',
 	])
 	hardcoded = set([
 		# full or partial supported
@@ -276,6 +278,9 @@ def check_clang_cl_options(ignored):
 
 def check_lld_link_options(ignored):
 	# https://github.com/llvm/llvm-project/tree/main/lld/COFF/Options.td
+	ignored |= set([
+		'LinkTimeCodeGeneration',
+	])
 	hardcoded = set([
 		# supported
 		'AdditionalLibraryDirectories',
