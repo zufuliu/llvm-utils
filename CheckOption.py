@@ -256,6 +256,7 @@ def check_clang_cl_options(ignored):
 		'EnableModules',
 		# unsupported
 		'BasicRuntimeChecks',
+		'MultiProcessorCompilation',	# handled by MSBuild
 		'SpectreMitigation',
 	])
 	hardcoded = set([
