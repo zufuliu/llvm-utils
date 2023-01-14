@@ -1,4 +1,5 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v141\Toolset.targets"/>
-  <Import Project="$(VCTargetsPath)\LLVM\LLVM.Common.targets"/>
+  <Import Project="$(VCTargetsPath)\LLVM\LLVM.MultiTask.targets"/>
+  <Import Project="$(VCTargetsPath)\LLVM\LLVM.MultiTask_v150.targets"/>
 </Project>
