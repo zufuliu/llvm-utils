@@ -335,6 +335,7 @@ def check_llvm_lib_options(ignored):
 		# supported
 		'AdditionalLibraryDirectories',
 		'TargetMachine',
+		'OutputFile',
 	])
 	check_program_options('llvm-lib.exe', 'lib', ignored=ignored, hardcoded=hardcoded)
 
