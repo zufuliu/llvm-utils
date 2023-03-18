@@ -8,7 +8,7 @@ After apply these changes, you can build your extension with
 
 ## Clang Static Analyze Utils
 
-*These scripts are deprecated in favor of HTML output by using:*
+*These scripts (Python 2) are deprecated in favor of HTML output by using:*
 
 	clang --analyze -Xanalyzer -analyzer-output=html
 	clang-cl --analyze -Xclang -analyzer-output=html
