@@ -70,7 +70,6 @@
       <MidlCommandFile/>
       <PdbThreads/>
       <ProfileGuidedDatabase/>
-      <SetChecksum/>
       <SignHash/>
       <SupportNobindOfDelayLoadedDLL/>
       <SupportUnloadOfDelayLoadedDLL/>
