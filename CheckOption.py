@@ -143,8 +143,16 @@ def parse_msvc_rule_xml(path, options, switchMap):
 				}
 			else:
 				switch = node.getAttribute('IncludeInCommandLine')
-				if switch != 'false':
+				if not switch:
 					print('    ignore:', tagName, name)
+				else:
+					options[name] = {
+						'Name': name,
+						'Type': tagName,
+						'DisplayName': node.getAttribute('DisplayName'),
+						'IncludeInCommandLine': switch,
+						'Description': node.getAttribute('Description'),
+					}
 	return options
 
 def dump_msvc_rule_as_yaml(path, options):
@@ -154,14 +162,13 @@ def dump_msvc_rule_as_yaml(path, options):
 			fd.write(f"  - {option['Type']}: {option['Name']}\n")
 			fd.write(f"    DisplayName: {option['DisplayName']}\n")
 			fd.write(f"    Description: {option['Description']}\n")
-			value = option['Switch']
-			if value:
+			if value := option.get('Switch', None):
 				fd.write(f"    Switch: {value}\n")
-			value = option['ReverseSwitch']
-			if value:
+			if value := option.get('ReverseSwitch', None):
 				fd.write(f"    ReverseSwitch: {value}\n")
-			values = option['Options']
-			if values:
+			if value := option.get('IncludeInCommandLine', None):
+				fd.write(f"    IncludeInCommandLine: {value}\n")
+			if values := option.get('Options', None):
 				fd.write("    Options:\n")
 				for value in values.values():
 					fd.write(f"      - Name: {value['Name']}\n")
@@ -225,20 +232,28 @@ def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
 	check_switch = check_switch_match_case if msvcName == 'cl' else check_switch_ignore_case
 	for option in options.values():
 		name = option['Name']
-		value = option['Switch']
-		check_switch(name, option, value)
-		value = option['ReverseSwitch']
-		check_switch(name, option, value)
-		values = option['Options']
-		if values:
+		if value := option.get('Switch', None):
+			check_switch(name, option, value)
+		if value := option.get('ReverseSwitch', None):
+			check_switch(name, option, value)
+		if values := option.get('Options', None):
 			for item in values.values():
 				value = item['Switch']
 				check_switch(name, option, value)
+		if 'IncludeInCommandLine' in option:
+			if name not in ignored and name not in hardcoded:
+				unsupported[name] = option
 
 	print(f'total {msvcName} option count:', len( options), 'unsupported:', len(unsupported))
+	path = f'{msvcName}-unsupported.yml'
 	if unsupported:
 		unsupported = dict(sorted(unsupported.items()))
-		dump_msvc_rule_as_yaml(f'{msvcName}-unsupported.yml', unsupported)
+		dump_msvc_rule_as_yaml(path, unsupported)
+	elif os.path.isfile(path):
+		try:
+			os.remove(path)
+		except Exception:
+			pass
 	if ignored:
 		for name in ignored:
 			if name in options:
@@ -256,8 +271,12 @@ def check_clang_cl_options(ignored):
 		'EnableModules',
 		# unsupported
 		'BasicRuntimeChecks',
-		'MultiProcessorCompilation',	# handled by MSBuild
 		'SpectreMitigation',
+		# handled by MSBuild
+		'BuildStlModules',
+		'MultiProcessorCompilation',
+		'ScanSourceForModuleDependencies',
+		'TrackerLogDirectory',
 	])
 	hardcoded = set([
 		# full or partial supported
@@ -281,6 +300,13 @@ def check_lld_link_options(ignored):
 	# https://github.com/llvm/llvm-project/tree/main/lld/COFF/Options.td
 	ignored |= set([
 		'LinkTimeCodeGeneration',
+		# handled by MSBuild
+		'IgnoreImportLibrary',
+		'LinkLibraryDependencies',
+		'PerUserRedirection',
+		'RegisterOutput',
+		'TrackerLogDirectory',
+		'UseLibraryDependencyInputs',
 	])
 	hardcoded = set([
 		# supported
@@ -330,6 +356,10 @@ def check_llvm_lib_options(ignored):
 	# https://github.com/llvm/llvm-project/tree/main/llvm/lib/ToolDrivers/llvm-lib/Options.td
 	ignored |= set([
 		'LinkTimeCodeGeneration',
+		# handled by MSBuild
+		'LinkLibraryDependencies',
+		'TrackerLogDirectory',
+		'UseUnicodeResponseFiles',
 	])
 	hardcoded = set([
 		# supported
@@ -341,11 +371,19 @@ def check_llvm_lib_options(ignored):
 
 def check_llvm_rc_options(ignored):
 	# https://github.com/llvm/llvm-project/blob/main/llvm/tools/llvm-rc/Opts.td
+	ignored |= set([
+		# handled by MSBuild
+		'DesigntimePreprocessorDefinitions',
+		'TrackerLogDirectory',
+	])
 	check_program_options('llvm-rc.exe', 'rc', ignored=ignored)
 
-if __name__ == '__main__':
+def main():
 	ignored = parse_clang_cl_ignored_options(r'VS2017\LLVM\LLVM.Common.targets')
 	check_clang_cl_options(ignored['cl'])
 	check_lld_link_options(ignored['link'])
 	check_llvm_lib_options(ignored['lib'])
 	check_llvm_rc_options(ignored['rc'])
+
+if __name__ == '__main__':
+	main()
