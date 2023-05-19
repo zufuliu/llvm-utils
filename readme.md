@@ -124,8 +124,8 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor or GitHub Actions Build Image
 ### Install LLVM on the build image
 
-	curl -fsSL -o "LLVM-16.0.3-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.3/LLVM-16.0.3-win64.exe"
-	LLVM-16.0.3-win64.exe /S
+	curl -fsSL -o "LLVM-16.0.4-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/LLVM-16.0.4-win64.exe"
+	LLVM-16.0.4-win64.exe /S
 
 ### Install from release archives
 
@@ -140,11 +140,11 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 
 Examples:
 
-	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v23.03/LLVM_VS2017.zip"
+	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v23.05/LLVM_VS2017.zip"
 	7z x -y "LLVM_VS2017.zip" >NUL
 	CALL "LLVM_VS2017\install.bat" 1
 
-	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v23.03/LLVM_VS2010_2015.zip"
+	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v23.05/LLVM_VS2010_2015.zip"
 	7z x -y "LLVM_VS2010_2015.zip" >NUL
 	CALL "LLVM_VS2010_2015\install.bat" 1
 
