@@ -354,7 +354,6 @@ public:
 
 std::vector<std::wstring> pathList;
 std::atomic<uint32_t> pathIndex;
-wchar_t clangTidyPath[MAX_PATH];
 std::wstring commandLinePrefix;
 
 inline bool PathIsFile(const wchar_t *path) noexcept {
@@ -362,18 +361,25 @@ inline bool PathIsFile(const wchar_t *path) noexcept {
 	return (attr & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
 
-bool FindClangTidyPath() noexcept {
+bool FindClangTidyPath() {
 	wchar_t dir[MAX_PATH]{};
 	GetModuleFileNameW(nullptr, dir, _countof(dir));
 	wchar_t path[MAX_PATH]{};
 	PathCombineW(path, dir, L"clang-tidy.exe");
 	if (PathIsFile(path)) {
-		memcpy(clangTidyPath, path, sizeof(path));
+		commandLinePrefix += L'\"';
+		commandLinePrefix += path;
+		commandLinePrefix += L'\"';
+		commandLinePrefix += L' ';
 		return true;
 	}
 
 	if (SearchPathW(nullptr, L"clang-tidy.exe", nullptr, _countof(path), path, nullptr)) {
-		GetFullPathNameW(path, _countof(clangTidyPath), clangTidyPath, nullptr);
+		GetFullPathNameW(path, _countof(dir), dir, nullptr);
+		commandLinePrefix += L'\"';
+		commandLinePrefix += dir;
+		commandLinePrefix += L'\"';
+		commandLinePrefix += L' ';
 		return true;
 	}
 	return false;
@@ -493,8 +499,8 @@ VOID CALLBACK WorkCallback([[maybe_unused]] PTP_CALLBACK_INSTANCE instance, [[ma
 		startInfo.dwFlags = STARTF_USESTDHANDLES;
 
 		const std::wstring &path = pathList[index];
-		std::wstring commandLine = commandLinePrefix + path + L"\"";
-		if (!CreateProcessW(clangTidyPath, commandLine.data(),
+		std::wstring commandLine = commandLinePrefix + path + L'\"';
+		if (!CreateProcessW(nullptr, commandLine.data(),
 			nullptr, nullptr, TRUE, 0, nullptr, nullptr,
 			&startInfo, &procInfo)) {
 			const std::wstring msg = L"run clang-tidy fail: " + commandLine + L"\n";
@@ -512,6 +518,10 @@ VOID CALLBACK WorkCallback([[maybe_unused]] PTP_CALLBACK_INSTANCE instance, [[ma
 int __cdecl wmain(int argc, wchar_t *argv[]) {
 	hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	hStdError = GetStdHandle(STD_ERROR_HANDLE);
+	if (!FindClangTidyPath()) {
+		return 1;
+	}
+
 	uint32_t jobCount = 1;
 	std::wstring directory;
 	for (int i = 1; i < argc; i++) {
@@ -531,10 +541,6 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 				commandLinePrefix += L' ';
 			}
 		}
-	}
-
-	if (!FindClangTidyPath()) {
-		return 1;
 	}
 
 	const std::wstring path = FindCompileDatebase(directory);
