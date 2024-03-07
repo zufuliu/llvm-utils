@@ -124,8 +124,8 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor or GitHub Actions Build Image
 ### Install LLVM on the build image
 
-	curl -fsSL -o "LLVM-16.0.4-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/LLVM-16.0.4-win64.exe"
-	LLVM-16.0.4-win64.exe /S
+	curl -fsSL -o "LLVM-18.1.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.0/LLVM-18.1.0-win64.exe"
+	LLVM-18.1.0-win64.exe /S
 
 ### Install from release archives
 
