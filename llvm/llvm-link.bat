@@ -39,14 +39,62 @@ MKLINK ld64.lld.exe lld.exe
 DEL wasm-ld.exe
 MKLINK wasm-ld.exe lld.exe
 
+DEL llvm-dlltool.exe
+MKLINK llvm-dlltool.exe llvm-ar.exe
+
 DEL llvm-lib.exe
 MKLINK llvm-lib.exe llvm-ar.exe
 
 DEL llvm-ranlib.exe
 MKLINK llvm-ranlib.exe llvm-ar.exe
 
-@rem DEL libiomp5md.dll
-@rem MKLINK libiomp5md.dll libomp.dll
+DEL llvm-strip.exe
+MKLINK llvm-strip.exe llvm-objcopy.exe
+
+IF EXIST llvm-bitcode-strip.exe (
+	DEL llvm-bitcode-strip.exe
+	MKLINK llvm-bitcode-strip.exe llvm-objcopy.exe
+)
+
+IF EXIST llvm-install-name-tool.exe (
+	DEL llvm-install-name-tool.exe
+	MKLINK llvm-install-name-tool.exe llvm-objcopy.exe
+)
+
+IF EXIST llvm-otool.exe (
+	DEL llvm-otool.exe
+	MKLINK llvm-otool.exe llvm-objdump.exe
+)
+
+IF EXIST llvm-addr2line.exe (
+	DEL llvm-addr2line.exe
+	MKLINK llvm-addr2line.exe llvm-symbolizer.exe
+)
+
+IF EXIST llvm-readelf.exe (
+	DEL llvm-readelf.exe
+	MKLINK llvm-readelf.exe llvm-readobj.exe
+)
+
+IF EXIST llvm-windres.exe (
+	DEL llvm-windres.exe
+	MKLINK llvm-windres.exe llvm-rc.exe
+)
+
+IF EXIST libiomp5md.dll (
+	DEL libiomp5md.dll
+	MKLINK libiomp5md.dll libomp.dll
+)
+
+IF EXIST llvm-boltdiff.exe (
+	DEL llvm-boltdiff.exe
+	MKLINK llvm-boltdiff.exe llvm-bolt.exe
+)
+
+IF EXIST perf2bolt.exe (
+	DEL perf2bolt.exe
+	MKLINK perf2bolt.exe llvm-bolt.exe
+)
 
 POPD
 
