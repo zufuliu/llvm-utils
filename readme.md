@@ -15,7 +15,7 @@ Please download and install LLVM from https://github.com/llvm/llvm-project/relea
 ### Visual Studio 2022
 The Platform Toolset is "LLVM for Visual Studio 2022 (`LLVM_v143`)", "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
-Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g: `C:\Program Files\Microsoft Visual Studio\2022\Community`), please manually copy folders under `VS2017` to their target paths.
+Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g.: `C:\Program Files\Microsoft Visual Studio\2022\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
@@ -38,9 +38,9 @@ Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g: `C:\Program 
 |`VS2017\LLVM_v141` | `%VS_PATH%\MSBuild\Microsoft\VC\v150\Platforms\ARM\PlatformToolsets\` |
 
 ### Visual Studio 2019
-The Platform Toolset is "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
+The Platform Toolset is "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
-Assume `VS_PATH` is your Visual Studio 2019 installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community`), please manually copy folders under `VS2017` to their target paths.
+Assume `VS_PATH` is your Visual Studio 2019 installation path (e.g.: `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
@@ -60,7 +60,7 @@ Assume `VS_PATH` is your Visual Studio 2019 installation path (e.g: `C:\Program 
 ### Visual Studio 2017
 The Platform Toolset is "LLVM for Visual Studio 2017 (`LLVM_v141`)" and "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
-Assume `VS_PATH` is your Visual Studio 2017 installation path (e.g: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community`), please manually copy folders under `VS2017` to their target paths.
+Assume `VS_PATH` is your Visual Studio 2017 installation path (e.g.: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
@@ -162,8 +162,8 @@ or
 	CALL "c:\projects\llvm-utils\VS2015\install.bat" 1
 
 ## clang-cl for Python 3 distutils
-See `clang\clang-cl-py3.diff` for the changes on hwo to use clang-cl as distutils compiler.
-After apply these changes, you can build your extension with
+See `clang\clang-cl-py3.diff` for the changes on how to use clang-cl as distutils compiler.
+After applying these changes, you can build your extension with
 
 	python setup.py build --compiler=clang-cl
 
@@ -171,7 +171,7 @@ After apply these changes, you can build your extension with
 The huge size of LLVM Windows installation can be reduced dramatically by using Windows symbolic link (see [mklink command](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink).
 
 ### Usage
-Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program Files\LLVM\`), and run it (may require Administrator privilege).
+Just copy `llvm\llvm-link.bat` to LLVM installation path (e.g.: `C:\Program Files\LLVM\`) and run it (may require Administrator privilege).
 
 ## Related Links
 * [LLVM Extensions for Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain) in Visual Studio Marketplace, [not works for Visual Studio 2019 alone](https://github.com/llvm/llvm-project/issues/41293).
