@@ -10,7 +10,7 @@
 ### Installation
 Please download and install LLVM from https://github.com/llvm/llvm-project/releases or https://releases.llvm.org/.
 
-`VS2017\install.bat` can be used to install MSBuild script for Visual Studio 2017, 2019 and 2022. (may require Administrator privilege. In Windows 8 or later, you can quickly open an elevated PowerShell prompt by File -> Open Windows PowerShell -> Open PowerShell as Administrator).
+`VS2017\install.bat` can be used to install (may require Administrator privilege) MSBuild script for Visual Studio 2017, 2019 and 2022.
 
 ### Visual Studio 2022
 The Platform Toolset is "LLVM for Visual Studio 2022 (`LLVM_v143`)", "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
@@ -124,8 +124,8 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor or GitHub Actions Build Image
 ### Install LLVM on the build image
 
-	curl -fsSL -o "LLVM-18.1.0-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.0/LLVM-18.1.0-win64.exe"
-	LLVM-18.1.0-win64.exe /S
+	curl -fsSL -o "LLVM-19.1.7-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe"
+	LLVM-19.1.7-win64.exe /S
 
 ### Install from release archives
 
