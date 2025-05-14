@@ -55,6 +55,7 @@
       <CLRThreadAttribute/>
       <CLRUnmanagedCodeCheck/>
       <DetectOneDefinitionRule/>
+      <DynamicDebuggingSuffix/>
       <EmbedManagedResourceFile/>
       <GenerateWindowsMetadata/>
       <IgnoreEmbeddedIDL/>
@@ -78,6 +79,7 @@
       <TypeLibraryResourceID/>
       <UACExecutionLevel/>
       <UACUIAccess/>
+      <UseDynamicDebugging/>
       <WindowsMetadataFile/>
       <WindowsMetadataKeyContainer/>
       <WindowsMetadataLinkDelaySign/>
@@ -187,6 +189,7 @@
         <BuildStlModules>false</BuildStlModules>
         <DisableLanguageExtensions/>
         <DisableSpecificWarnings/>
+        <DynamicDebuggingSuffix/>
         <EnableFiberSafeOptimizations/>
         <EnableFuzzer/>
         <EnableParallelCodeGeneration/>
@@ -221,6 +224,7 @@
         <TreatSpecificWarningsAsErrors/>
         <UndefineAllPreprocessorDefinitions/>
         <UseFullPaths/>
+        <UseDynamicDebugging/>
         <UseStandardPreprocessor/>
         <UseUnicodeForAssemblerListing/>
         <WarningVersion/>
