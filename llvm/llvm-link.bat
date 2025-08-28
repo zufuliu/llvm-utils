@@ -91,6 +91,19 @@ IF EXIST llvm-boltdiff.exe (
 	MKLINK llvm-boltdiff.exe llvm-bolt.exe
 )
 
+IF EXIST llvm-ml64.exe (
+	DEL llvm-ml64.exe
+	MKLINK llvm-ml64.exe llvm-ml.exe
+)
+
+IF EXIST amdgpu-arch.exe (
+	DEL nvptx-arch.exe
+	MKLINK nvptx-arch.exe amdgpu-arch.exe
+
+	DEL offload-arch.exe
+	MKLINK offload-arch.exe amdgpu-arch.exe
+)
+
 IF EXIST perf2bolt.exe (
 	DEL perf2bolt.exe
 	MKLINK perf2bolt.exe llvm-bolt.exe
