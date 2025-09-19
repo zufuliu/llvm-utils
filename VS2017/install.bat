@@ -20,8 +20,11 @@ FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.B
 	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!"
 )
 
-@rem Visual Studio 2019, 2022
-FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -version [16.0^,18.0^)') DO (
+@rem Visual Studio 2019, 2022£¬2026
+FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -version [16.0^,19.0^)') DO (
+	@rem Visual C++ 2026 v145 toolset
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v180\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2026 "!VCT_PATH!"
 	@rem Visual C++ 2022 v143 toolset
 	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v170\Platforms
 	IF EXIST "!VCT_PATH!" CALL :SUB_VS2022 "!VCT_PATH!"
@@ -33,8 +36,11 @@ FOR /f "delims=" %%A IN ('"%VSWHERE%" -property installationPath -prerelease -ve
 	IF EXIST "!VCT_PATH!" CALL :SUB_VS2017 "!VCT_PATH!"
 )
 
-@rem Visual Studio 2019, 2022 Build Tools
-FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.BuildTools -property installationPath -prerelease -version [16.0^,18.0^)') DO (
+@rem Visual Studio 2019, 2022£¬2026 Build Tools
+FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.BuildTools -property installationPath -prerelease -version [16.0^,19.0^)') DO (
+	@rem Visual C++ 2026 v145 toolset
+	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v180\Platforms
+	IF EXIST "!VCT_PATH!" CALL :SUB_VS2026 "!VCT_PATH!"
 	@rem Visual C++ 2022 v143 toolset
 	SET VCT_PATH=%%A\MSBuild\Microsoft\VC\v170\Platforms
 	IF EXIST "!VCT_PATH!" CALL :SUB_VS2022 "!VCT_PATH!"
@@ -85,5 +91,14 @@ XCOPY /Q /Y "LLVM_v143" "%~1\x64\PlatformToolsets\LLVM_v143\"
 XCOPY /Q /Y "LLVM_v143" "%~1\Win32\PlatformToolsets\LLVM_v143\"
 XCOPY /Q /Y "LLVM_v143" "%~1\ARM64\PlatformToolsets\LLVM_v143\"
 XCOPY /Q /Y "LLVM_v143" "%~1\ARM\PlatformToolsets\LLVM_v143\"
+SET SUCCESS=1
+EXIT /B
+
+:SUB_VS2026
+ECHO VCTargetsPath for Visual Studio 2026: %~1
+XCOPY /Q /Y "LLVM" "%~1\..\LLVM\"
+XCOPY /Q /Y "LLVM_v145" "%~1\x64\PlatformToolsets\LLVM_v145\"
+XCOPY /Q /Y "LLVM_v145" "%~1\Win32\PlatformToolsets\LLVM_v145\"
+XCOPY /Q /Y "LLVM_v145" "%~1\ARM64\PlatformToolsets\LLVM_v145\"
 SET SUCCESS=1
 EXIT /B

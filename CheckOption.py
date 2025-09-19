@@ -30,13 +30,13 @@ def get_msvc_rule_path(filename):
 	path = os.getenv('ProgramFiles(x86)') or r'C:\Program Files (x86)'
 	vswhere = os.path.join(path, r'Microsoft Visual Studio\Installer\vswhere.exe')
 	# Visual Studio 2019, 2022
-	with subprocess.Popen([vswhere, '-sort', '-property', 'installationPath', '-prerelease', '-version', '[16.0,18.0)'], stdout=subprocess.PIPE) as proc:
+	with subprocess.Popen([vswhere, '-sort', '-property', 'installationPath', '-prerelease', '-version', '[16.0,19.0)'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
 		lines = decode_stdout(doc).splitlines()
 		for line in lines:
 			if not os.path.exists(line):
 				continue
-			for version in ['v170', 'v160', 'v150']:
+			for version in ['v180', 'v170', 'v160', 'v150']:
 				path = os.path.join(line, rf'MSBuild\Microsoft\VC\{version}\1033', filename)
 				if os.path.isfile(path):
 					print('find:', path)
