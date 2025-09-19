@@ -93,6 +93,7 @@
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <AdditionalOptions>$(LlvmLibAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
       <!-- Ignore unsupported or ignored options. -->
+      <DynamicDebuggingSuffix/>
       <ErrorReporting/>
       <ExportNamedFunctions/>
       <ForceSymbolReferences/>
@@ -102,6 +103,7 @@
       <Name/>
       <RemoveObjects/>
       <SubSystem/>
+      <UseDynamicDebugging/>
       <Verbose/>
     </Lib>
   </ItemDefinitionGroup>
