@@ -11,7 +11,7 @@ jobs:
     name: Visual Studio 2022
     runs-on: windows-2022
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
 
     - name: install llvm utils
       run: |
@@ -22,7 +22,7 @@ jobs:
     if: false
     runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
 
     - name: install llvm utils
       run: |
@@ -33,7 +33,7 @@ jobs:
     if: false
     runs-on: windows-2016
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
 
     - name: install llvm utils
       run: |
