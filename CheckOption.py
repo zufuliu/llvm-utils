@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-import sys
 import os.path
 import subprocess
 import string
 import xml.dom.minidom
 import ctypes
 
-CP_ACP = 'cp' + str(ctypes.windll.kernel32.GetACP())
+CP_ACP = f'cp{ctypes.windll.kernel32.GetACP()}'
 
 def decode_stdout(doc):
 	if not doc:
@@ -29,7 +28,7 @@ def get_msvc_rule_path(filename):
 	result = []
 	path = os.getenv('ProgramFiles(x86)') or r'C:\Program Files (x86)'
 	vswhere = os.path.join(path, r'Microsoft Visual Studio\Installer\vswhere.exe')
-	# Visual Studio 2019, 2022
+	# Visual Studio 2019, 2022, 2026
 	with subprocess.Popen([vswhere, '-sort', '-property', 'installationPath', '-prerelease', '-version', '[16.0,19.0)'], stdout=subprocess.PIPE) as proc:
 		doc = proc.stdout.read()
 		lines = decode_stdout(doc).splitlines()
@@ -176,7 +175,7 @@ def dump_msvc_rule_as_yaml(path, options):
 					fd.write(f"        DisplayName: {value['DisplayName']}\n")
 					fd.write(f"        Description: {value['Description']}\n")
 
-def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
+def check_program_options(llvmName, msvcName, ignored, hardcoded):
 	doc = get_clang_cl_help(llvmName)
 	supported = parse_clang_cl_help(doc)
 	if msvcName != 'cl':
@@ -252,7 +251,7 @@ def check_program_options(llvmName, msvcName, ignored=[], hardcoded=[]):
 	elif os.path.isfile(path):
 		try:
 			os.remove(path)
-		except Exception:
+		except OSError:
 			pass
 	if ignored:
 		for name in ignored:
@@ -376,7 +375,7 @@ def check_llvm_rc_options(ignored):
 		'DesigntimePreprocessorDefinitions',
 		'TrackerLogDirectory',
 	])
-	check_program_options('llvm-rc.exe', 'rc', ignored=ignored)
+	check_program_options('llvm-rc.exe', 'rc', ignored=ignored, hardcoded=[])
 
 def main():
 	ignored = parse_clang_cl_ignored_options(r'VS2017\LLVM\LLVM.Common.targets')
