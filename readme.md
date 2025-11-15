@@ -150,14 +150,14 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 ## Install to AppVeyor or GitHub Actions Build Image
 ### Install LLVM on the build image
 
-	curl -fsSL -o "LLVM-20.1.5-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.5/LLVM-20.1.5-win64.exe"
-	LLVM-20.1.5-win64.exe /S
+	curl -fsSL -o "LLVM-21.1.5-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.5/LLVM-21.1.5-win64.exe"
+	LLVM-21.1.5-win64.exe /S
 
 ### Install from release archives
 
 | Archive Name | Visual Studio Version |
 |------|-------------|
-| LLVM_VS2017.zip | 2017, 2019 and 2022 |
+| LLVM_VS2017.zip | 2017, 2019, 2022 and 2026 |
 | LLVM_VS2010_2015.zip | 2010, 2012, 2013 and 2015 |
 | LLVM_VS2015.zip | 2015 |
 | LLVM_VS2013.zip | 2013 |
@@ -166,11 +166,11 @@ The Platform Toolset is "LLVM for Visual Studio 2010 (`LLVM_v100`)" and "LLVM fo
 
 Examples:
 
-	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v25.05/LLVM_VS2017.zip"
+	curl -fsSL -o "LLVM_VS2017.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v25.11/LLVM_VS2017.zip"
 	7z x -y "LLVM_VS2017.zip" >NUL
 	CALL "LLVM_VS2017\install.bat" 1
 
-	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v25.05/LLVM_VS2010_2015.zip"
+	curl -fsSL -o "LLVM_VS2010_2015.zip" "https://github.com/zufuliu/llvm-utils/releases/download/v25.11/LLVM_VS2010_2015.zip"
 	7z x -y "LLVM_VS2010_2015.zip" >NUL
 	CALL "LLVM_VS2010_2015\install.bat" 1
 
