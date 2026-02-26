@@ -9,8 +9,8 @@ def get_exe_file_list(file_size_map, root, path):
 	for name in items:
 		if name.startswith('api-ms'):
 			continue
-		ext = os.path.splitext(name)[1].lower()
-		if ext not in ('.exe', '.dll', '.pyd'):
+		ext = os.path.splitext(name)[1].lower()[:4]
+		if ext not in ('.exe', '.dll', '.pyd', '.abi'):
 			continue
 		path = os.path.join(folder, name)
 		size = os.path.getsize(path)
@@ -41,6 +41,7 @@ def find_same_file(root):
 	file_size_map = {} # file size => [path list]
 	get_exe_file_list(file_size_map, root, 'bin')
 	get_exe_file_list(file_size_map, root, r'lib\site-packages\lldb')
+	get_exe_file_list(file_size_map, root, r'lib\site-packages\lldb\native')
 	for items in file_size_map.values():
 		while len(items) > 1:
 			cmp_file_list(items)

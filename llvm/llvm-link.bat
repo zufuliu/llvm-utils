@@ -86,6 +86,11 @@ IF EXIST libiomp5md.dll (
 	MKLINK libiomp5md.dll libomp.dll
 )
 
+IF EXIST flang-new.exe (
+	DEL flang-new.exe
+	MKLINK flang-new.exe flang.exe
+)
+
 IF EXIST llvm-boltdiff.exe (
 	DEL llvm-boltdiff.exe
 	MKLINK llvm-boltdiff.exe llvm-bolt.exe
@@ -102,6 +107,11 @@ IF EXIST amdgpu-arch.exe (
 
 	DEL offload-arch.exe
 	MKLINK offload-arch.exe amdgpu-arch.exe
+)
+
+IF EXIST llvm-offload-binary.exe (
+	DEL llvm-offload-binary.exe
+	MKLINK llvm-offload-binary.exe clang-offload-packager.exe
 )
 
 IF EXIST perf2bolt.exe (
@@ -126,6 +136,11 @@ IF EXIST _lldb.cp310-win_amd64.pyd (
 IF EXIST _lldb.cp310-win32.pyd (
 	DEL _lldb.cp310-win32.pyd
 	MKLINK _lldb.cp310-win32.pyd ..\..\..\bin\liblldb.dll
+)
+@rem LLVM 21.1.0
+IF EXIST native\_lldb.abi3None (
+	DEL native\_lldb.abi3None
+	MKLINK native\_lldb.abi3None ..\..\..\bin\liblldb.dll
 )
 
 DEL lldb-argdumper.exe
