@@ -53,7 +53,7 @@ FOR /f "delims=" %%A IN ('"%VSWHERE%" -products Microsoft.VisualStudio.Product.B
 )
 
 IF %SUCCESS% == 0 (
-	ECHO Visual C++ 2017, 2019 or 2022 NOT Installed.
+	ECHO Visual C++ 2017, 2019, 2022 or 2026 NOT Installed.
 	IF "%EXIT_ON_ERROR%" == "" PAUSE
 )
 

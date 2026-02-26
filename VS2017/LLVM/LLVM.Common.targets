@@ -196,7 +196,6 @@
         <EnableFuzzer/>
         <EnableParallelCodeGeneration/>
         <EnablePREfast/>
-        <EnableVectorLength/>
         <EnforceTypeConversionRules/>
         <ErrorReporting/>
         <ExpandAttributedSource/>
