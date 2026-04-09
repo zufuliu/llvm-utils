@@ -554,9 +554,8 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	}
 
 	commandLinePrefix += L" -p=\"" + directory + L"\" \"";
-	SYSTEM_INFO info{};
-	GetNativeSystemInfo(&info);
-	jobCount = std::min<uint32_t>(jobCount, info.dwNumberOfProcessors - 1);
+	const uint32_t processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
+	jobCount = std::min<uint32_t>(jobCount, processorCount - 1);
 	jobCount = std::min(jobCount, static_cast<uint32_t>(pathList.size()));
 	jobCount = std::max(jobCount, 1U);
 	if (jobCount == 1) {
