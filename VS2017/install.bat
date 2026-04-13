@@ -90,6 +90,7 @@ XCOPY /Q /Y "LLVM" "%~1\..\LLVM\"
 XCOPY /Q /Y "LLVM_v143" "%~1\x64\PlatformToolsets\LLVM_v143\"
 XCOPY /Q /Y "LLVM_v143" "%~1\Win32\PlatformToolsets\LLVM_v143\"
 XCOPY /Q /Y "LLVM_v143" "%~1\ARM64\PlatformToolsets\LLVM_v143\"
+XCOPY /Q /Y "LLVM_v143" "%~1\ARM64EC\PlatformToolsets\LLVM_v143\"
 XCOPY /Q /Y "LLVM_v143" "%~1\ARM\PlatformToolsets\LLVM_v143\"
 SET SUCCESS=1
 EXIT /B
@@ -100,5 +101,6 @@ XCOPY /Q /Y "LLVM" "%~1\..\LLVM\"
 XCOPY /Q /Y "LLVM_v145" "%~1\x64\PlatformToolsets\LLVM_v145\"
 XCOPY /Q /Y "LLVM_v145" "%~1\Win32\PlatformToolsets\LLVM_v145\"
 XCOPY /Q /Y "LLVM_v145" "%~1\ARM64\PlatformToolsets\LLVM_v145\"
+XCOPY /Q /Y "LLVM_v145" "%~1\ARM64EC\PlatformToolsets\LLVM_v145\"
 SET SUCCESS=1
 EXIT /B

@@ -35,6 +35,7 @@
       <AdditionalOptions Condition="'$(Platform)' == 'Win32'">--target=i686-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)' == 'x64'">--target=x86_64-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)' == 'ARM64'">--target=aarch64-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Platform)' == 'ARM64EC'">--target=arm64ec-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)' == 'ARM'">--target=arm-pc-windows-msvc $(ClangClAdditionalOptions) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>

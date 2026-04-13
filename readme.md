@@ -15,7 +15,7 @@ Please download and install LLVM from https://github.com/llvm/llvm-project/relea
 ### Visual Studio 2026
 The Platform Toolset are "LLVM for Visual Studio 2026 (`LLVM_v145`)", "LLVM for Visual Studio 2022 (`LLVM_v143`)", "LLVM for Visual Studio 2019 (`LLVM_v142`)" and "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
-Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g.: `C:\Program Files\Microsoft Visual Studio\2022\Community`), please manually copy folders under `VS2017` to their target paths.
+Assume `VS_PATH` is your Visual Studio 2026 installation path (e.g.: `C:\Program Files\Microsoft Visual Studio\18\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
@@ -23,10 +23,12 @@ Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g.: `C:\Program
 |`VS2017\LLVM_v145` | `%VS_PATH%\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v145` | `%VS_PATH%\MSBuild\Microsoft\VC\v180\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v145` | `%VS_PATH%\MSBuild\Microsoft\VC\v180\Platforms\ARM64\PlatformToolsets\` |
+|`VS2017\LLVM_v145` | `%VS_PATH%\MSBuild\Microsoft\VC\v180\Platforms\ARM64EC\PlatformToolsets\` |
 |`VS2017\LLVM` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\` |
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\` |
+|`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\ARM64EC\PlatformToolsets\` |
 |`VS2017\LLVM` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\` |
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\Win32\PlatformToolsets\` |
@@ -41,7 +43,7 @@ Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g.: `C:\Program
 ### Visual Studio 2022
 The Platform Toolset are "LLVM for Visual Studio 2022 (`LLVM_v143`)", "LLVM for Visual Studio 2019 (`LLVM_v142`)", "LLVM for Visual Studio 2017 (`LLVM_v141`)" and  "LLVM for Visual Studio 2017 - Windows XP (`LLVM_v141_xp`)".
 
-Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g.: `C:\Program Files\Microsoft Visual Studio\2022\Community`), please manually copy folders under `VS2017` to their target paths.
+Assume `VS_PATH` is your Visual Studio 2022 installation path (e.g.: `C:\Program Files\Microsoft Visual Studio\2022\Community`), please manually copy folders under `VS2017` to their target paths.
 
 | Folder | Target Path |
 |------|-------------|
@@ -49,6 +51,7 @@ Assume `VS_PATH` is your Visual Studio 2020 installation path (e.g.: `C:\Program
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\` |
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\` |
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\` |
+|`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\ARM64EC\PlatformToolsets\` |
 |`VS2017\LLVM_v143` | `%VS_PATH%\MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\` |
 |`VS2017\LLVM` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\` |
 |`VS2017\LLVM_v142` | `%VS_PATH%\MSBuild\Microsoft\VC\v160\Platforms\x64\PlatformToolsets\` |
