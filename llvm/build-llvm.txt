@@ -118,6 +118,7 @@ cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ^
 	-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" ^
 	-DLLVM_ENABLE_RUNTIMES=compiler-rt ^
 	-DLLVM_TARGETS_TO_BUILD="X86" ^
+	-DCLANG_ENABLE_CIR=OFF ^
 	../llvm/llvm
 
 ninja clang-tidy
