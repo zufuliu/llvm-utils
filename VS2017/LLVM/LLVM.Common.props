@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OfficialLLVMInstallDir>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\LLVM\LLVM)</OfficialLLVMInstallDir>
     <OfficialLLVMInstallDir Condition="'$(OfficialLLVMInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\LLVM\LLVM)</OfficialLLVMInstallDir>
+    <OfficialLLVMInstallDir Condition="'$(OfficialLLVMInstallDir)' == ''">$(ProgramFiles)\LLVM</OfficialLLVMInstallDir>
     <LLVMInstallDir Condition="Exists('$(OfficialLLVMInstallDir)\bin\clang-cl.exe')">$(OfficialLLVMInstallDir)</LLVMInstallDir>
     <ExecutablePath>$(LLVMInstallDir)\bin;$(ExecutablePath)</ExecutablePath>
     <ClangClExecutable>clang-cl.exe</ClangClExecutable>
